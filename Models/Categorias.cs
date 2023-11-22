@@ -1,0 +1,21 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RenderGallery.Models
+{
+    public class Categoria
+    {
+        [Key]
+        public int Id { get; set; }
+        
+        [StringLength(250)]
+        public string? Nome { get; set; }
+        
+        public string? Image { get; set; }
+
+        public string? Descricao { get; set; }
+
+        public virtual List<Tags>? Tags { get; set; }
+
+    }
+}

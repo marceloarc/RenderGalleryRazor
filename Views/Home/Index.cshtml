@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+
+    @foreach (var categoria in ViewBag.categorias)
+    {
+        <div class="col-lg-4">
+
+            <div class="image-wrap-2">
+                <div class="image-info">
+                    <h2 class="mb-3">@categoria.Nome</h2>
+                    <a href="~/Home/Galeria/@categoria.Id" class="btn btn-outline-white py-2 px-4">Mais Imagens</a>
+                </div>
+                <img src="~/@categoria.Image" alt="Image" class="img-fluid">
+            </div>
+
+        </div>
+
+    }
+
+</div>
