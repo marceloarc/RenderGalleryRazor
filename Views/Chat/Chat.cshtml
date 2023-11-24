@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "";
+   }
+
+    @if(ViewBag.Chat.Messages!= null){
+        @foreach (var msg in ViewBag.Chat.Messages)
+        {
+        if (msg.user_id_from == ViewBag.from)
+            {
+                <div class="chat__conversation-board__message-container reversed">
+                    <div class="chat__conversation-board__message__person">
+                <div class="chat__conversation-board__message__person__avatar"><img src="~/@ViewBag.Chat.User1.Pic" alt="Dennis Mikle" /></div><span class="chat__conversation-board__message__person__nickname">Dennis Mikle</span>
+                    </div>
+                    <div class="chat__conversation-board__message__context">
+                        <div class="chat__conversation-board__message__bubble"> <span>@msg.msg_content</span></div>
+                    </div>
+                    <div class="chat__conversation-board__message__options">
+
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="chat__conversation-board__message-container">
+                    <div class="chat__conversation-board__message__person">
+                <div class="chat__conversation-board__message__person__avatar"><img src="~/@ViewBag.Chat.User2.Pic" alt="Dennis Mikle" /></div><span class="chat__conversation-board__message__person__nickname">Dennis Mikle</span>
+                    </div>
+                    <div class="chat__conversation-board__message__context">
+                        <div class="chat__conversation-board__message__bubble"> <span>@msg.msg_content</span></div>
+                    </div>
+                    <div class="chat__conversation-board__message__options">
+
+                    </div>
+                </div>
+            }
+
+        }
+}
+
+<script>
+    $(document).ready(function () {
+        $("#chat").attr("chat_id", @ViewBag.Chat.chat_id);
+        $("#chat").attr("to_id", @ViewBag.to);
+    })
+
+</script>

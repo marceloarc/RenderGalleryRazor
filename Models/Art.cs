@@ -18,7 +18,12 @@ namespace RenderGallery.Models
         public int Quantidade { get; set; }
 
         public int categoria_id { get; set; }
-      
+
+        public int like { get; set; }
+        public int deslike { get; set; }
+
+        public int publi_id { get; set; }
+
         [StringLength(250)]
         public string? Hash { get; set;}
      
@@ -27,6 +32,10 @@ namespace RenderGallery.Models
 
         [ForeignKey("categoria_id")]
         public virtual Categoria? Categoria { get; set; }
+
+
+        [ForeignKey("publi_id")]
+        public virtual Publicacao? Publicacao { get; set; }
 
     }
 }

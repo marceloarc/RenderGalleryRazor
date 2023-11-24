@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "u/tCyErnPn+AkLMz7LW4tzhA6adg8VCfzQzzw/LWTwo=",
+  "Hash": "TK6s+1/AYNTQpXsjumn3A917u0u+kK3mkJXHNYBoBqc=",
   "Source": "RenderGalleyRazor",
   "BasePath": "_content/RenderGalleyRazor",
   "Mode": "Default",
@@ -134,6 +134,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\bootstrap-datepicker.css"
+    },
+    {
+      "Identity": "C:\\Users\\Administrator\\source\\repos\\RenderGalleyRazor\\wwwroot\\css\\chat.css",
+      "SourceId": "RenderGalleyRazor",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Administrator\\source\\repos\\RenderGalleyRazor\\wwwroot\\",
+      "BasePath": "_content/RenderGalleyRazor",
+      "RelativePath": "css/chat.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\chat.css"
     },
     {
       "Identity": "C:\\Users\\Administrator\\source\\repos\\RenderGalleyRazor\\wwwroot\\css\\jquery-ui.css",

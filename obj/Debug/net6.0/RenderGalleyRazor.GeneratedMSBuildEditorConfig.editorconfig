@@ -16,6 +16,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\Administrator\source\repos\RenderGalleyRazor
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/Administrator/source/repos/RenderGalleyRazor/Views/Chat/Chat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxDaGF0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Administrator/source/repos/RenderGalleyRazor/Views/Home/Galeria.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxHYWxlcmlhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

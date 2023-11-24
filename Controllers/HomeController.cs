@@ -17,6 +17,7 @@ namespace RenderGalleyRazor.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Title = "Render Gallery";
             List<Categoria> categorias = db.Categorias.ToList();
             ViewBag.Categorias = categorias;
             return View();
@@ -29,8 +30,10 @@ namespace RenderGalleyRazor.Controllers
             
             List<Art> arts = db.Arts.Where(x => x.categoria_id == id).ToList();
             Categoria cat = db.Categorias.Where(x=> x.Id == id).FirstOrDefault();
+            
             ViewBag.Arts = arts;
             ViewBag.Title = cat.Nome;
+      
             return View();
         }
 

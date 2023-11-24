@@ -310,3 +310,5 @@ C:\Users\Administrator\source\repos\RenderGalleyRazor\obj\Debug\net6.0\refint\Re
 C:\Users\Administrator\source\repos\RenderGalleyRazor\obj\Debug\net6.0\RenderGalleyRazor.pdb
 C:\Users\Administrator\source\repos\RenderGalleyRazor\obj\Debug\net6.0\RenderGalleyRazor.genruntimeconfig.cache
 C:\Users\Administrator\source\repos\RenderGalleyRazor\obj\Debug\net6.0\ref\RenderGalleyRazor.dll
+C:\Users\Administrator\source\repos\RenderGalleyRazor\bin\Debug\net6.0\Castle.Core.dll
+C:\Users\Administrator\source\repos\RenderGalleyRazor\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Proxies.dll

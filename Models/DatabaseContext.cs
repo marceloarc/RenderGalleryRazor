@@ -11,6 +11,7 @@ namespace RenderGallery.Models
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
             this.Database.EnsureCreated();
+           
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Administrador> Administradores { get; set; }
