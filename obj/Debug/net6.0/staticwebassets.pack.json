@@ -25,6 +25,10 @@
       "PackagePath": "staticwebassets\\css\\bootstrap.min.css.map"
     },
     {
+      "Id": "C:\\Users\\Administrator\\source\\repos\\RenderGalleyRazor\\wwwroot\\css\\chat.css",
+      "PackagePath": "staticwebassets\\css\\chat.css"
+    },
+    {
       "Id": "C:\\Users\\Administrator\\source\\repos\\RenderGalleyRazor\\wwwroot\\css\\jquery-ui.css",
       "PackagePath": "staticwebassets\\css\\jquery-ui.css"
     },
