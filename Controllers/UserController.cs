@@ -38,7 +38,6 @@ namespace RenderGallery.Controllers
                 {
                     TempData["erro"] = "Artista já cadastrado!";
                     return Ok(TempData);
-
                 }
                 else
                 {

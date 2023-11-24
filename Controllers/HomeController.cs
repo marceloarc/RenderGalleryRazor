@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RenderGallery.Models;
 using RenderGalleyRazor.Models;
 using System.Data.Entity;
@@ -22,7 +23,6 @@ namespace RenderGalleyRazor.Controllers
             ViewBag.Categorias = categorias;
             return View();
         }
-
         public IActionResult Galeria(int id)
         {
             List<Categoria> categorias = db.Categorias.ToList();

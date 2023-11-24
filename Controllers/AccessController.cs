@@ -43,7 +43,7 @@ namespace RenderGallery.Controllers
                 AuthenticationProperties properties = new AuthenticationProperties()
                 {
                     AllowRefresh = true,
-                    IsPersistent = modelLogin.KeepLoggedIn
+                    IsPersistent = modelLogin.RememberMe
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
