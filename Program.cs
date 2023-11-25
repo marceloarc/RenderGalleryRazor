@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
+using RenderGalleyRazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +36,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 
-//teste de rotas
+//criação de roles
+builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+
+
 
 
 var app = builder.Build();
@@ -53,6 +57,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+await CriarRolesUsuariosAsync(app);
+
 app.UseAuthorization();
 app.UseAuthentication();
 
@@ -62,3 +68,14 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+async Task CriarRolesUsuariosAsync(WebApplication app)
+{
+    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (var scope = scopedFactory.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<ISeedUserRoleInitial>();
+        await service.SeedRolesAsync();
+    }
+}

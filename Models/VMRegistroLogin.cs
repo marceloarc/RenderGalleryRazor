@@ -1,5 +1,4 @@
-﻿using RenderGallery.Models;
-
+﻿
 namespace RenderGalleyRazor.Models
 {
     public class VMRegistroLogin

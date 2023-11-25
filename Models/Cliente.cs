@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     public class Cliente
     {

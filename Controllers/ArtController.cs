@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
 using RenderGallery.Util;
 
 namespace RenderGallery.Controllers

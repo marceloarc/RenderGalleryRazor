@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static RenderGallery.Models.ArtDefinicoes;
 
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     public class ArtDefinicoes
     {

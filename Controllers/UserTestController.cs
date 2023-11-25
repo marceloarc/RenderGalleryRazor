@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
 
 namespace RenderGallery.Controllers
 {

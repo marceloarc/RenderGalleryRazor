@@ -2,10 +2,10 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace RenderGallery.Controllers
+namespace RenderGalleyRazor.Controllers
 {
     [Route("login")]
     [ApiController]

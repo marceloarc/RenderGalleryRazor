@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
 
 namespace RenderGallery.Util
 {

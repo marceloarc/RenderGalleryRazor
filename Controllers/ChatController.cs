@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
 
 namespace RenderGallery.Controllers
 {

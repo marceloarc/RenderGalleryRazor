@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     public class VMLogin
     {

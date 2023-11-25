@@ -1,4 +1,9 @@
-﻿
+﻿@using RenderGalleyRazor.Models;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+
+@{
+    var categorias = dbContext.Categorias.ToList();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +65,10 @@
                                 <li class="has-children">
                                     <a href="single.html">Galeria</a>
                                     <ul class="dropdown">
- 
+                                        @foreach (var category in categorias)
+                                        {
+                                            <li><a href="~/Home/Galeria/@category.Id">@category.Nome</a></li>
+                                        }
 
                                         @*                    <li class="has-children">
                                         <a href="#">Sub Menu</a>

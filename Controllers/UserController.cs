@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
 using RenderGallery.Util;
 using System;
 using System.Data.Entity;
@@ -43,7 +43,7 @@ namespace RenderGallery.Controllers
                 {
                     string hash = BCrypt.Net.BCrypt.HashPassword(artista.User.Password);
                     artista.User.Password = hash;
-                    artista.User.Usuario = Models.User.TipoUsuario.Artista;
+                    artista.User.Usuario = RenderGalleyRazor.Models.User.TipoUsuario.Artista;
                     artista.dataHora = DateTime.Now;
                     db.Artistas.Add(artista);
                     db.SaveChanges();
@@ -92,7 +92,7 @@ namespace RenderGallery.Controllers
                     {
                         string hash = BCrypt.Net.BCrypt.HashPassword(cliente.User.Password);
                         cliente.User.Password = hash;
-                        cliente.User.Usuario = Models.User.TipoUsuario.Cliente;
+                        cliente.User.Usuario = RenderGalleyRazor.Models.User.TipoUsuario.Cliente;
                         cliente.dataHora = DateTime.Now;
                         cliente.document = cpf;
                         db.Clientes.Add(cliente);

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RenderGallery.Models;
 using RenderGalleyRazor.Models;
 using System.Data.Entity;
 using System.Diagnostics;

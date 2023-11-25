@@ -5,13 +5,13 @@ using System.Linq;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     public partial class DatabaseContext : IdentityDbContext
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-            this.Database.EnsureCreated();
+           this.Database.EnsureCreated();
            
         }
         public DbSet<User> Users { get; set; }
@@ -29,4 +29,5 @@ namespace RenderGallery.Models
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Categoria> Categorias{ get; set; }
     }
+
 }

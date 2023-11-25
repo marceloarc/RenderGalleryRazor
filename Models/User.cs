@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     [JsonObject(IsReference = true)]
     public class User
@@ -31,5 +33,6 @@ namespace RenderGallery.Models
         public enum TipoUsuario { Administrador = 0, Cliente = 1, Artista = 2 }
         [StringLength(250)]
         public string? Pic { get; set; }
+
     }
 }
