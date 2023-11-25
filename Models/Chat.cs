@@ -1,4 +1,4 @@
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     using System;
     using System.Collections.Generic;

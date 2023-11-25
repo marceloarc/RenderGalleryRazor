@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+
+<style>
+
+    .day{
+        position: absolute;
+        z-index: 1;
+        top: 15px;
+       
+        background-color:red;
+        border-radius:100%;
+        width:18px;
+        height:18px;
+        text-align: center;
+    }
+    .day span{
+        color:white;
+        font-size:12px;
+        position:absolute;
+        font-weight:bold;
+        right:3px;
+            text-align: center;
+    }
+</style>
+
+@if (SignInManager.IsSignedIn(User))
+{
+        var total_conversa = 0;
+        var total = 0;
+        var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+        var conversas = dbContext.Chats.Where(x => x.user_one == user.Id || x.user_two == user.Id).ToList();
+        var produtos = dbContext.Produtos.Where((x => x.User_id == user.Id)).ToList();
+        foreach (var produto in produtos)
+        {
+            total += produto.Quantidade;
+        }
+        foreach (var chat in conversas)
+        {
+        total_conversa++;
+    }
+ 
+
+    <div class="col-6 col-xl-2 text-right" data-aos="fade-down">
+        <div class="d-none d-xl-inline-block">
+            <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-right mb-0" data-class="social">
+                <li id="cart">
+                    <div class="day">
+                        <span class="product_total">@total</span>
+                    </div>
+
+                    <a href="#" class="pl-0 pr-3"><i class="fa fa-shopping-cart fa-xl" aria-hidden="true"></i></a>
+                </li>
+
+                <li id="message">
+                    <div class="day">
+                        <span class="message_total">@total_conversa</span>
+                    </div>
+                    <a href="#" class="pl-0 pr-3"><i class="fa-solid fa-message fa-xl"></i></a>
+                </li>
+
+                <li>
+                    <form method="post" asp-controller="account" asp-action="logout">
+                        <button type="submit" style="width: auto" class="nav-link btn btn-link py-0">@user.Name - Sair</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
+
+    </div>
+    <div id="cd-cart">
+       
+    </div> <!-- cd-cart -->
+
+    <div id="cd-message">
+
+    </div> <!-- cd-cart -->
+
+
+    
+
+}
+else
+{
+                    <div class="col-6 col-xl-2 text-right" data-aos="fade-down">
+                        <div class="d-none d-xl-inline-block">
+                            <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-right mb-0" data-class="social">
+                                <li><a asp-controller="account" asp-action="register">Login</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
+
+                    </div>
+}

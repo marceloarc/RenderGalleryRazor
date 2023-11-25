@@ -1,6 +1,12 @@
 ﻿@{
     ViewData["Title"] = ViewBag.Title;
 }
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+
+
+
 <style>
     .modal-backdrop {
         z-index: -1;
@@ -22,24 +28,7 @@
         width: 100%;
     }
 
-    ::-webkit-scrollbar {
-        width: 5px;
-    }
 
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #888;
-    }
-
-        /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
     .middle2 {
         display: none;
         position: absolute;
@@ -116,23 +105,30 @@
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade"  data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
                     <img src="~/@art.Path" alt="IMage" class="img-fluid">
                     <div class="middle">
-                        <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.Artista.User.Id">
+                        <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
                             <i class="fa fa-user" aria-hidden="true"></i>
-                            <a>@art.Publicacao.Artista.User.Name</a>
+                            <a>@art.Publicacao.User.Name</a>
                         </button>
-                        <button class="item-btn item-image msg" style="" user_id="@art.Publicacao.Artista.User.Id">
-                            <i class="fa-solid fa-message"></i>
 
-                         </button>
-                        <button class="item-btn item-image" style="" id="add-cart" user_id="@art.Publicacao.Artista.User.Id">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+
+                            <button class="item-btn item-image msg" style="" user_id="@art.Publicacao.User.Id">
+                                <i class="fa-solid fa-message"></i>
+
+                            </button>
+
+                        }
+     
+                        <button class="item-btn item-image add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
                             <i class="fa-solid fa-shopping-cart"></i>
 
                         </button>
-                        <button class="item-btn item-image-like" art_id="@art.Id" style="" user_id="@art.Publicacao.Artista.User.Id">
+                        <button class="item-btn item-image-like" art_id="@art.Id" style="" user_id="@art.Publicacao.User.Id">
                             <i class="fa-solid fa-thumbs-up"></i>
                             @art.like
                         </button>
-                        <button class="item-btn item-image-like" style="" art_id="@art.Id id="msg" user_id="@art.Publicacao.Artista.User.Id">
+                        <button class="item-btn item-image-like" style="" art_id="@art.Id id="msg" user_id="@art.Publicacao.User.Id">
                             <i class="fa-solid fa-thumbs-down"></i>
                             @art.deslike
                         </button>
@@ -149,38 +145,7 @@
 
 </div>
 
-<div class="modal" id="modal1" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background-color:rgba(10, 14, 14, 0.95); color:white;">
-            <div class="modal-header">
-                <h5 class="modal-title">Chat</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="--dark-theme" id="chat" chat_id="" to_id="">
-                    <div class="chat__conversation-board" id="content-chat">
 
-
-                    </div>
-                    <div class="chat__conversation-panel">
-                        <div class="chat__conversation-panel__container">
-
-                            <input class="chat__conversation-panel__input panel-item" id="msg-content" placeholder="Type a message..." />
-                            <button class="chat__conversation-panel__button panel-item btn-icon send-message-button" id="send-msg">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-reactid="1036">
-                                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <script type="text/javascript">
 
     window.onload = function () {
@@ -200,58 +165,154 @@
 
         $(".msg").click(function () {
             $("#msg-content").val("");
+
+            if (@ViewBag.user_id== $(this).attr("user_id")) {
+                Swal.fire({
+                    title: "Não é possivel mandar mensagens para si mesmo!",
+                    html: "Irá fechar em <b></b> milisegundos.",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+
+                    }
+                });
+                return
+            }
+
             updateChat($(this).attr("user_id"));
             $("#modal1").modal("show");
             
         })
+            $(".add-cart").click(function(){
+            if (@ViewBag.user_id== $(this).attr("user_id")) {
+                Swal.fire({
+                    title: "Não é possivel comprar seu proprio produto!",
+                    html: "Irá fechar em <b></b> milisegundos.",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
 
-        
-            $(document).on('keypress', function (e) {
-                if (e.which == 13) {
-                    $("#send-msg").click();
-                }
-            });
-        
-        $("#send-msg").click(function () {
-            console.log("tste");
-
-            var msg = $("#msg-content").val();
-            var from = 2;
-            var to = $("#chat").attr("to_id");
-            var formData = new FormData();
-            var cid = $("#chat").attr("chat_id");
-
-            formData.append("msg", msg);
-            formData.append("to", to);
-            formData.append("from", from);
-            formData.append("cid", cid);
-            if (msg.trim() != "") {
-                $.ajax({
-                    dataType: "json",
-                    type: "POST",
-                    url: "/Chat/Enviar",
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: formData,
-                    success: function (retorno) {
-                        console.log(retorno);
-                        updateChat(to);
-                        $("#msg-content").val("");
-                        $("#msg-content").focus();
                     }
                 });
+                return
             }
-        })
-        function updateChat(id) {
-            $("#content-chat").html("");
-            var url = "/Chat/Chat/2?to=" + id;
-            $.get(url, function (data) {
-                $("#content-chat").html(data);
-                $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
+            Swal.fire({
+                title: "Digite a quantidade",
+                input: "text",
+                inputAttributes: {
+                    autocapitalize: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "Confirmar",
+                showLoaderOnConfirm: true,
+                preConfirm: async (quantidade) => {
+                    if (quantidade > 0) {
+                        var formData = new FormData();
+                        var art_id = $(this).attr("art_id");
+                 
+                        formData.append("art_id", art_id);
+                        formData.append("quantidade", quantidade);
+                        $.ajax({
+                            dataType: "json",
+                            type: "POST",
+                            url: "/Cart/AddItem",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                            success: function (retorno) {
+                                console.log(retorno);
+                                if (retorno=="sucesso") {
+                                    var url = "/Cart/Produtos";
+                                    $.get(url, function (data) {
+                                        $("#cd-cart").html(data);
+                                    });
+                                    let timerInterval;
+                                    Swal.fire({
+                                        title: "Produto adicionado!",
+                                        html: "Irá fechar em <b></b> milisegundos.",
+                                        timer: 1000,
+                                        timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                            const timer = Swal.getPopup().querySelector("b");
+                                            timerInterval = setInterval(() => {
+                                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                            }, 100);
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            OpenCloseCart();
+
+                                        }
+                                    });
+                                }
+
+                                if(retorno=="erro-1"){
+                                    let timerInterval;
+                                    Swal.fire({
+                                        title: "Você precisa estar logado para adicionar produtos no carrinho!",
+                                        html: "Irá fechar em <b></b> milisegundos.",
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                            const timer = Swal.getPopup().querySelector("b");
+                                            timerInterval = setInterval(() => {
+                                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                            }, 100);
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            OpenCloseCart();
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
+                    }
+                }
+       
             });
 
-        }
+            })
+
+        
+
+
 
 
 

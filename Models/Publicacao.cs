@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     public class Publicacao
     {
@@ -14,10 +14,10 @@ namespace RenderGallery.Models
         public string? Descricao { get; set; }
 
         public DateTime dataHora { get; set; }
-        public int Artista_Id { get; set; }
+        public int User_id { get; set; }
 
-        [ForeignKey("Artista_Id")]
-        public virtual Artista? Artista { get; set; }
+        [ForeignKey("User_id")]
+        public virtual User? User { get; set; }
 
         public virtual List<Art>? Artes { get; set; }
     }

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RenderGallery.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RenderGalleyRazor.Models;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -22,15 +22,19 @@ namespace RenderGalleyRazor.Controllers
             ViewBag.Categorias = categorias;
             return View();
         }
-
         public IActionResult Galeria(int id)
         {
+            int user_id = 0;
             List<Categoria> categorias = db.Categorias.ToList();
             ViewBag.Categorias = categorias;
-            
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+            }
             List<Art> arts = db.Arts.Where(x => x.categoria_id == id).ToList();
             Categoria cat = db.Categorias.Where(x=> x.Id == id).FirstOrDefault();
-            
+            ViewBag.user_id = user_id;
             ViewBag.Arts = arts;
             ViewBag.Title = cat.Nome;
       

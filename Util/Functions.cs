@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
 
 namespace RenderGallery.Util
 {
@@ -21,13 +21,14 @@ namespace RenderGallery.Util
 
         public static string WriteFile(IFormFile img)
         {
-            string caminhoCompleto = Path.Combine(Directory.GetCurrentDirectory(), "imagens");
+            string caminhoCompleto = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images");
 
             if (!Directory.Exists(caminhoCompleto))
             {
                 Directory.CreateDirectory(caminhoCompleto);
             }
             string path = caminhoCompleto + "\\" + GetTimestamp(DateTime.Now)+System.IO.Path.GetExtension(img.FileName);
+            string name = Path.GetFileName(path);
             using (Stream stream = new FileStream(path, FileMode.Create))
             {
                 img.CopyTo(stream);

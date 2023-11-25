@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     public class ProdutoCarrinho
     {
         public int Id { get; set; }
+
+        public int Quantidade { get; set; }
 
         public  int? User_id { get; set; }   
         
@@ -21,10 +23,6 @@ namespace RenderGallery.Models
         [ForeignKey("art_id")]
         public virtual Art? Arte { get; set; }
 
-        public int? cart_id { get; set; }
-
-        [ForeignKey("cart_id")]
-        public virtual Cart? Cart { get; set; }
 
     }
 }
