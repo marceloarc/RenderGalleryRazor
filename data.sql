@@ -7,5 +7,4 @@ insert into Publicacoes (Nome,Descricao,dataHora,User_id) VALUES ('teste','teste
 
 insert into Arts (Arte,Path,Valor,Quantidade,categoria_id,dataHora,publi_id,"like",deslike) VALUES ('Teste','images/cu.png',100,100,1,CONVERT(DATE,'13-12-2019',104),1,10,20);
 
-insert into produtos (Quantidade,User_id, publi_id, art_id) VALUES(1,1,1,1);
 
