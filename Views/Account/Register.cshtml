@@ -26,7 +26,7 @@
             <span class="sub-text">Ou use seu e-mail para se registrar</span>
             <span asp-validation-for="Error" class="text-danger"></span>
             <input asp-for="File" style="display:none;" type="file" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])" placeholder="Foto" id="input-pic" class="input-text" />
-            <img src="~/images/user.jpg" id="output" width="100" />
+            <img src="~/images/user.jpg" id="output" width="70" />
             <input asp-for="Nome" type="text" placeholder="Nome" class="input-text" />
             <span asp-validation-for="Nome" class="text-danger"></span>
             <input asp-for="Email" type="email" placeholder="Email" class="input-email" />
