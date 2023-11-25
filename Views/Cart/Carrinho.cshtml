@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Carrinho";
+}
+
+
+<link rel="stylesheet" href="~/css/styles.css" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+<div class="content-cart">
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                    <th>Total</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var produtos in ViewBag.produtos)
+                {
+                    <tr>
+                        <td>
+                            <div class="product">
+                                <img src="~/@produtos.Arte.Arte" alt="" />
+                                <div class="info">
+                                    <div class="name">@produtos.Publicacao.Nome</div>
+                                    <div class="category">@produtos.Arte.Categoria.Nome</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>R$ 120</td>
+                        <td>
+                            <div class="qty">
+                                <button><i class="bx bx-minus"></i></button>
+                                <span>1</span>
+                                <button><i class="bx bx-plus"></i></button>
+                            </div>
+                        </td>
+                        <td>R$ @produtos.Arte.Valor</td>
+                        <td>
+                            <button class="remove"><i class="bx bx-x"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+    <aside>
+        <div class="box">
+            <header>Resumo da compra</header>
+            <div class="info">
+                <div><span>Sub-total</span><span>R$ 418</span></div>
+            </div>
+            <footer>
+                <span>Total</span>
+                <span>R$ 418</span>
+            </footer>
+        </div>
+        <button>Finalizar Compra</button>
+    </aside>
+</div>

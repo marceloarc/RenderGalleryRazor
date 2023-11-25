@@ -14,6 +14,13 @@ namespace RenderGallery.Controllers
         {
             this.db = db;
         }
+        [HttpGet]
+        public IActionResult Carrinho()
+        {
+            List<ProdutoCarrinho> produtos = db.Produtos.ToList();
+            ViewBag.Produtos = produtos;
+            return View();
+        }
 
         [HttpGet("[action]/{id?}")]
         public async Task<IActionResult> Cart(int Id)
