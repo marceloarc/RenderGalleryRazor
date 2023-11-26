@@ -17,10 +17,21 @@
         
 
     @foreach (var chat in ViewBag.chats)
-            {
+     {
             var message = chat.Messages[chat.Messages.Count - 1];
 
-            message_total++;
+            foreach(var msg in chat.Messages)
+            {
+                if (msg.visu_status == 0)
+                {
+                    if (msg.user_id_to == chat.user_one)
+                    {
+                        message_total++;
+                    }
+              
+                }
+            }
+
 
             <div class="friend" user_id="@chat.user_two">
               <img src="~/@chat.User2.Pic" />

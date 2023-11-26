@@ -59,7 +59,16 @@ namespace RenderGallery.Controllers
 
                     }
                 }
-
+                foreach(Message msg in conversa.Messages)
+                {
+                    if(msg.user_id_to == Id)
+                    {
+                        msg.visu_status = 1;
+                    }
+                  
+                   
+                }
+                db.SaveChanges();
                 if (userDetails != null)
                 {
                     if(userDetails.Id == Id)
