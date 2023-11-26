@@ -21,6 +21,10 @@
         text-align: center;
     }
 
+    .hide{
+        display:none;
+    }
+
 </style>
 
 @if (SignInManager.IsSignedIn(User))
@@ -42,7 +46,11 @@
 
  
         }
- 
+    var hide = "hide";
+    if (total_conversa > 0)
+    {
+        hide = "";
+    }
 
     <div class="col-6 col-xl-2 text-right" data-aos="fade-down">
         <div class="d-none d-xl-inline-block">
@@ -56,9 +64,9 @@
                 </li>
 
                 <li id="message">
-                    <div class="day">
-                        <span class="message_total">@total_conversa</span>
-                    </div>
+              
+                        <span class="message_total day @hide">@total_conversa</span>
+                   
                     <a href="#" class="pl-0 pr-3"><i class="fa-solid fa-message fa-xl"></i></a>
                 </li>
 

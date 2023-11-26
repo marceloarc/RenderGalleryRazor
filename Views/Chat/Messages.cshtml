@@ -66,6 +66,14 @@ else
 <script>
     $(document).ready(function () {
         $(".message_total").text(@message_total);
+
+    @if(message_total < 1)
+    {
+       <text>
+                $(".message_total").addClass("hide");
+       </text> 
+    }
+
         $(".friend").click(function () {
         
             updateChat($(this).attr("user_id"));
