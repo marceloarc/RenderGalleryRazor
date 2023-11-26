@@ -26,6 +26,8 @@ namespace RenderGalleyRazor.Models
         public DbSet<Publicacao> Publicacoes { get; set; }
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Categoria> Categorias{ get; set; }
+
+        public DbSet<LikesDeslikes> LikeDeslikes { get; set; }
     }
 
 }

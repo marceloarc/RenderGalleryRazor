@@ -1,11 +1,19 @@
 ﻿@{
     ViewData["Title"] = ViewBag.Title;
 }
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> SignInManager;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext;
 
+@{
+    var user_id = 0;
+    if (SignInManager.IsSignedIn(User))
+    {
 
+        var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+        user_id = user.Id;
+    }
+}
 
 <style>
     .modal-backdrop {
@@ -20,12 +28,14 @@
         -ms-transform: translate(-50%, -50%);
         background-color: rgba(10, 14, 14, 0.50);
         color: white;
-        font-size: 16px;
+        font-size: 12px;
         padding: 12px 24px;
         border: none;
         cursor: pointer;
         border-radius: 5px;
         width: 100%;
+        align-items: center;
+        text-align: center;
     }
 
 
@@ -44,6 +54,7 @@
         cursor: pointer;
         border-radius: 5px;
         width: 100%;
+
     }
     .item-btn{
         cursor: pointer;
@@ -62,8 +73,8 @@
     }
 
     .item-image-like {
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
        
     }
     .item-image-profile {
@@ -98,9 +109,9 @@
         <div class="row" id="lightgallery">
         @foreach(var art in ViewBag.arts)
         {
-            
-            
-            
+                int art_id = art.Id;
+                int likes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isLike == true).Count();
+                int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
           
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade"  data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
                     <img src="~/@art.Path" alt="IMage" class="img-fluid">
@@ -109,28 +120,29 @@
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <a>@art.Publicacao.User.Name</a>
                         </button>
-
+                       
+     
                         @if (SignInManager.IsSignedIn(User))
                         {
 
-                            <button class="item-btn item-image msg" style="" user_id="@art.Publicacao.User.Id">
+                            <button class="item-btn item-image-like msg" style="" user_id="@art.Publicacao.User.Id">
                                 <i class="fa-solid fa-message"></i>
 
                             </button>
 
                         }
-     
-                        <button class="item-btn item-image add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+
+                        <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
                             <i class="fas fa-cart-plus"></i>
 
                         </button>
-                        <button class="item-btn item-image-like" art_id="@art.Id" style="" user_id="@art.Publicacao.User.Id">
+                        <button class="item-btn item-image-like like" is_like="1" art_id="@art.Id" style="" user_id="@art.Publicacao.User.Id">
                             <i class="fa-solid fa-thumbs-up"></i>
-                            @art.like
+                            @likes
                         </button>
-                        <button class="item-btn item-image-like" style="" art_id="@art.Id id="msg" user_id="@art.Publicacao.User.Id">
+                        <button class="item-btn item-image-like like" is_like="0" style="" art_id="@art.Id"  user_id="@art.Publicacao.User.Id">
                             <i class="fa-solid fa-thumbs-down"></i>
-                            @art.deslike
+                            @deslikes
                         </button>
 
                     </div>
@@ -162,6 +174,51 @@
         
         
         }, 5000);
+
+        $(".like").click(function(){
+            var btn = $(this)
+            var formData = new FormData();
+            var art_id = $(this).attr("art_id");
+            var user_id = @user_id;
+            var is_like = $(this).attr("is_like");
+        
+            if(user_id == 0 ){
+                alert("deslogado!");
+                return
+            }
+
+            formData.append("art_id", art_id);
+            formData.append("user_id", user_id);
+
+            if (is_like == 1) {
+                formData.append("isLike", true);
+                formData.append("isDeslike", false);
+            } else {
+                formData.append("isLike", false);
+                formData.append("isDeslike", true);
+            }
+
+            $.ajax({
+                dataType: "json",
+                type: "POST",
+                url: "/Art/LikeDeslike",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (retorno) {
+                    console.log(retorno);
+
+                    $("button[is_like=1]").text(+retorno['likes'])
+
+                    $("button[is_like=0]").text(retorno['deslikes'])
+                    $("button[is_like=1]").prepend('<i class="fa-solid fa-thumbs-up"></i> ')
+
+                    $("button[is_like=0]").prepend('<i class="fa-solid fa-thumbs-down"></i> ')
+                }
+            });
+        })
+    
 
         $(".msg").click(function () {
             $("#msg-content").val("");
