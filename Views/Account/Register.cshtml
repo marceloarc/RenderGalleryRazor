@@ -85,9 +85,11 @@
     })
         $("#signUp").click(function () {
             $("#container-login").addClass("right-panel-active");
+            $(".text-danger").hide();
         })
         $("#signIn").click(function () {
             $("#container-login").removeClass("right-panel-active");
+            $(".text-danger").hide();
         })
 
 
