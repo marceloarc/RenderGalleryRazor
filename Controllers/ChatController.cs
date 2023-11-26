@@ -59,16 +59,20 @@ namespace RenderGallery.Controllers
 
                     }
                 }
-                foreach(Message msg in conversa.Messages)
+                if(conversa.Messages != null)
                 {
-                    if(msg.user_id_to == Id)
+                    foreach (Message msg in conversa.Messages)
                     {
-                        msg.visu_status = 1;
+                        if (msg.user_id_to == Id)
+                        {
+                            msg.visu_status = 1;
+                        }
+
+
                     }
-                  
-                   
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
+
                 if (userDetails != null)
                 {
                     if(userDetails.Id == Id)
@@ -102,24 +106,31 @@ namespace RenderGallery.Controllers
                 List<Chat> chats2 = new List<Chat>();
                 chats = db.Chats.Where(x => x.user_one == user.Id || x.user_two == user.Id).ToList();
                     
-                foreach (Chat chat in chats)
-                {
-
-                    if(user.Id != chat.user_one)
+                if(chats.Count >0) {
+                    foreach (Chat chat in chats)
                     {
-                        User user1 = chat.User1;
-                        User user2 = chat.User2;
-         
-                        chat.User1 = user2;
-                        chat.User2 = user1;
 
+                        if (user.Id != chat.user_one)
+                        {
+                            User user1 = chat.User1;
+                            User user2 = chat.User2;
+
+                            chat.User1 = user2;
+                            chat.User2 = user1;
+
+                        }
+                        chats2.Add(chat);
                     }
-                    chats2.Add(chat);
-                }
 
-                if(chats2 != null)
+                    if (chats2 != null)
+                    {
+                        ViewBag.chats = chats2;
+                    }
+
+                }
+                else
                 {
-                    ViewBag.chats = chats2;
+                    ViewBag.chats = null;
                 }
 
 

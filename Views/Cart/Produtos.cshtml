@@ -22,9 +22,20 @@
             total += (produto.Quantidade * produto.Arte.Valor);
             products_total += produto.Quantidade;
             <li>
-                    <span class="cd-qty">@produto.Quantidade x</span> @produto.Arte.Arte
-                    <div class="cd-price">R$@produto.Arte.Valor</div>
+
+         <div class="row">
+                    <img src="~/@produto.Arte.Path" width="50" style="margin:10px;">
+                    <div class="col-6">
+                        <span class="cd-qty"></span> @produto.Arte.Arte
+                        <br>
+                        <br>
+                        <div class="cd-price">@produto.Quantidade x R$@produto.Arte.Valor</div>
+                       
+                    </div>
                     <button class="cd-item-remove cd-img-replace" product_id="@produto.Id">Remove</button>
+         </div>
+ 
+    
                 </li>
             }
             </ul>

@@ -20,6 +20,7 @@
         overflow:hidden;
         text-align: center;
     }
+
 </style>
 
 @if (SignInManager.IsSignedIn(User))
@@ -47,17 +48,17 @@
         <div class="d-none d-xl-inline-block">
             <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-right mb-0" data-class="social">
                 <li id="cart">
-                    <div class="day">
-                        <span class="product_total">@total</span>
-                    </div>
+                   
+                        <span class="product_total day">@total</span>
+         
 
                     <a href="#" class="pl-0 pr-3"><i class="fa fa-shopping-cart fa-xl" aria-hidden="true"></i></a>
                 </li>
 
                 <li id="message">
-                
-                        <span class="message_total day">@total_conversa</span>
-                  
+                    <div class="day">
+                        <span class="message_total">@total_conversa</span>
+                    </div>
                     <a href="#" class="pl-0 pr-3"><i class="fa-solid fa-message fa-xl"></i></a>
                 </li>
 
