@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@using RenderGalleyRazor.Models;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+
+@{
+    Layout = "";
+    var categorias = dbContext.Categorias.ToList();
+    var id = ViewBag.id;
+}
+<style>
+    .myRows{
+        padding:10px;
+    }
+</style>
+<h2>Arte</h2>
+<div class="myRows">
+    <div class="row">
+        <div class="input-group">
+            <label>Nome </label>
+            <input class="input-publi" id="Artes_ @id _Arte" name="Artes[@id].Arte" type="text" placholder="Enter your email address">
+        </div>
+        <div class="input-group" style="align-content:center; align-items:center;">
+            <label>Arte</label>
+            <input class="input-publi" id="Artes_ @id _File" style="display:none;" onchange="document.getElementById('output_@id').src = window.URL.createObjectURL(this.files[0]); document.getElementById('btn-plus_@id').style.visibility = 'hidden';" name="Artes[@id].File" type="file">
+            <div class="container-image">
+                <img onclick="document.getElementById('Artes_ @id _File').click();" style="cursor:pointer; -webkit-box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);
+-moz-box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);
+box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);" src="~/images/user.jpg" id="output_@id" width="100" />
+                <a id="btn-plus_@id" class="btn-center" onclick="document.getElementById('Artes_ @id _File').click();"><i class="fa fa-plus" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-group">
+            <label>Valor</label>
+            <input class="input-publi" id="Artes_ @id _Valor" name="Artes[@id].Valor" type="number">
+        </div>
+        <div class="input-group">
+            <label for="">Categoria</label>
+            <select class="input-publi" id="Artes_ @id _categoria_id" name="Artes[@id].categoria_id">
+                @foreach (var categoria in categorias)
+                {
+                    <option value="@categoria.Id">@categoria.Nome</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-group">
+            <label>Quantidade</label>
+
+            <input class="input-publi" id="Artes_ @id _Quantidade" name="Artes[@id].Quantidade" type="number">
+        </div>
+
+    </div>
+</div>

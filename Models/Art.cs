@@ -19,6 +19,8 @@ namespace RenderGalleyRazor.Models
 
         public int categoria_id { get; set; }
 
+        [NotMapped]
+        public IFormFile File { get; set; }
 
         public int publi_id { get; set; }
 

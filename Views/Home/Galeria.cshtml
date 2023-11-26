@@ -209,12 +209,15 @@
                 success: function (retorno) {
                     console.log(retorno);
 
-                    $("button[is_like=1]").text(+retorno['likes'])
+                    if (btn.attr("is_like") == 1) {
+                        btn.siblings("button[is_like=0]").text(+retorno['deslikes']).prepend('<i class="fa-solid fa-thumbs-down"></i> ')
+                        btn.text(+retorno['likes']).prepend('<i class="fa-solid fa-thumbs-up"></i> ')
+                    } else {
+                        btn.siblings("button[is_like=1]").text(+retorno['likes']).prepend('<i class="fa-solid fa-thumbs-up"></i> ')
+                        btn.text(+retorno['deslikes']).prepend('<i class="fa-solid fa-thumbs-down"></i> ')
+                    }
 
-                    $("button[is_like=0]").text(retorno['deslikes'])
-                    $("button[is_like=1]").prepend('<i class="fa-solid fa-thumbs-up"></i> ')
-
-                    $("button[is_like=0]").prepend('<i class="fa-solid fa-thumbs-down"></i> ')
+ 
                 }
             });
         })
