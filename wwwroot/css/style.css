@@ -14,10 +14,6 @@ body {
   background: #000;
   color: #fff; }
 
-  .icon-menu{
-    color:#20c997 !important;
-  }
-
 a {
   -webkit-transition: .3s all ease;
   -o-transition: .3s all ease;
@@ -117,7 +113,7 @@ a {
     padding: 4em 0; }
 
 .site-section-heading {
-  color: #20c997 ;
+  color: #fff;
   position: relative;
   font-size: 2.5rem; }
   @media (min-width: 768px) {
