@@ -14,6 +14,10 @@ body {
   background: #000;
   color: #fff; }
 
+  .icon-menu{
+    color:#20c997 !important;
+  }
+
 a {
   -webkit-transition: .3s all ease;
   -o-transition: .3s all ease;
@@ -112,8 +116,177 @@ a {
   .site-section.site-section-sm {
     padding: 4em 0; }
 
+
+    #registration-page {
+      height:100%;
+
+      display:flex;
+      justify-content: center;
+      align-items: center;
+     
+  }
+  
+  .signup-form  {
+      flex:1;
+      max-width:600px;
+      border-radius: 10px;
+      background-color: #EFF0F1;
+      border: 1px solid #999;
+      margin-top: auto;
+      margin-bottom:  auto;
+    }
+    
+  /* FORM HEADER */
+  .form-header {
+      padding:15px 0;
+      border-bottom:1px solid #cccccc;
+  }
+  
+  .form-header h1 {
+      font-size: 28px;
+      text-align:center;
+      color:#666;
+  }
+  
+  /* FORM BODY */
+  .form-body {
+      background:white;
+      padding:30px;
+  }
+  
+  .row-publi {
+      display:flex; 
+  }
+    
+  .input-group {
+      flex:1;  
+      display:flex;
+      flex-direction:column; 
+      margin:10px 5px;
+  }
+  
+  /* FORM BODY - Gender & Hobbies */
+  .radio-group, .checkbox-group {
+      display:flex;
+    }
+    
+    .radio-group div, .checkbox-group div {
+      flex:1;
+    }
+    
+    .radio-group label, .checkbox-group label  {
+      color:#666;
+      cursor:pointer;
+    }
+  /* FORM BODY - Source of Income & Income */
+    .range-group {
+      display:flex;
+    }
+  
+    .range-group input {
+        flex:1;
+    }
+  
+    .range-group label {
+      margin-left:10px;
+      background-color: #1BBA93;
+      color:white;
+      border-radius: 5px;
+      padding:5px;
+      font-size:17px;
+      text-align:center;
+    }
+  
+  /* MOBILE VIEW */
+  @media only screen and (max-width: 500px) {
+
+  }
+  
+  .container-image {
+    position: relative;
+    width: 50%;
+    align-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+    /* Make the image responsive */
+
+    /* Style the button and place it in the middle of the container/image */
+    .container-image .btn-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        background-color: #555;
+        color: white !important;
+        font-size: 14px;
+        flex-wrap: wrap;
+        margin: auto;
+        text-align: center;
+        border-radius: 50%;
+        padding: 5px;
+        border: none;
+        cursor: pointer;
+        border-radius: 50%;
+        font-weight:bold;
+width:30px !important;
+height:30px !important;
+        align-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+  
+  /* FORM FOTTER */
+  .form-footer {
+      display:flex;
+      justify-content: flex-end;
+      padding:10px;
+  }
+  
+  .btn-publi {
+      padding:10px 20px;
+      background-color: #1BBA93;
+      font-size:17px;
+      border:none;
+      border-radius:5px;
+      color:#bcf5e7;
+      cursor:pointer;
+      text-align: center;
+   }
+  
+   /* INPUT*/
+  
+   .label-publi {
+    color:#1BBA93;
+    font-size: 17px;
+    font-weight: 500;
+  }
+  
+ .input-publi {
+  width:100%;
+  
+  font-size: 18px;
+  height: 34px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #666;
+  border: 1px solid #d6d6d6;
+  border-radius: 4px;
+  background: white;
+  outline: none;
+  }
+  
+  
+  textarea {
+    resize: none;
+    height:100px !important;
+  }
 .site-section-heading {
-  color: #fff;
+  color: #20c997 ;
   position: relative;
   font-size: 2.5rem; }
   @media (min-width: 768px) {
