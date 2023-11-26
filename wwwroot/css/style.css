@@ -14,6 +14,10 @@ body {
   background: #000;
   color: #fff; }
 
+  .icon-menu{
+    color:#20c997 !important;
+  }
+
 a {
   -webkit-transition: .3s all ease;
   -o-transition: .3s all ease;
