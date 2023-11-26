@@ -41,14 +41,16 @@
                     @if (message.user_id_from == chat.user_one)
                     {
                         <span style="">Você: @message.msg_content</span>
+                       <div class="status inactive"></div>
                     }
                     else
                     {
                         <span style="font-weight:bold !important;">@message.msg_content</span>
+                       <div class="status available"></div>
                     }
 
           
-                <div class="status available"></div>
+             
             </div>
 
             <br />
