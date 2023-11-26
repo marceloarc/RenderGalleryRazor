@@ -23,10 +23,10 @@
                 <a href="#" class="social-icon a-login"><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social-icon a-login"><i class="fab fa-linkedin-in"></i></a>
             </div> *@
-            <span class="sub-text">Ou use seu e-mail para se registrar</span>
+           @*  <span class="sub-text">Ou use seu e-mail para se registrar</span> *@
             <span asp-validation-for="Error" class="text-danger"></span>
             <input asp-for="File" style="display:none;" type="file" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])" placeholder="Foto" id="input-pic" class="input-text" />
-            <img src="~/images/user.jpg" id="output" width="70" />
+            <img style="cursor:pointer;" src="~/images/user.jpg" id="output" width="70" />
             <input asp-for="Nome" type="text" placeholder="Nome" class="input-text" />
             <span asp-validation-for="Nome" class="text-danger"></span>
             <input asp-for="Email" type="email" placeholder="Email" class="input-email" />
@@ -45,7 +45,7 @@
                 <a href="#" class="social-icon a-login"><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social-icon a-login"><i class="fab fa-linkedin-in"></i></a>
             </div> *@
-            <span class="sub-text">Ou use sua conta</span>
+           @*<span class="sub-text">Ou use sua conta</span> *@
             <span asp-validation-for="Error" class="text-danger"></span>
             <input asp-for="Email" type="email" placeholder="Email" class="input-email" />
             <span asp-validation-for="Email" class="text-danger"></span>
