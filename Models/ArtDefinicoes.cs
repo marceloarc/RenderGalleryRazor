@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static RenderGallery.Models.ArtDefinicoes;
 
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     public class ArtDefinicoes
     {
         [Key] 
         public int Id { get; set; }
-        [EnumDataType(typeof(categorias))]
+        [EnumDataType(typeof(categoriaTipo))]
         [Required]
-        public categorias categoriaProduct { get; set; }
-        public enum categorias { digital = 0, fisico = 1 }
+        public categoriaTipo categoriaProduct { get; set; }
+        public enum categoriaTipo { digital = 0, fisico = 1 }
         [EnumDataType(typeof(tipo))]
         [Required]
         public tipo tipoProduct { get; set; }

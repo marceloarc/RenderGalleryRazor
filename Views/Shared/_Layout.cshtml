@@ -1,4 +1,18 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@using RenderGalleyRazor.Models;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+
+@{
+    var user_id = 0;
+    var categorias = dbContext.Categorias.ToList();
+    if (SignInManager.IsSignedIn(User))
+    {
+
+        var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+        user_id = user.Id;
+    }
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +28,7 @@
     <link rel="stylesheet" href="~/css/jquery-ui.css">
     <link rel="stylesheet" href="~/css/owl.carousel.min.css">
     <link rel="stylesheet" href="~/css/owl.theme.default.min.css">
-    
+    <link rel="stylesheet" href="~/css/login.css">
     <link rel="stylesheet" href="~/css/lightgallery.min.css">
 
     <link rel="stylesheet" href="~/css/bootstrap-datepicker.css">
@@ -26,113 +40,128 @@
     <link rel="stylesheet" href="~/css/aos.css">
 
     <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/login.css">
+    <link rel="stylesheet" href="~/css/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="~/css/cart.css">
+    <link rel="stylesheet" href="~/css/message.css">
+    <script src="~/js/modernizr.js"></script>
 </head>
 <body>
 
-  <div class="site-wrap">
+    <div class="site-wrap">
 
-    <div class="site-mobile-menu">
-      <div class="site-mobile-menu-header">
-        <div class="site-mobile-menu-close mt-3">
-          <span class="icon-close2 js-menu-toggle"></span>
+        <div class="site-mobile-menu">
+            <div class="site-mobile-menu-header">
+                <div class="site-mobile-menu-close mt-3">
+                    <span class="icon-close2 js-menu-toggle"></span>
+                </div>
+            </div>
+            <div class="site-mobile-menu-body"></div>
         </div>
-      </div>
-      <div class="site-mobile-menu-body"></div>
-    </div>
-    
 
 
 
-    <header class="site-navbar py-3" role="banner">
 
-      <div class="container-fluid">
-        <div class="row align-items-center">
+        <header class="site-navbar py-3" role="banner">
 
-          <div class="col-6 col-xl-2" data-aos="fade-down">
-                        <h1 class="mb-0"><a href="~/Home" class="text-white h2 mb-0">Render Gallery</a></h1>
-          </div>
-          <div class="col-10 col-md-8 d-none d-xl-block" data-aos="fade-down">
-            <nav class="site-navigation position-relative text-right text-lg-center" role="navigation">
+            <div class="container-fluid">
+                <div class="row align-items-center">
 
-              <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
+                    <div class="col-6 col-xl-2" data-aos="fade-down">
+                        <img src="~/images/render.png" width="200"><a href="~/Home" class="text-white h2 mb-0"></a></img>
+                    </div>
+                    <div class="col-10 col-md-8 d-none d-xl-block" data-aos="fade-down">
+                        <nav class="site-navigation position-relative text-right text-lg-center" role="navigation">
+
+                            <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
                                 <li class="active"><a href="~/Home">Início</a></li>
-                <li class="has-children">
-                  <a href="single.html">Galeria</a>
-                  <ul class="dropdown">
-                                        @foreach (var category in ViewBag.categorias)
+                                <li class="has-children">
+                                    <a href="">Galeria</a>
+                                    <ul class="dropdown">
+                                        @foreach (var category in categorias)
                                         {
                                             <li><a href="~/Home/Galeria/@category.Id">@category.Nome</a></li>
                                         }
-                                  
-@*                    <li class="has-children">
-                      <a href="#">Sub Menu</a>
-                      <ul class="dropdown">
-                        <li><a href="#">Menu One</a></li>
-                        <li><a href="#">Menu Two</a></li>
-                        <li><a href="#">Menu Three</a></li>
-                      </ul>
-                    </li> *@
-                  </ul>
-                </li>
-                <li><a href="services.html">Planos</a></li>
-                <li class="active"><a href="about.html">Sobre</a></li>
-                <li><a href="contact.html">Contato</a></li>
-              </ul>
-            </nav>
-          </div>
 
-          <div class="col-6 col-xl-2 text-right" data-aos="fade-down">
-            <div class="d-none d-xl-inline-block">
-              <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-right mb-0" data-class="social">
-                <li>
-                  <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
-                </li>
-                <li>
-                  <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                </li>
-                <li>
-                  <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                </li>
-                <li>
-                  <a href="#" class="pl-3 pr-3"><span class="icon-youtube-play"></span></a>
-                </li>
-              </ul>
+                                        @*                    <li class="has-children">
+                                        <a href="#">Sub Menu</a>
+                                        <ul class="dropdown">
+                                        <li><a href="#">Menu One</a></li>
+                                        <li><a href="#">Menu Two</a></li>
+                                        <li><a href="#">Menu Three</a></li>
+                                        </ul>
+                                        </li> *@
+                                    </ul>
+                                </li>
+                                <li><a href="services.html">Planos</a></li>
+                                <li class="active"><a href="about.html">Sobre</a></li>
+                                <li><a href="contact.html">Contato</a></li>
+                                @* <li><a asp-controller="cart" asp-action="carrinho">Carrinho</a></li> *@
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <partial name="_LoginPartial.cshtml"/>
+
+                </div>
             </div>
 
-            <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
-
-          </div>
-
-        </div>
-      </div>
-      
-    </header>
+        </header>
 
 
 
-    <div class="container-fluid" data-aos="fade" data-aos-delay="500">
+        <div class="container-fluid" data-aos="fade" data-aos-delay="500">
 
             <main role="main" class="pb-3">
                 @RenderBody()
             </main>
+        </div>
+
+        <div class="footer py-4">
+            <div class="container-fluid text-center">
+                <p>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Render Gallery &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
+            </div>
+        </div>
+
+
+
+
+
     </div>
+    <div class="modal" id="modal1" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color:rgba(10, 14, 14, 0.95); color:white;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chat</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="--dark-theme" id="chat" chat_id="" to_id="">
+                        <div class="chat__conversation-board" id="content-chat">
+                        </div>
+                        <div class="chat__conversation-panel">
+                            <div class="chat__conversation-panel__container">
 
-    <div class="footer py-4">
-      <div class="container-fluid text-center">
-        <p>
-          <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-          Render Gallery &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script>
-          <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-        </p>
-      </div>
+                                <input class="chat__conversation-panel__input panel-item" id="msg-content" placeholder="Type a message..." />
+                                <button class="chat__conversation-panel__button panel-item btn-icon send-message-button" id="send-msg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-reactid="1036">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    
-
-    
-    
-  </div>
-
     <script src="~/js/jquery-3.3.1.min.js"></script>
     <script src="~/js/jquery-migrate-3.0.1.min.js"></script>
     <script src="~/js/jquery-ui.js"></script>
@@ -141,20 +170,102 @@
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/jquery.stellar.min.js"></script>
     <script src="~/js/jquery.countdown.min.js"></script>
-  <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
     <script src="~/js/bootstrap-datepicker.min.js"></script>
     <script src="~/js/swiper.min.js"></script>
     <script src="~/js/aos.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/picturefill.min.js"></script>
     <script src="~/js/lightgallery-all.min.js"></script>
     <script src="~/js/jquery.mousewheel.min.js"></script>
 
     <script src="~/js/main.js"></script>
-  
-  <script>
+<script>
+    $("#cart").click(function () {
+        OpenCloseCart();
+    })
+        $("#message").click(function () {
+            OpenCloseMessages();
+        })
+    function OpenCloseCart(){
+            if ($("#cd-cart").hasClass("speed-in")) {
+                $("#cd-cart").removeClass("speed-in");
+            } else {
+                $("#cd-cart").addClass("speed-in");
+            }
+        
+    }
+        function updateChat(id) {
+            $("#content-chat").html("");
+            var url = "/Chat/Chat/2?to=" + id;
+            $.get(url, function (data) {
+                $("#content-chat").html(data);
+                $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
+            });
+            var url = "/Chat/Messages";
+            $.get(url, function (data) {
+                $("#cd-message").html(data);
+            });
+        }
 
-  </script>
+        $(document).on('keypress', function (e) {
+            if (e.which == 13) {
+                $("#send-msg").click();
+            }
+        });
+        $("#send-msg").click(function () {
+
+
+            var msg = $("#msg-content").val();
+            var from = @user_id;
+            var to = $("#chat").attr("to_id");
+            var formData = new FormData();
+            var cid = $("#chat").attr("chat_id");
+
+            formData.append("msg", msg);
+            formData.append("to", to);
+            formData.append("from", from);
+            formData.append("cid", cid);
+            if (msg.trim() != "") {
+                $.ajax({
+                    dataType: "json",
+                    type: "POST",
+                    url: "/Chat/Enviar",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function (retorno) {
+                        console.log(retorno);
+                        updateChat(to);
+                        $("#msg-content").val("");
+                        $("#msg-content").focus();
+                    }
+                });
+            }
+        })
+
+        function OpenCloseMessages() {
+            if ($("#cd-message").hasClass("speed-in")) {
+                $("#cd-message").removeClass("speed-in");
+            } else {
+                $("#cd-message").addClass("speed-in");
+            }
+
+        }
+    $(document).ready(function () {
+            var url = "/Cart/Produtos";
+            $.get(url, function (data) {
+                $("#cd-cart").html(data);
+            });
+
+            var url = "/Chat/Messages";
+            $.get(url, function (data) {
+                $("#cd-message").html(data);
+            });
+    })
+
+</script>
 
 </body>
 </html>

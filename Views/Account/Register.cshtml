@@ -1,0 +1,98 @@
+﻿@using RenderGalleyRazor.Models;
+@model VMRegistro
+
+<style>
+    body {
+    }
+
+    .pb-3 {
+        justify-content: center !important;
+        align-items: center !important;
+        display: flex !important;
+        height: 80vh !important;
+    }
+</style>
+
+
+<div class="container-login" id="container-login">
+    <div class="form-container sign-up-container">
+        <form class="form-login" method="post" EncType="multipart/form-data" action="/Account/Register">
+            <h1 class="title ">Registre-se</h1>
+@*             <div class="social-container">
+                <a href="#" class="social-icon a-login"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon a-login"><i class="fab fa-google-plus-g"></i></a>
+                <a href="#" class="social-icon a-login"><i class="fab fa-linkedin-in"></i></a>
+            </div> *@
+           @*  <span class="sub-text">Ou use seu e-mail para se registrar</span> *@
+            <span asp-validation-for="Error" class="text-danger"></span>
+            <input asp-for="File" style="display:none; cursor:pointer;" type="file" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])" placeholder="Foto" id="input-pic" class="input-text" />
+            <img style="cursor:pointer;" src="~/images/user.jpg" id="output" width="70" />
+            <input asp-for="Nome" type="text" placeholder="Nome" class="input-text" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+            <input asp-for="Email" type="email" placeholder="Email" class="input-email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+            <input asp-for="Password" type="password" placeholder="Senha" class="input-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+            <button formaction="~/Account/Register" class="btn-register btn-login" type="submit">Registrar-se</button>
+
+        </form>
+    </div>
+    <div class="form-container sign-in-container">
+        <form class="form-login" method="post" action="/Account/Login">
+            <h1 class="title">Login</h1>
+@*             <div class="social-container">
+                <a href="#" class="social-icon a-login"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon a-login"><i class="fab fa-google-plus-g"></i></a>
+                <a href="#" class="social-icon a-login"><i class="fab fa-linkedin-in"></i></a>
+            </div> *@
+      @*       <span class="sub-text">Ou use sua conta</span> *@
+            <span asp-validation-for="Error" class="text-danger"></span>
+            <input asp-for="Email" type="email" placeholder="Email" class="input-email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+            <input asp-for="Password" type="password" placeholder="Senha" class="input-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+            <a href="#" class="forgot-password a-login">Esqueceu sua senha?</a>
+            <button formaction="~/Account/Login" class="button-login btn-login" type="submit">Login</button>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay-login">
+            <div class="overlay-panel overlay-left">
+                <h1 class="title">Bem vindo de volta!</h1>
+                <p class="description">Para se manter conectado, faça login com suas informações pessoais</p>
+                <button class="ghost-btn btn-login" id="signIn">Login</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h1 class="title">Bem vindo!</h1>
+                <p class="description">Realize o login para acessar sua conta ou cadastre-se gratuitamente.</p>
+                <button class="ghost-btn btn-login" id="signUp">Registre-se</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+
+    @if (ViewBag.btn == "register")
+    {
+        <text>
+                $("#container-login").addClass("right-panel-active");
+         </text>
+    }
+    $("#output").click(function(){
+        $("#input-pic").click();
+    })
+        $("#signUp").click(function () {
+            $("#container-login").addClass("right-panel-active");
+            $(".text-danger").hide();
+        })
+        $("#signIn").click(function () {
+            $("#container-login").removeClass("right-panel-active");
+            $(".text-danger").hide();
+        })
+
+
+    }
+
+</script>

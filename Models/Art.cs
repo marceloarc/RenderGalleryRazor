@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RenderGallery.Models
+namespace RenderGalleyRazor.Models
 {
     public class Art
     {
@@ -19,8 +19,6 @@ namespace RenderGallery.Models
 
         public int categoria_id { get; set; }
 
-        public int like { get; set; }
-        public int deslike { get; set; }
 
         public int publi_id { get; set; }
 

@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RenderGallery.Models;
+using RenderGalleyRazor.Models;
 
 namespace RenderGallery.Controllers
 {
-    [ApiController]
-    [Route("cart")]
     public class CartController : Controller
     {
         private readonly DatabaseContext db;
@@ -14,61 +12,100 @@ namespace RenderGallery.Controllers
         {
             this.db = db;
         }
-
-        [HttpGet("[action]/{id?}")]
-        public async Task<IActionResult> Cart(int Id)
+        [HttpGet]
+        public IActionResult Carrinho()
         {
-            if(Id != null)
-            {
-                User userDetails = db.Users.Where(x => x.Id == Id).FirstOrDefault();
 
-                if(userDetails != null) {
-                    Cart cart = db.Carts.Where(x => x.User_id == Id).FirstOrDefault();
-                    TempData["cart"] = cart;
-                }
-            }
-            return Json(TempData);
+            return View();
         }
 
-        public async Task<IActionResult> AddItem(ProdutoCarrinho produto)
+        public JsonResult AddItem(int art_id, int quantidade)
         {
-           if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                if(produto.cart_id > 0)
+                int user_id = 0;
+                if (User.Identity.IsAuthenticated)
                 {
-                    Cart cart = db.Carts.Where(x => x.Id == produto.cart_id).FirstOrDefault();
-
-                    cart.Produtos.Add(produto);
-
-                    db.SaveChanges();
+                    User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                    user_id = user.Id;
                 }
                 else
                 {
-                    Cart cart = new Cart();
-
-                    cart.User_id = (int)produto.User_id;
-                    cart.Produtos.Add(produto);
-                    db.Carts.Add(cart);
-                    db.SaveChanges();
+                    return Json(TempData["n"] = "erro-1");
                 }
-                TempData["success"] = "Produto adicionado com sucesso!";
+
+                if (user_id > 0)
+                {
+                    Art art = db.Arts.Where(x=> x.Id == art_id).FirstOrDefault();
+
+                    if(art!= null)
+                    {
+
+
+                        ProdutoCarrinho produto = new ProdutoCarrinho();
+
+                        produto = db.Produtos.Where(x => x.art_id == art_id && x.User_id == user_id).FirstOrDefault();
+
+                        if(produto == null)
+                        {
+                            produto = new ProdutoCarrinho();
+                            produto.art_id = art_id;
+                            produto.publi_id = art.publi_id;
+                            produto.User_id = user_id;
+                            produto.Quantidade = quantidade;
+                            db.Produtos.Add(produto);
+                      
+                        }
+                        else
+                        {
+                            produto.Quantidade += quantidade;
+                         
+                        }
+
+                        db.SaveChanges();
+                        return Json(TempData["s"] = "sucesso");
+
+                    }
+ 
+                
+                }
+
 
             }
-            else
-            {
-                TempData["error"] = "Algum dado está faltando ou incorreto!";
-                
-            }
-            return Json(TempData);
+            return Json(TempData["n"]="erro");
         }
 
-        [HttpGet("[action]/{id?}")]
-        public async Task<IActionResult> RemoveItem(int id)
+        public IActionResult Produtos() {
+            int user_id = 0;
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+
+            }
+
+            List<ProdutoCarrinho> produtos = db.Produtos.Where(x => x.User_id == user_id).ToList();
+
+            if(produtos.Count > 0)
+            {
+                ViewBag.produtos = produtos;
+
+
+            }
+
+         
+            return View(); 
+        
+        
+        }
+
+ 
+        public JsonResult RemoveItem(int product_id)
         {
-           if(id>0)
+           if(product_id > 0)
             {
 
-               db.Produtos.Where(x => x.Id == id).ExecuteDelete();
+               db.Produtos.Where(x => x.Id == product_id).ExecuteDelete();
                db.SaveChanges();
                TempData["success"] = "Produto deletado com sucesso!";
            
