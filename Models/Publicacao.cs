@@ -19,7 +19,7 @@ namespace RenderGalleyRazor.Models
         [ForeignKey("User_id")]
         public virtual User? User { get; set; }
 
-        public virtual List<Art>? Artes { get; set; }
+        public virtual List<Art> Artes { get; set; }
 
         [NotMapped]
         public string? Error { get; set; }
