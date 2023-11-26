@@ -7,21 +7,18 @@
     .day{
         position: absolute;
         z-index: 1;
-        top: 15px;
-       
+        top: -7px;
         background-color:red;
         border-radius:100%;
-        width:18px;
-        height:18px;
+        width:15px;
+        height:15px;
         text-align: center;
-    }
-    .day span{
-        color:white;
-        font-size:12px;
-        position:absolute;
-        font-weight:bold;
-        right:3px;
-            text-align: center;
+        color: white;
+        font-size: 9px;
+        position: absolute;
+        font-weight: bold;
+        overflow:hidden;
+        text-align: center;
     }
 </style>
 
@@ -58,9 +55,9 @@
                 </li>
 
                 <li id="message">
-                    <div class="day">
-                        <span class="message_total">@total_conversa</span>
-                    </div>
+                
+                        <span class="message_total day">@total_conversa</span>
+                  
                     <a href="#" class="pl-0 pr-3"><i class="fa-solid fa-message fa-xl"></i></a>
                 </li>
 
