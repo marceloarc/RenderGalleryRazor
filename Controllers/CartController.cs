@@ -19,10 +19,16 @@ namespace RenderGallery.Controllers
             return View();
         }
 
-        public JsonResult AddItem(int art_id, int quantidade)
+        public JsonResult AddItem(int art_id, int quantidade, string? plan)
         {
             if (ModelState.IsValid)
             {
+
+                if (plan != null) 
+                { 
+
+
+                }
                 int user_id = 0;
                 if (User.Identity.IsAuthenticated)
                 {

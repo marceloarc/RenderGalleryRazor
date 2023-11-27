@@ -46,8 +46,47 @@
     <link rel="stylesheet" href="~/css/message.css">
     <script src="~/js/modernizr.js"></script>
 </head>
-<body>
+<style>
+    .backgroud-dark {
+        display: none;
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        z-index: 1 !important;
+        background: rgba(0, 0, 0, 0.8);
+    }
 
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 9999999999999999 !important;
+        padding-top: 60px;
+        left: 0;
+        top: 0;
+        width: 40%;
+        height: 40%;
+        text-align: center;
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+        .lightbox img {
+            width: 80%;
+            height: auto;
+        }
+
+</style>
+<body>
+    <div class="lightbox" id="lightbox">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img src="" alt="" id="lightbox-img">
+        <div id="caption"></div>
+    </div>
+    <div class="backgroud-dark" id="dark">
+    </div>
     <div class="site-wrap">
 
         <div class="site-mobile-menu">
@@ -68,13 +107,13 @@
                 <div class="row align-items-center">
 
                     <div class="col-6 col-xl-2" data-aos="fade-down">
-                        <img src="~/images/render.png" width="200"><a href="~/Home" class="text-white h2 mb-0"></a></img>
+                        <img src="~/images/render.png" width="200"><a href="~/Home" class="text-white h2 mb-0"></a>
                     </div>
                     <div class="col-10 col-md-8 d-none d-xl-block" data-aos="fade-down">
                         <nav class="site-navigation position-relative text-right text-lg-center" role="navigation">
 
                             <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
-                                <li class="active"><a href="~/Home">Início</a></li>
+                                <li ><a href="~/Home">Início</a></li>
                                 <li class="has-children">
                                     <a href="">Galeria</a>
                                     <ul class="dropdown">
@@ -93,9 +132,15 @@
                                         </li> *@
                                     </ul>
                                 </li>
-                                <li><a href="services.html">Planos</a></li>
-                                <li class="active"><a href="about.html">Sobre</a></li>
-                                <li><a href="contact.html">Contato</a></li>
+                                <li><a href="~/Home/Planos">Planos</a></li>
+                                <li><a href="~/Home/About">Contato</a></li>
+                                <li>
+                                    <form class="search-box" method="post" action="/Art/Search">
+                                      
+                                        <button type="button" class="btn-search">Buscar</button>
+                                        <input type="text" class="input-search" name="search" placeholder="Digite para pesquisar">
+                                    </form>
+                                </li>
                                 @* <li><a asp-controller="cart" asp-action="carrinho">Carrinho</a></li> *@
                             </ul>
                         </nav>
@@ -132,7 +177,7 @@
 
 
     </div>
-    <div class="modal" id="modal1" tabindex="-1" role="dialog">
+    <div class="modal" id="modal1" tabindex="-1" role="dialog" style="z-index:999999999999999999999999999999999999;">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="background-color:rgba(10, 14, 14, 0.95); color:white;">
                 <div class="modal-header">
@@ -148,7 +193,7 @@
                         <div class="chat__conversation-panel">
                             <div class="chat__conversation-panel__container">
 
-                                <input class="chat__conversation-panel__input panel-item" id="msg-content" placeholder="Type a message..." />
+                                <input class="chat__conversation-panel__input panel-item" id="msg-content" placeholder="Escreva uma mensagem..." />
                                 <button class="chat__conversation-panel__button panel-item btn-icon send-message-button" id="send-msg">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-reactid="1036">
                                         <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -184,6 +229,8 @@
     $("#cart").click(function () {
         OpenCloseCart();
     })
+
+
         $("#message").click(function () {
             OpenCloseMessages();
         })
@@ -244,6 +291,8 @@
                 });
             }
         })
+
+
 
         function OpenCloseMessages() {
             if ($("#cd-message").hasClass("speed-in")) {

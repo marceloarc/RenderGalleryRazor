@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@using RenderGalleyRazor.Models;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+@model Publicacao
+@{
+    var categorias = dbContext.Categorias.ToList();
+}
+<section id="registration-page">
+    <form class="signup-form" method="post" EncType="multipart/form-data" action="/Publicacao/Create">
+        <!-- FORM HEADER -->
+        <div class="form-header">
+            <h1>Criar Publicação</h1>
+        </div>
+        <!-- FORM BODY -->
+        <div class="form-body">
+
+            <span asp-validation-for="Error" class="text-danger"></span>
+            <!-- Email -->
+            <div class="row-publi">
+                <div class="input-group">
+                    <label>Titulo </label>
+                    <input class="input-publi" asp-for="Nome" type="text" placholder="Enter your email address">
+                </div>
+            </div>
+            <div class="row-publi">
+                <div class="input-group">
+                    <label for="">Descrição</label>
+                    <textarea class="input-publi" asp-for="Descricao"> </textarea>
+                </div>
+            </div>
+  
+            <!-- Upload Profile Picure & Age -->
+            <div  id="art-rows">
+                <div class="myRows">
+                  
+                </div>
+
+            </div>
+
+            <div class="input-group">
+        
+                <div class="btn-publi" id="add-row"><i class="fa-solid fa-plus fa-lg"></i> Adicionar arte</div>
+            </div>
+
+        </div>
+        <!--  FORM FOOTER   -->
+        <div class="form-footer">
+            <button class="btn-publi">Criar publicação</button>
+        </div>
+    </form>
+</section>
+<script>
+    window.onload = function () {
+        $("#add-row").click(function () {
+            var nextId = $(".myRows").length-1;
+            var url = "/Publicacao/Arte/" + nextId;
+            $.get(url, function (data) {
+                $("#art-rows").append(data);
+            });
+        });
+    }
+</script>

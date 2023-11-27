@@ -3,7 +3,25 @@
 @inject RenderGalleyRazor.Models.DatabaseContext dbContext
 
 <style>
+    .dropdown2 {
+  position: relative;
+  display: inline-block;
+}
 
+.dropdown-content2 {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+  left:-80px;
+}
+
+.dropdown2:hover .dropdown-content2 {
+  display: block;
+}
     .day{
         position: absolute;
         z-index: 1;
@@ -21,10 +39,24 @@
         text-align: center;
 
     }
-
+    .active2{
+        color: #3498DB !important;
+    }
+    .active2:before{
+            position: absolute;
+            content: "\e313";
+            font-size: 16px;
+            top: 50%;
+            right: -15px;
+            -webkit-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            font-family: 'icomoon';
+    }
     .hide{
         display:none;
     }
+
 
 </style>
 
@@ -56,25 +88,39 @@
     <div class="col-6 col-xl-2 text-right" data-aos="fade-down">
         <div class="d-none d-xl-inline-block">
             <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-right mb-0" data-class="social">
+
                 <li id="cart">
                    
                         <span class="product_total day">@total</span>
 
 
-                    <a href="#" class="pl-0 pr-3"><i class="fa fa-shopping-cart fa-lg" style="color:#20c997;" aria-hidden="true"></i></a>
+                    <a href="#" class="pl-0 pr-3"><i class="fa fa-shopping-cart fa-lg" style="color:#3498DB;" aria-hidden="true"></i></a>
                 </li>
 
                 <li id="message">
               
                         <span class="message_total day @hide">@total_conversa</span>
 
-                    <a href="#" class="pl-0 pr-3"><i class="fas fa-comments fa-lg"  style="color:#20c997;"></i></a>
+                    <a href="#" class="pl-0 pr-3"><i class="fas fa-comments fa-lg" style="color:#3498DB;"></i></a>
                 </li>
 
+
+
                 <li>
-                    <form method="post" asp-controller="account" asp-action="logout">
-                        <button type="submit" style="width: auto" class="nav-link btn btn-link py-0">@user.Name - Sair</button>
-                    </form>
+                    <div class="dropdown2">
+                        <a class="active2">@user.Name</a>
+                        <div class="dropdown-content2">
+
+                            <a style="width: auto; color: black;" class="nav-link btn btn-link py-0" href="~/Publicacao/Create">Nova publicação</a>
+                            <form method="post" asp-controller="account" asp-action="logout">
+                                <button type="submit" style="width: auto; color: black;" class="nav-link btn btn-link py-0">Sair</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+
+           
                 </li>
             </ul>
         </div>
@@ -99,7 +145,7 @@ else
                     <div class="col-6 col-xl-2 text-right" data-aos="fade-down">
                         <div class="d-none d-xl-inline-block">
                             <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-right mb-0" data-class="social">
-                                <li><a asp-controller="account" asp-action="register">Login</a></li>
+                                <li><a asp-controller="account" asp-action="register">Login/Cadastro</a></li>
                             </ul>
                         </div>
 

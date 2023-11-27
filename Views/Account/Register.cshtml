@@ -11,6 +11,47 @@
         display: flex !important;
         height: 80vh !important;
     }
+
+    .container-image {
+        position: relative;
+        width: 50%;
+        align-content:center;
+        align-items:center;
+        text-align:center;
+    }
+
+        /* Make the image responsive */
+
+        /* Style the button and place it in the middle of the container/image */
+        .container-image .btn-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+    
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            background-color: #555;
+            color: white !important;
+            font-size: 14px;
+            flex-wrap: wrap;
+            margin: auto;
+            text-align: center;
+            border-radius: 50%;
+            padding: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            font-weight:bold;
+  width:30px !important;
+  height:30px !important;
+            align-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+            .container .btn:hover {
+                background-color: black;
+            }
 </style>
 
 
@@ -26,7 +67,13 @@
            @*  <span class="sub-text">Ou use seu e-mail para se registrar</span> *@
             <span asp-validation-for="Error" class="text-danger"></span>
             <input asp-for="File" style="display:none; cursor:pointer;" type="file" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])" placeholder="Foto" id="input-pic" class="input-text" />
-            <img style="cursor:pointer;" src="~/images/user.jpg" id="output" width="70" />
+            <div class="container-image">
+                <img style="cursor:pointer; -webkit-box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);
+-moz-box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);
+box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);" src="~/images/user.jpg" id="output" width="70" />
+                <a class="btn-center"><i class="fa fa-plus" aria-hidden="true"></i></a>
+            </div>
+
             <input asp-for="Nome" type="text" placeholder="Nome" class="input-text" />
             <span asp-validation-for="Nome" class="text-danger"></span>
             <input asp-for="Email" type="email" placeholder="Email" class="input-email" />
@@ -80,9 +127,13 @@
                 $("#container-login").addClass("right-panel-active");
          </text>
     }
-    $("#output").click(function(){
+      $(".container-image").click(function () {
         $("#input-pic").click();
     })
+        $("#input-pic").change(function(){
+            $('.btn-center').hide();
+        });
+        $('.btn-center').off('click');
         $("#signUp").click(function () {
             $("#container-login").addClass("right-panel-active");
             $(".text-danger").hide();

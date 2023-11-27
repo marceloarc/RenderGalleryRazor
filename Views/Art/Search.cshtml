@@ -164,8 +164,8 @@
                 int likes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isLike == true).Count();
                 int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
 
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
-                    <img src="~/@art.Path" alt="IMage" onclick="openLightbox('/@art.Path','@art.Arte')" class="img-fluid hover">
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-src="~/@art.Path" data-aos="fade" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
+                    <img src="~/@art.Path" alt="IMage" onclick="teste('@art.publi_id','@art.Id')" class="img-fluid hover">
                     <div class="middle">
 
                         <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
@@ -222,9 +222,12 @@
 
 
 </div>
-
+<div id="teste123" style="display:none;">
+</div>
 
 <script type="text/javascript">
+
+
 
     window.onload = function () {
 
@@ -287,7 +290,6 @@
                 }
             });
         })
-
 
         $(".msg").click(function () {
             $("#msg-content").val("");
@@ -448,6 +450,13 @@
 
 </script>
 <script>
+    function teste(publi_id, art_id) {
+        var url = "/Art/PubliArts/?publi_id=" + publi_id + "&art_id=" + art_id;
+        $.get(url, function (data) {
+            $("#teste123").html(data);
+        });
+    }
+
     // Abre a lightbox com a imagem clicada
     function openLightbox(imageSrc, captionText) {
         document.getElementById('lightbox-img').src = imageSrc;
