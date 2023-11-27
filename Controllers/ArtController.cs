@@ -77,17 +77,38 @@ namespace RenderGallery.Controllers
                     
                     if(like != null)
                     {
-                        if (isLike)
+                        bool like2 = false;
+                        bool deslike2 = false;
+                        if (isLike && !like.isLike)
                         {
-                            like.isLike = true;
-                            like.isDeslike = false;
+                            like2 = true;
+                            deslike2 = false;
                         }
                         
-                        if(isDeslike)
+                        if(isDeslike && !like.isDeslike)
                         {
-                            like.isDeslike = true;
-                            like.isLike = false;
+                            like2 = false;
+                            deslike2 = true;
                         }
+
+                        if(isLike && like.isLike)
+                        {
+
+                            like2 = false;
+                            deslike2 = false;
+                        }
+
+
+                        if (isDeslike && like.isDeslike)
+                        {
+
+                            like2 = false;
+                            deslike2 = false;
+                        }
+
+                        like.isLike = like2;
+                        like.isDeslike = deslike2;
+
                     }
                     else
                     {
