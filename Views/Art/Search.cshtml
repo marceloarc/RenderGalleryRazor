@@ -1,0 +1,465 @@
+﻿@{
+    ViewData["Title"] = ViewBag.Title;
+}
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> SignInManager;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext;
+
+@{
+    var user_id = 0;
+    if (SignInManager.IsSignedIn(User))
+    {
+
+        var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+        user_id = user.Id;
+    }
+}
+
+<style>
+    .modal-backdrop {
+        z-index: -1;
+    }
+
+    .middle {
+        display: none;
+        position: absolute;
+        top: 95%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        background-color: rgba(10, 14, 14, 0.50);
+        color: white;
+        font-size: 12px;
+        padding: 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+
+
+    .middle2 {
+        display: none;
+        position: absolute;
+        top: 9%;
+        left: 92%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        padding: 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 80px;
+    }
+
+    .item-btn {
+        cursor: pointer;
+        background-color: black;
+        color: #3498DB;
+        border-radius: 25px;
+        border: 0;
+    }
+
+    .item-image {
+        margin: 10px !important;
+        height: 30px;
+        width: 3px;
+    }
+
+    .item-image-like {
+        height: 30px;
+        width: 30px;
+        margin: 0px 5px !important;
+        font-size: 12px;
+    }
+
+    .item-image-profile {
+        float: left;
+        height: 30px;
+        width: 150px;
+        margin-left: 10px;
+    }
+
+    .item-image-like .icone {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @@media (min-width: 1281px) {
+        .item-image-like {
+            height: 40px;
+            width: 40px;
+            margin: 0px 5px !important;
+            font-size: 14px;
+        }
+
+        .item-image-profile {
+            float: left;
+            height: 40px;
+            width: 180px;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .middle2 {
+            display: none;
+            position: absolute;
+            top: 9%;
+            left: 90%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 80px;
+        }
+    }
+
+    #lightgallery .item:hover .middle {
+        display: block;
+    }
+
+    #lightgallery .item:hover .middle2 {
+        display: block;
+    }
+
+    #lightgallery .item:hover .item {
+        background: rgba(10, 14, 14, 0.50) !important;
+    }
+
+
+    .hover {
+        cursor: pointer;
+    }
+
+</style>
+
+<div class="site-section" data-aos="fade">
+    <div class="container-fluid">
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-7">
+                <div class="row mb-5">
+                    <div class="col-12 ">
+                        <h2 class="site-section-heading text-center">@ViewBag.Title</h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" id="lightgallery">
+
+            @foreach (var art in ViewBag.arts)
+            {
+                int art_id = art.Id;
+                int likes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isLike == true).Count();
+                int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
+
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
+                    <img src="~/@art.Path" alt="IMage" onclick="openLightbox('/@art.Path','@art.Arte')" class="img-fluid hover">
+                    <div class="middle">
+
+                        <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
+                            <i class="far fa-user-circle fa-xl " aria-hidden="true"></i>
+                            <a>@art.Publicacao.User.Name</a>
+                        </button>
+
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+
+                            <button class="item-btn item-image-like msg" style="" user_id="@art.Publicacao.User.Id">
+                                <i class="far fa-comments fa-lg icone"></i>
+
+                            </button>
+
+                        }
+
+
+                        <button class="item-btn item-image-like" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                            <i class="far fa-heart fa-lg icone"></i>
+
+                        </button>
+
+
+                        <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                            <i class="fas fa-cart-plus icone"></i>
+
+                        </button>
+
+
+                    </div>
+
+                    <div class="middle2">
+
+
+                        <button class="item-btn item-image-like like" is_like="1" style="margin-top:10px !important;" art_id="@art.Id" style="" user_id="@art.Publicacao.User.Id">
+                            <i class="far fa-thumbs-up fa-lg"></i>
+                            @likes
+                        </button>
+                        <button class="item-btn item-image-like like" is_like="0" style="margin-top:10px !important;" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                            <i class="far fa-thumbs-down fa-lg"></i>
+                            @deslikes
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            }
+        </div>
+    </div>
+
+
+</div>
+
+
+<script type="text/javascript">
+
+    window.onload = function () {
+
+
+        setInterval(function () {
+
+
+
+            if ($(".chat__conversation-board")[0].scrollHeight - $(".chat__conversation-board").scrollTop() == $(".chat__conversation-board").outerHeight()) {
+                var id = $("#chat").attr("to_id");
+                updateChat(id);
+            }
+
+
+        }, 5000);
+
+        $(".like").click(function () {
+            var btn = $(this)
+            var formData = new FormData();
+            var art_id = $(this).attr("art_id");
+            var user_id = @user_id;
+            var is_like = $(this).attr("is_like");
+
+            if (user_id == 0) {
+                alert("deslogado!");
+                return
+            }
+
+            formData.append("art_id", art_id);
+            formData.append("user_id", user_id);
+
+            if (is_like == 1) {
+                formData.append("isLike", true);
+                formData.append("isDeslike", false);
+            } else {
+                formData.append("isLike", false);
+                formData.append("isDeslike", true);
+            }
+
+            $.ajax({
+                dataType: "json",
+                type: "POST",
+                url: "/Art/LikeDeslike",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (retorno) {
+                    console.log(retorno);
+
+                    if (btn.attr("is_like") == 1) {
+                        btn.siblings("button[is_like=0]").text(+retorno['deslikes']).prepend('<i class="far fa-thumbs-down fa-lg"></i> ')
+                        btn.text(+retorno['likes']).prepend('<i class="far fa-thumbs-up fa-lg"></i> ')
+                    } else {
+                        btn.siblings("button[is_like=1]").text(+retorno['likes']).prepend('<i class="far fa-thumbs-up fa-lg"></i> ')
+                        btn.text(+retorno['deslikes']).prepend('<i class="far fa-thumbs-down fa-lg"></i> ')
+                    }
+
+
+                }
+            });
+        })
+
+
+        $(".msg").click(function () {
+            $("#msg-content").val("");
+
+            if (@ViewBag.user_id== $(this).attr("user_id")) {
+                Swal.fire({
+                    title: "Não é possivel mandar mensagens para si mesmo!",
+                    html: "Irá fechar em <b></b> milisegundos.",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+
+                    }
+                });
+                return
+            }
+
+            updateChat($(this).attr("user_id"));
+            $("#modal1").modal("show");
+
+        })
+        $(".add-cart").click(function () {
+            if (@ViewBag.user_id== $(this).attr("user_id")) {
+                Swal.fire({
+                    title: "Não é possivel comprar seu proprio produto!",
+                    html: "Irá fechar em <b></b> milisegundos.",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+
+                    }
+                });
+                return
+            }
+            Swal.fire({
+                title: "Digite a quantidade",
+                input: "text",
+                inputAttributes: {
+                    autocapitalize: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "Confirmar",
+                showLoaderOnConfirm: true,
+                preConfirm: async (quantidade) => {
+                    if (quantidade > 0) {
+                        var formData = new FormData();
+                        var art_id = $(this).attr("art_id");
+
+                        formData.append("art_id", art_id);
+                        formData.append("quantidade", quantidade);
+                        $.ajax({
+                            dataType: "json",
+                            type: "POST",
+                            url: "/Cart/AddItem",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                            success: function (retorno) {
+                                console.log(retorno);
+                                if (retorno == "sucesso") {
+                                    var url = "/Cart/Produtos";
+                                    $.get(url, function (data) {
+                                        $("#cd-cart").html(data);
+                                    });
+                                    let timerInterval;
+                                    Swal.fire({
+                                        title: "Produto adicionado!",
+                                        html: "Irá fechar em <b></b> milisegundos.",
+                                        timer: 1000,
+                                        timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                            const timer = Swal.getPopup().querySelector("b");
+                                            timerInterval = setInterval(() => {
+                                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                            }, 100);
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            OpenCloseCart();
+
+                                        }
+                                    });
+                                }
+
+                                if (retorno == "erro-1") {
+                                    let timerInterval;
+                                    Swal.fire({
+                                        title: "Você precisa estar logado para adicionar produtos no carrinho!",
+                                        html: "Irá fechar em <b></b> milisegundos.",
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                            const timer = Swal.getPopup().querySelector("b");
+                                            timerInterval = setInterval(() => {
+                                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                            }, 100);
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            OpenCloseCart();
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
+                    }
+                }
+
+            });
+
+        })
+
+
+
+
+
+
+
+    };
+
+
+
+</script>
+<script>
+    // Abre a lightbox com a imagem clicada
+    function openLightbox(imageSrc, captionText) {
+        document.getElementById('lightbox-img').src = imageSrc;
+        document.getElementById('caption').innerHTML = captionText;
+        document.getElementById('lightbox').style.display = 'block';
+        document.getElementById('dark').style.display = 'block';
+    }
+
+    // Fecha a lightbox
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+        document.getElementById('dark').style.display = 'none';
+    }
+
+</script>
