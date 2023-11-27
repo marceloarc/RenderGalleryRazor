@@ -29,7 +29,7 @@
         background-color: rgba(10, 14, 14, 0.50);
         color: white;
         font-size: 12px;
-        padding: 12px 24px;
+        padding: 12px;
         border: none;
         cursor: pointer;
         border-radius: 5px;
@@ -42,18 +42,18 @@
     .middle2 {
         display: none;
         position: absolute;
-        top: 5%;
-        left: 50%;
+        top: 9%;
+        left: 92%;
         transform: translate(-50%, -50%);
         -ms-transform: translate(-50%, -50%);
-        background-color: rgba(10, 14, 14, 0.50);
+
         color: white;
-        font-size: 16px;
-        padding: 12px 24px;
+        font-size: 12px;
+        padding: 12px;
         border: none;
         cursor: pointer;
         border-radius: 5px;
-        width: 100%;
+        width: 80px;
 
     }
     .item-btn{
@@ -66,31 +66,72 @@
     }
     .item-image{
 
-    
-        height: 40px;
-        width: 40px;
+    margin:10px !important;
+        height: 30px;
+        width: 3px;
     
     }
 
     .item-image-like {
-        height: 40px;
-        width: 40px;
-       
+      
+        height: 30px;
+        width: 30px;
+        margin: 0px 5px !important;
+        font-size:12px;
+    
     }
     .item-image-profile {
-
-        height: 40px;
+        float:left;
+        height: 30px;
         width: 150px;
-      
+        margin-left:10px;
     }
+    @@media (min-width: 1281px) {
+        .item-image-like {
+            height: 40px;
+            width: 40px;
+            margin: 0px 5px !important;
+            font-size: 14px;
+        }
+
+        .item-image-profile {
+            float: left;
+            height: 40px;
+            width: 180px;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .middle2 {
+            display: none;
+            position: absolute;
+            top: 9%;
+            left: 90%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 80px;
+        }
+}
 
     #lightgallery .item:hover .middle{
         display:block;
+
     }
 
     #lightgallery .item:hover .middle2 {
         display: block;
     }
+
+    #lightgallery .item:hover .item{
+        background: rgba(10, 14, 14, 0.50) !important;
+    }
+
 </style>
 <div class="site-section" data-aos="fade">
     <div class="container-fluid">
@@ -114,10 +155,11 @@
                 int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
           
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade"  data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
-                    <img src="~/@art.Path" alt="IMage" class="img-fluid">
+                    <img src="~/@art.Path" alt="IMage" class="img-fluid hover" style="background-color: rgba(10, 14, 14, 0.50);">
                     <div class="middle">
+
                         <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
-                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <i class="far fa-user-circle fa-xl " aria-hidden="true"></i>
                             <a>@art.Publicacao.User.Name</a>
                         </button>
                        
@@ -126,22 +168,36 @@
                         {
 
                             <button class="item-btn item-image-like msg" style="" user_id="@art.Publicacao.User.Id">
-                                <i class="fa-solid fa-message"></i>
+                                <i class="far fa-comments fa-lg"></i>
 
                             </button>
 
                         }
 
-                        <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="fas fa-cart-plus"></i>
+
+                        <button class="item-btn item-image-like" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                            <i class="far fa-heart fa-lg"></i>
 
                         </button>
-                        <button class="item-btn item-image-like like" is_like="1" art_id="@art.Id" style="" user_id="@art.Publicacao.User.Id">
-                            <i class="fa-solid fa-thumbs-up"></i>
+
+
+                        <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                            <i class="fas fa-cart-plus fa-lg"></i>
+
+                        </button>
+
+
+                    </div>
+
+                    <div class="middle2">
+
+
+                        <button class="item-btn item-image-like like" is_like="1" style="margin-top:10px !important;" art_id="@art.Id" style="" user_id="@art.Publicacao.User.Id">
+                            <i class="far fa-thumbs-up fa-lg"></i>
                             @likes
                         </button>
-                        <button class="item-btn item-image-like like" is_like="0" style="" art_id="@art.Id"  user_id="@art.Publicacao.User.Id">
-                            <i class="fa-solid fa-thumbs-down"></i>
+                        <button class="item-btn item-image-like like" is_like="0" style="margin-top:10px !important;" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                            <i class="far fa-thumbs-down fa-lg"></i>
                             @deslikes
                         </button>
 
