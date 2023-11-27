@@ -34,23 +34,34 @@
 
 
             <div class="friend" user_id="@chat.user_two">
-              <img src="~/@chat.User2.Pic" />
+            
+                    <img class="" src="~/@chat.User2.Pic" />
+         
+              
         
                     <strong>@chat.User2.Name</strong><br>
-
+               
                     @if (message.user_id_from == chat.user_one)
                     {
                         <span style="">Você: @message.msg_content</span>
-                    <div class="status inactive"></div>
+                        <div class="status inactive"></div>
                     }
                     else
                     {
                         <span style="font-weight:bold !important;">@message.msg_content</span>
-                    <div class="status available"></div>
-                    }
 
-          
-      
+                        if (message.visu_status == 0)
+                        {
+                            <div class="status available"></div>
+                        }
+                        else
+                        {
+                            <div class="status inactive"></div>
+                        }
+                   
+       
+                }
+               
             </div>
 
             <br />

@@ -87,6 +87,7 @@ namespace RenderGallery.Controllers
                 }
                 db.Publicacoes.Add(publi);
                 db.SaveChanges();
+                return RedirectToAction("Index", "home");
             }
             else
             {

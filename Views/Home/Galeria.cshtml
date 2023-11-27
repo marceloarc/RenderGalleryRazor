@@ -59,7 +59,7 @@
     .item-btn{
         cursor: pointer;
         background-color: black;
-        color: #20c997;
+        color: #3498DB;
         border-radius: 25px;
         border: 0;
       
@@ -132,6 +132,34 @@
         background: rgba(10, 14, 14, 0.50) !important;
     }
 
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 99999999999999999999999999999999999;
+        padding-top: 60px;
+        left: 0;
+        top: 0;
+        width: 40%;
+        height: 40%;
+
+        text-align: center;
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+        .lightbox img {
+            width: 80%;
+            height: auto;
+            
+        }
+        .hover{
+        cursor: pointer;
+        }
+
+
 </style>
 <div class="site-section" data-aos="fade">
     <div class="container-fluid">
@@ -148,6 +176,11 @@
 
         </div>
         <div class="row" id="lightgallery">
+            <div class="lightbox" id="lightbox">
+                <span class="close" onclick="closeLightbox()">&times;</span>
+                <img src="" alt="" id="lightbox-img">
+                <div id="caption"></div>
+            </div>
         @foreach(var art in ViewBag.arts)
         {
                 int art_id = art.Id;
@@ -155,7 +188,7 @@
                 int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
           
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade"  data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
-                    <img src="~/@art.Path" alt="IMage" class="img-fluid hover" style="background-color: rgba(10, 14, 14, 0.50);">
+                    <img src="~/@art.Path"  alt="IMage" onclick="openLightbox('/@art.Path','@art.Arte')" class="img-fluid hover">
                     <div class="middle">
 
                         <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
@@ -266,11 +299,11 @@
                     console.log(retorno);
 
                     if (btn.attr("is_like") == 1) {
-                        btn.siblings("button[is_like=0]").text(+retorno['deslikes']).prepend('<i class="fa-solid fa-thumbs-down"></i> ')
-                        btn.text(+retorno['likes']).prepend('<i class="fa-solid fa-thumbs-up"></i> ')
+                        btn.siblings("button[is_like=0]").text(+retorno['deslikes']).prepend('<i class="far fa-thumbs-down fa-lg"></i> ')
+                        btn.text(+retorno['likes']).prepend('<i class="far fa-thumbs-up fa-lg"></i> ')
                     } else {
-                        btn.siblings("button[is_like=1]").text(+retorno['likes']).prepend('<i class="fa-solid fa-thumbs-up"></i> ')
-                        btn.text(+retorno['deslikes']).prepend('<i class="fa-solid fa-thumbs-down"></i> ')
+                        btn.siblings("button[is_like=1]").text(+retorno['likes']).prepend('<i class="far fa-thumbs-up fa-lg"></i> ')
+                        btn.text(+retorno['deslikes']).prepend('<i class="far fa-thumbs-down fa-lg"></i> ')
                     }
 
  
@@ -435,5 +468,19 @@
     };
        
 
+
+</script>
+<script>
+    // Abre a lightbox com a imagem clicada
+    function openLightbox(imageSrc, captionText) {
+        document.getElementById('lightbox-img').src = imageSrc;
+        document.getElementById('caption').innerHTML = captionText;
+        document.getElementById('lightbox').style.display = 'block';
+    }
+
+    // Fecha a lightbox
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
 
 </script>
