@@ -4,12 +4,13 @@ namespace RenderGalleyRazor.Models
 {
     public class VMRegistro
     {
-        [Required]
+        [Required(ErrorMessage = "O Nome é obrigatório")]
         public string? Nome { get; set; }
-        [Required]
+        [Required(ErrorMessage = "O Email é obrigatório")]
         [EmailAddress]
         public string? Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "A Senha é obrigatória")]
+
         [DataType(DataType.Password)]
         public string? Password { get; set; }
 

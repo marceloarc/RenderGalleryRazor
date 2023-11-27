@@ -28,7 +28,6 @@
         left: 50%;
         transform: translate(-50%, -50%);
         -ms-transform: translate(-50%, -50%);
-        background-color: rgba(10, 14, 14, 0.50);
         color: white;
         font-size: 12px;
         padding: 12px;
@@ -240,7 +239,7 @@
 <script type="text/javascript">
 
         $(document).ready(function () {
-            $('#lightgallery2').lightGallery();
+        $('#lightgallery2').lightGallery({ enableDrag: false, enableSwipe: false, hideScrollbar: true, keyPress: false, mousewheel: false });
 
         $("[image_art_id=@ViewBag.art_id]").click();
         var foi = 0;
