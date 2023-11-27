@@ -207,11 +207,13 @@ Modules - reusable parts of our design
   float:right; background-color:transparent; margin-bottom:200px; position:absolute; right: 1em; top:2%;  width: 32px;
   height: 32px;
   border:0;
+  outline: none !important;
 }
 .close-cart2{
   float:right; background-color:transparent; margin-bottom:200px; position:absolute; right: 1em; top:2%;  width: 32px;
   height: 32px;
   border:0;
+  outline: none !important;
 }
 #cd-cart .cd-item-remove {
   position: absolute;
@@ -249,13 +251,13 @@ Modules - reusable parts of our design
   width: 100%;
   height: 60px;
   line-height: 60px;
-  background: #20c997;
+  background: #3498DB;
   color: #FFF;
   text-align: center;
   bottom:0;
 }
 .no-touch #cd-cart .checkout-btn:hover {
-  background: #20c997;
+  background: #3498DB;
 }
 #cd-cart .cd-go-to-cart {
   text-align: center;
