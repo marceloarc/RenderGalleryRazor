@@ -84,6 +84,12 @@
         margin-left: 10px;
     }
 
+    .item-image-like .icone {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     @@media (min-width: 1281px) {
         .item-image-like {
             height: 40px;
@@ -129,35 +135,13 @@
         background: rgba(10, 14, 14, 0.50) !important;
     }
 
-    .lightbox {
-        display: none;
-        position: fixed;
-        z-index: 99999999999999999999999999999999999;
-        padding-top: 60px;
-        left: 0;
-        top: 0;
-        width: 40%;
-        height: 40%;
-        text-align: center;
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    }
-
-        .lightbox img {
-            width: 80%;
-            height: auto;
-        }
 
     .hover {
         cursor: pointer;
     }
 
-  
-
 </style>
+
 <div class="site-section" data-aos="fade">
     <div class="container-fluid">
 
@@ -174,11 +158,6 @@
         </div>
         <div class="row" id="lightgallery">
 
-            <div class="lightbox" id="lightbox">
-                <span class="close" onclick="closeLightbox()">&times;</span>
-                <img src="" alt="" id="lightbox-img">
-                <div id="caption"></div>
-            </div>
             @foreach (var art in ViewBag.arts)
             {
                 int art_id = art.Id;
@@ -199,7 +178,7 @@
                         {
 
                             <button class="item-btn item-image-like msg" style="" user_id="@art.Publicacao.User.Id">
-                                <i class="far fa-comments fa-lg"></i>
+                                <i class="far fa-comments fa-lg icone"></i>
 
                             </button>
 
@@ -207,13 +186,13 @@
 
 
                         <button class="item-btn item-image-like" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="far fa-heart fa-lg"></i>
+                            <i class="far fa-heart fa-lg icone"></i>
 
                         </button>
 
 
                         <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="fas fa-cart-plus fa-lg"></i>
+                            <i class="fas fa-cart-plus icone"></i>
 
                         </button>
 
@@ -238,8 +217,6 @@
 
 
             }
-
-
         </div>
     </div>
 
@@ -461,6 +438,10 @@
 
 
 
+
+
+
+
     };
 
 
@@ -472,11 +453,13 @@
         document.getElementById('lightbox-img').src = imageSrc;
         document.getElementById('caption').innerHTML = captionText;
         document.getElementById('lightbox').style.display = 'block';
+        document.getElementById('dark').style.display = 'block';
     }
 
     // Fecha a lightbox
     function closeLightbox() {
         document.getElementById('lightbox').style.display = 'none';
+        document.getElementById('dark').style.display = 'none';
     }
 
 </script>

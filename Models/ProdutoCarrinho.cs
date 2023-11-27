@@ -23,6 +23,8 @@ namespace RenderGalleyRazor.Models
         [ForeignKey("art_id")]
         public virtual Art? Arte { get; set; }
 
+       
+
 
     }
 }

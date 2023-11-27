@@ -64,6 +64,23 @@ namespace RenderGallery.Controllers
             return View();
         }
 
+        public IActionResult PubliArts([FromQuery(Name = "publi_id")] int publi_id, [FromQuery(Name = "art_id")] int art_id)
+        {
+            int user_id = 0;
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+            }
+            List<Art> arts = db.Arts.Where(x => x.publi_id == publi_id).ToList();
+            ViewBag.user_id = user_id;
+            ViewBag.Arts = arts;
+            ViewBag.Title = "teste";
+            ViewBag.art_id = art_id;
+            return View();
+        }
+
+
         public JsonResult LikeDeslike(int user_id,int art_id, bool isLike, bool isDeslike)
         {
             User user = db.Users.Where(x => x.Id == user_id).FirstOrDefault();

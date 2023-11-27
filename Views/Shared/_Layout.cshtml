@@ -46,8 +46,47 @@
     <link rel="stylesheet" href="~/css/message.css">
     <script src="~/js/modernizr.js"></script>
 </head>
-<body>
+<style>
+    .backgroud-dark {
+        display: none;
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        z-index: 1 !important;
+        background: rgba(0, 0, 0, 0.8);
+    }
 
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 9999999999999999 !important;
+        padding-top: 60px;
+        left: 0;
+        top: 0;
+        width: 40%;
+        height: 40%;
+        text-align: center;
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+        .lightbox img {
+            width: 80%;
+            height: auto;
+        }
+
+</style>
+<body>
+    <div class="lightbox" id="lightbox">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img src="" alt="" id="lightbox-img">
+        <div id="caption"></div>
+    </div>
+    <div class="backgroud-dark" id="dark">
+    </div>
     <div class="site-wrap">
 
         <div class="site-mobile-menu">
@@ -252,6 +291,8 @@
                 });
             }
         })
+
+
 
         function OpenCloseMessages() {
             if ($("#cd-message").hasClass("speed-in")) {

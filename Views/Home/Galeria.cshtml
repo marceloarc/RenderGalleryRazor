@@ -80,17 +80,19 @@
         font-size:12px;
     
     }
-    .item-image-like .icone{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
     .item-image-profile {
         float:left;
         height: 30px;
         width: 150px;
         margin-left:10px;
     }
+
+    .item-image-like .icone{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     @@media (min-width: 1281px) {
         .item-image-like {
             height: 40px;
@@ -137,35 +139,13 @@
         background: rgba(10, 14, 14, 0.50) !important;
     }
 
-    .lightbox {
-        display: none;
-        position: fixed;
-        z-index: 99999999999999999999999999999999999;
-        padding-top: 60px;
-        left: 0;
-        top: 0;
-        width: 40%;
-        height: 40%;
 
-        text-align: center;
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    }
-
-        .lightbox img {
-            width: 80%;
-            height: auto;
-            
-        }
         .hover{
         cursor: pointer;
         }
 
-
 </style>
+
 <div class="site-section" data-aos="fade">
     <div class="container-fluid">
 
@@ -181,19 +161,15 @@
 
         </div>
         <div class="row" id="lightgallery">
-            <div class="lightbox" id="lightbox">
-                <span class="close" onclick="closeLightbox()">&times;</span>
-                <img src="" alt="" id="lightbox-img">
-                <div id="caption"></div>
-            </div>
+
         @foreach(var art in ViewBag.arts)
         {
                 int art_id = art.Id;
                 int likes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isLike == true).Count();
                 int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
-          
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade"  data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
-                    <img src="~/@art.Path"  alt="IMage" onclick="openLightbox('/@art.Path','@art.Arte')" class="img-fluid hover">
+
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-src="~/@art.Path" data-aos="fade" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
+                    <img src="~/@art.Path"  alt="IMage" onclick="teste('@art.publi_id','@art.Id')" class="img-fluid hover">
                     <div class="middle">
 
                         <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
@@ -220,7 +196,7 @@
 
 
                         <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="fas fa-cart-plus fa-lg icone"></i>
+                            <i class="fas fa-cart-plus icone"></i>
 
                         </button>
 
@@ -250,9 +226,13 @@
 
 
 </div>
+<div id="teste123" style="display:none;">
 
+</div>
 
 <script type="text/javascript">
+
+
 
     window.onload = function () {
 
@@ -315,7 +295,6 @@
                 }
             });
         })
-    
 
         $(".msg").click(function () {
             $("#msg-content").val("");
@@ -476,16 +455,25 @@
 
 </script>
 <script>
+            function teste(publi_id, art_id) {
+            var url = "/Art/PubliArts/?publi_id=" + publi_id+"&art_id="+art_id;
+            $.get(url, function (data) {
+                $("#teste123").html(data);
+            });
+        }
+
     // Abre a lightbox com a imagem clicada
     function openLightbox(imageSrc, captionText) {
         document.getElementById('lightbox-img').src = imageSrc;
         document.getElementById('caption').innerHTML = captionText;
         document.getElementById('lightbox').style.display = 'block';
+        document.getElementById('dark').style.display = 'block';
     }
 
     // Fecha a lightbox
     function closeLightbox() {
         document.getElementById('lightbox').style.display = 'none';
+        document.getElementById('dark').style.display = 'none';
     }
 
 </script>
