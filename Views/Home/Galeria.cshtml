@@ -80,6 +80,11 @@
         font-size:12px;
     
     }
+    .item-image-like .icone{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .item-image-profile {
         float:left;
         height: 30px;
@@ -201,7 +206,7 @@
                         {
 
                             <button class="item-btn item-image-like msg" style="" user_id="@art.Publicacao.User.Id">
-                                <i class="far fa-comments fa-lg"></i>
+                                <i class="far fa-comments fa-lg icone"></i>
 
                             </button>
 
@@ -209,13 +214,13 @@
 
 
                         <button class="item-btn item-image-like" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="far fa-heart fa-lg"></i>
+                            <i class="far fa-heart fa-lg icone"></i>
 
                         </button>
 
 
                         <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="fas fa-cart-plus fa-lg"></i>
+                            <i class="fas fa-cart-plus fa-lg icone"></i>
 
                         </button>
 
