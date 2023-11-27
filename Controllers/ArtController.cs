@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using RenderGalleyRazor.Models;
 using RenderGallery.Util;
+using Microsoft.EntityFrameworkCore;
 
 namespace RenderGallery.Controllers
 {
@@ -45,6 +46,22 @@ namespace RenderGallery.Controllers
 
             TempData["sucesso"] = "Arte Cadastrada com sucesso!";
             return Ok(TempData);
+        }
+
+        public IActionResult Search(string search)
+        {
+            int user_id = 0;
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+            }
+            List<Art> arts = db.Arts.Where(x => EF.Functions.Like(x.Arte, "%"+search+"%") || EF.Functions.Like(x.Categoria.Nome, "%" + search + "%")).ToList();
+            ViewBag.user_id = user_id;
+            ViewBag.Arts = arts;
+            ViewBag.Title = "Pesquisando por "+search;
+
+            return View();
         }
 
         public JsonResult LikeDeslike(int user_id,int art_id, bool isLike, bool isDeslike)

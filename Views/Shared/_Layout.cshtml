@@ -94,8 +94,14 @@
                                     </ul>
                                 </li>
                                 <li><a href="services.html">Planos</a></li>
-                                <li class="active"><a href="about.html">Sobre</a></li>
-                                <li><a href="contact.html">Contato</a></li>
+                                <li class="active"><a href="about.html">Contato</a></li>
+                                <li>
+                                    <form class="search-box" method="post" action="/Art/Search">
+                                      
+                                        <button type="button" class="btn-search">Buscar</button>
+                                        <input type="text" class="input-search" name="search" placeholder="Digite para pesquisar">
+                                    </form>
+                                </li>
                                 @* <li><a asp-controller="cart" asp-action="carrinho">Carrinho</a></li> *@
                             </ul>
                         </nav>
@@ -184,6 +190,8 @@
     $("#cart").click(function () {
         OpenCloseCart();
     })
+
+
         $("#message").click(function () {
             OpenCloseMessages();
         })
