@@ -71,9 +71,9 @@ namespace RenderGalleyRazor.Controllers
                 }
 
                 //Se houver erros entrão inclui no ModelState
-                foreach (var error in result.Errors)
+                if (result.Errors != null)
                 {
-                    ModelState.AddModelError("Error", error.Description);
+                    ModelState.AddModelError("Error", "A senha deve possuir mais de 6 caracteres, uma letra minúscula, uma maiúscula e um caractere especial.");
                 }
             }
             ViewBag.btn = "register";
