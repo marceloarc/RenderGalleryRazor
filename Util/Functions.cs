@@ -19,7 +19,82 @@ namespace RenderGallery.Util
             caminhoServidor = sistema.WebRootPath;
         }
 
-        public static string WriteFile(IFormFile img)
+        public class ImageHashing
+        {
+            public static string CalculateImageHash(byte[] imageBytes)
+            {
+                using (var md5 = MD5.Create())
+                {
+                    byte[] hashBytes = md5.ComputeHash(imageBytes);
+                    return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+                }
+            }
+        }
+
+        public static bool ImageExistsInSystem(string hash)
+        {
+            // Diretório raiz onde todas as imagens estão armazenadas
+            string rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+
+            // Procurar em todos os subdiretórios de usuários
+            foreach (var userDirectory in Directory.GetDirectories(rootDirectory))
+            {
+                var files = Directory.EnumerateFiles(userDirectory);
+
+                foreach (var file in files)
+                {
+                    if (Path.GetFileNameWithoutExtension(file) == hash)
+                    {
+                        return true; // Se encontrar um arquivo com o mesmo hash, a imagem existe no sistema
+                    }
+                }
+            }
+
+            return false; // Se não houver correspondências em nenhum diretório de usuário
+        }
+
+
+
+        public static (string path, bool alreadyExistsForUser, bool alreadyExistsInSystem) WriteFile(IFormFile img, int userId)
+        {
+            // Ler os bytes da imagem
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                img.CopyTo(memoryStream);
+                byte[] imageBytes = memoryStream.ToArray();
+
+                // Calcular o hash baseado nos bytes da imagem
+                string hash = ImageHashing.CalculateImageHash(imageBytes);
+
+                // Definir o caminho para salvar a imagem com base no hash e no ID do usuário
+                string caminhoCompleto = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", userId.ToString());
+                if (!Directory.Exists(caminhoCompleto))
+                {
+                    Directory.CreateDirectory(caminhoCompleto);
+                }
+
+                string path = Path.Combine(caminhoCompleto, hash + Path.GetExtension(img.FileName));
+
+                // Verificar se o arquivo já existe para o usuário específico
+                bool alreadyExistsForUser = File.Exists(path);
+
+                // Verificar se o arquivo já existe no sistema
+                bool alreadyExistsInSystem = ImageExistsInSystem(hash);
+
+                if (!alreadyExistsForUser && !alreadyExistsInSystem)
+                {
+                    // Se não existir, salvar a imagem com o nome baseado no hash
+                    using (Stream stream = new FileStream(path, FileMode.Create))
+                    {
+                        img.CopyTo(stream);
+                    }
+                }
+
+                return (path, alreadyExistsForUser, alreadyExistsInSystem);
+            }
+        }
+
+        public static string WriteFilePerfil(IFormFile img)
         {
             string caminhoCompleto = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images");
 
@@ -27,7 +102,7 @@ namespace RenderGallery.Util
             {
                 Directory.CreateDirectory(caminhoCompleto);
             }
-            string path = caminhoCompleto + "\\" + GetTimestamp(DateTime.Now)+System.IO.Path.GetExtension(img.FileName);
+            string path = caminhoCompleto + "\\" + GetTimestamp(DateTime.Now) + System.IO.Path.GetExtension(img.FileName);
             string name = Path.GetFileName(path);
             using (Stream stream = new FileStream(path, FileMode.Create))
             {
@@ -37,6 +112,7 @@ namespace RenderGallery.Util
 
 
         }
+
 
         public static String GetTimestamp(DateTime value)
         {

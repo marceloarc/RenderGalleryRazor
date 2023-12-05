@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using RenderGalleyRazor.Models;
 using RenderGallery.Util;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 
 namespace RenderGallery.Controllers
 {
@@ -21,8 +22,9 @@ namespace RenderGallery.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Upload([FromForm]Files arte)
         {
+            User user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
 
-         string caminhoArquivo = Functions.WriteFile(arte.File);
+            string caminhoArquivo = Functions.WriteFile(arte.File, user.Id).path;
 
             if (string.IsNullOrEmpty(caminhoArquivo))
             {

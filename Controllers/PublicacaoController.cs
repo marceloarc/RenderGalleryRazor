@@ -69,64 +69,85 @@ namespace RenderGallery.Controllers
 
         [HttpPost]
         public IActionResult Create(Publicacao publi)
-    {
-
+        {
             if (ModelState.IsValid)
             {
-                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
-                publi.User_id = user.Id;
-                publi.User = user;
-                foreach(Art art in publi.Artes)
+                User user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
+                if (user != null)
                 {
-                    var path = Functions.WriteFile(art.File);
-                    var fileName = Path.GetFileName(path);
-                    var name = "images/" + fileName;
+                    publi.User_id = user.Id;
+                    publi.User = user;
 
-                    art.Path = name;
+                    foreach (Art art in publi.Artes)
+                    {
+                        var (path, alreadyExistsForUser, alreadyExistsInSystem) = Functions.WriteFile(art.File, user.Id);
 
+                        if (alreadyExistsForUser)
+                        {
+                            ModelState.AddModelError("Error", "Arte já cadastrada no sistema.");
+                            return View();
+                        }
+
+                        if (alreadyExistsInSystem)
+                        {
+                            ModelState.AddModelError("Error", "Arte já cadastrada por outro usuário.");
+                            return View();
+                        }
+
+
+                        var fileName = Path.GetFileName(path);
+                        var name = "images/" + user.Id + "/" + fileName;
+                        art.Path = name;
+                    }
+
+                    db.Publicacoes.Add(publi);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "home");
                 }
-                db.Publicacoes.Add(publi);
-                db.SaveChanges();
-                return RedirectToAction("Index", "home");
+                else
+                {
+                    ModelState.AddModelError("Error", "Usuário não encontrado.");
+                }
             }
             else
             {
-                ModelState.AddModelError("Error", "Todos os campos são obrigatórios");
+                ModelState.AddModelError("Error", "Todos os campos são obrigatórios.");
             }
 
             return View();
-    }
+        }
+
 
         [HttpGet]
         public IActionResult Arte(int id)
-    {
+        {
             ViewBag.id = id;
             return View();
-    }
+        }
 
       
-    public async Task<IActionResult> Excluir([FromBody] int id)
-    {
-        if (id > 0)
+        public async Task<IActionResult> Excluir([FromBody] int id)
         {
-            Publicacao publicacao = db.Publicacoes.Where(x => x.Id == id).FirstOrDefault();
-
-            if (publicacao != null)
+            if (id > 0)
             {
-                db.Publicacoes.Remove(publicacao);
-                db.SaveChanges();
-                TempData["success"] = "Publicação apagada!";
+                Publicacao publicacao = db.Publicacoes.Where(x => x.Id == id).FirstOrDefault();
+
+                if (publicacao != null)
+                {
+                    db.Publicacoes.Remove(publicacao);
+                    db.SaveChanges();
+                    TempData["success"] = "Publicação apagada!";
+                }
+                else
+                {
+                    TempData["error"] = "Publicacao não encontrada!";
+                }
             }
             else
             {
-                TempData["error"] = "Publicacao não encontrada!";
+                TempData["error"] = "id inválido!";
             }
+            return Json(TempData);
         }
-        else
-        {
-            TempData["error"] = "id inválido!";
-        }
-        return Json(TempData);
-    }
 } }
 

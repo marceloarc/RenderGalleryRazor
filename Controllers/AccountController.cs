@@ -53,7 +53,7 @@ namespace RenderGalleyRazor.Controllers
                 var name = "";
                 if (registro.File != null)
                 {
-                    path = Functions.WriteFile(registro.File);
+                    path = Functions.WriteFilePerfil(registro.File);
                     var fileName = Path.GetFileName(path);
                     name = "images/"+ fileName;
                 }
