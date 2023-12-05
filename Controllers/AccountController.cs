@@ -38,7 +38,16 @@ namespace RenderGalleyRazor.Controllers
                 user.UserName = registro.Email;
                 user.Email = registro.Email;
 
+                User userExists = db.Users.Where(x => x.Email == registro.Email).FirstOrDefault();
 
+                if(userExists != null) {
+                    ModelState.AddModelError("Email", "Email já cadastrado!");
+
+                }
+                else
+                {
+
+                
 
                 var path = "";
                 var name = "";
@@ -70,11 +79,15 @@ namespace RenderGalleyRazor.Controllers
                     return RedirectToAction("Index", "home");
                 }
 
+
+
                 //Se houver erros entrão inclui no ModelState
                 if (result.Errors != null)
                 {
                     ModelState.AddModelError("Error", "A senha deve possuir mais de 6 caracteres, uma letra minúscula, uma maiúscula e um caractere especial.");
+
                 }
+            }
             }
             ViewBag.btn = "register";
             return View();

@@ -58,6 +58,7 @@
 <div class="container-login" id="container-login">
     <div class="form-container sign-up-container">
         <form class="form-login" method="post" EncType="multipart/form-data" action="/Account/Register">
+            <span asp-validation-for="Error" class="text-danger"></span>
             <h1 class="title ">Registre-se</h1>
 @*             <div class="social-container">
                 <a href="#" class="social-icon a-login"><i class="fab fa-facebook-f"></i></a>
@@ -65,7 +66,6 @@
                 <a href="#" class="social-icon a-login"><i class="fab fa-linkedin-in"></i></a>
             </div> *@
            @*  <span class="sub-text">Ou use seu e-mail para se registrar</span> *@
-            <span asp-validation-for="Error" class="text-danger"></span>
             <input asp-for="File" style="display:none; cursor:pointer;" type="file" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])" placeholder="Foto" id="input-pic" class="input-text" />
             <div class="container-image">
                 <img style="cursor:pointer; -webkit-box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);
