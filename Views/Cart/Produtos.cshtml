@@ -1,0 +1,99 @@
+﻿@{
+    Layout = "";
+    int total = 0;
+    int products_total = 0;
+}
+<button class="close-cart">
+    <i class="fa-solid fa-x"></i>
+</button>
+<h2>Carrinho</h2>
+
+@if (ViewBag.produtos != null)
+{
+
+        <ul class="cd-cart-items">
+
+   
+
+        
+
+    @foreach (var produto in ViewBag.produtos)
+            {
+            total += (produto.Quantidade * produto.Arte.Valor);
+            products_total += produto.Quantidade;
+            <li>
+
+         <div class="row">
+                    <img src="~/@produto.Arte.Path" width="50" style="margin:10px;">
+                    <div class="col-6">
+                        <span class="cd-qty"></span> @produto.Arte.Arte
+                        <br>
+                        <br>
+                        <div class="cd-price">@produto.Quantidade x R$@produto.Arte.Valor</div>
+                       
+                    </div>
+                    <button class="cd-item-remove cd-img-replace" product_id="@produto.Id">Remove</button>
+         </div>
+ 
+    
+                </li>
+            }
+            </ul>
+}
+  
+<div class="cd-cart-total">
+        <p>Total <span>R$@total</span></p>
+</div> <!-- cd-cart-total -->
+
+
+<a href="#0" class="checkout-btn">Finzalizar Compra</a>
+
+@* <p class="cd-go-to-cart"><a href="#0">Go to cart page</a></p> *@
+
+<script>
+    $(document).ready(function () {
+        $(".product_total").text(@products_total);
+        $(".close-cart").click(function () {
+            OpenCloseCart();
+
+        });
+        $(".cd-item-remove").click(function () {
+            Swal.fire({
+                title: "Tem certeza?",
+                text: "Isto irá remover o produto de seu carrinho!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var product_id = $(this).attr("product_id");
+                    var formData = new FormData();
+                    formData.append("product_id", product_id);
+                    $.ajax({
+                        dataType: "json",
+                        type: "POST",
+                        url: "/Cart/RemoveItem",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (retorno) {
+                            if (retorno) {
+                                var url = "/Cart/Produtos";
+                                $.get(url, function (data) {
+                                    $("#cd-cart").html(data);
+                             
+                                });
+                            }
+
+                        }
+                    });
+                }
+            });
+
+        })
+    })
+
+</script>

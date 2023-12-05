@@ -1,0 +1,99 @@
+﻿@{
+    Layout = "";
+    var message_total = 0;
+}
+<button class="close-cart2">
+    <i class="fa-solid fa-x"></i>
+</button>
+<h2>Conversas</h2>
+
+@if (ViewBag.chats != null)
+{
+
+ <div id="friends">
+
+   
+
+        
+
+    @foreach (var chat in ViewBag.chats)
+     {
+            var message = chat.Messages[chat.Messages.Count - 1];
+
+            foreach(var msg in chat.Messages)
+            {
+                if (msg.visu_status == 0)
+                {
+                    if (msg.user_id_to == chat.user_one)
+                    {
+                        message_total++;
+                    }
+              
+                }
+            }
+
+
+            <div class="friend" user_id="@chat.user_two">
+            
+                    <img class="" src="~/@chat.User2.Pic" />
+         
+              
+        
+                    <strong>@chat.User2.Name</strong><br>
+               
+                    @if (message.user_id_from == chat.user_one)
+                    {
+                        <span style="">Você: @message.msg_content</span>
+                        <div class="status inactive"></div>
+                    }
+                    else
+                    {
+                        <span style="font-weight:bold !important;">@message.msg_content</span>
+
+                        if (message.visu_status == 0)
+                        {
+                            <div class="status available"></div>
+                        }
+                        else
+                        {
+                            <div class="status inactive"></div>
+                        }
+                   
+       
+                }
+               
+            </div>
+
+            <br />
+        }
+    </div>
+}
+else
+{
+    <h2>Nenhuma mensagem!</h2>
+}
+
+
+<script>
+    $(document).ready(function () {
+        $(".message_total").text(@message_total);
+
+    @if(message_total < 1)
+    {
+       <text>
+                $(".message_total").addClass("hide");
+       </text> 
+    }
+
+        $(".friend").click(function () {
+        
+            updateChat($(this).attr("user_id"));
+            $("#modal1").modal("show");
+
+        })
+    })
+    $(".close-cart2").click(function () {
+        OpenCloseMessages();
+
+    });
+</script>
