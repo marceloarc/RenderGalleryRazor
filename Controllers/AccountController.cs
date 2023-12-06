@@ -46,48 +46,44 @@ namespace RenderGalleyRazor.Controllers
                 }
                 else
                 {
+                    var path = "";
+                    var name = "";
+                    if (registro.File != null)
+                    {
+                        path = Functions.WriteFilePerfil(registro.File);
+                        var fileName = Path.GetFileName(path);
+                        name = "images/"+ fileName;
+                    }
 
-                
+                    if (name == "")
+                    {
+                        name = "images/user.jpg";
+                    }
+                    //Armazena os dados do usuário na tabela AspNetUsers
+                    IdentityResult result = await _userManager.CreateAsync(user, registro.Password);
 
-                var path = "";
-                var name = "";
-                if (registro.File != null)
-                {
-                    path = Functions.WriteFilePerfil(registro.File);
-                    var fileName = Path.GetFileName(path);
-                    name = "images/"+ fileName;
+                    //Se o usuário foi criado com sucesso, faz o login atravez do signInManager
+                    if (result.Succeeded)
+                    {
+                        User user1 = new User();
+                        user1.Name = registro.Nome;
+                        user1.Email = registro.Email;
+                        user1.Pic = name;
+                        user1.plano_id = 1;
+                        db.Users.Add(user1);
+                        db.SaveChanges();
+                        await _userManager.AddToRoleAsync(user, "Artista");
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return RedirectToAction("Index", "home");
+                    }
+
+                    //Se houver erros entrão inclui no ModelState
+                    if (result.Errors != null)
+                    {
+                        ModelState.AddModelError("Error", "A senha deve possuir mais de 6 caracteres, uma letra minúscula, uma maiúscula e um caractere especial.");
+
+                    }
                 }
-
-                if (name == "")
-                {
-                    name = "images/user.jpg";
-                }
-                //Armazena os dados do usuário na tabela AspNetUsers
-                IdentityResult result = await _userManager.CreateAsync(user, registro.Password);
-
-                //Se o usuário foi criado com sucesso, faz o login atravez do signInManager
-                if (result.Succeeded)
-                {
-                    User user1 = new User();
-                    user1.Name = registro.Nome;
-                    user1.Email = registro.Email;
-                    user1.Pic = name;
-                    db.Users.Add(user1);
-                    db.SaveChanges();
-                    await _userManager.AddToRoleAsync(user, "Artista");
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "home");
-                }
-
-
-
-                //Se houver erros entrão inclui no ModelState
-                if (result.Errors != null)
-                {
-                    ModelState.AddModelError("Error", "A senha deve possuir mais de 6 caracteres, uma letra minúscula, uma maiúscula e um caractere especial.");
-
-                }
-            }
             }
             ViewBag.btn = "register";
             return View();

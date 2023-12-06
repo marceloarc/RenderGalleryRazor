@@ -1,40 +1,61 @@
-﻿<main class="main flow">
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@using RenderGalleyRazor.Models;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+
+@{
+    var user_id = 0;
+    var planos = dbContext.Planos.ToList();
+    if (SignInManager.IsSignedIn(User))
+    {
+
+        var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+        user_id = user.Id;
+    }
+}
+
+<main class="main flow">
     <h1 class="main__heading">Preços</h1>
     <div class="main__cards cards">
         <div class="cards__inner">
-            <div class="cards__card card">
-                <h2 class="card__heading">Basico</h2>
-                <p class="card__price">Gratuito</p>
-                <ul role="list" class="card__bullets flow">
-                    <li>Limite de 10 postagens</li>
-                    <li>Possibilidade de saque em até 30 dias</li>
-                    <li>Ao atingir 50 curtidas recebe o selo de verificado</li>
-                </ul>
-                <a href="#basic" class="card__cta cta">Comece Agora</a>
-            </div>
 
-            <div class="cards__card card">
-                <h2 class="card__heading">Pro</h2>
-                <p class="card__price">R$30,00</p>
-                <ul role="list" class="card__bullets flow">
-                    <li>Limite de 50 postagens</li>
-                    <li>Possibilidade de saque entre 15 e 20 dias</li>
-                    <li>Ao atingir 15 curtidas recebe o selo de verificado</li>
-                </ul>
-                <a href="#pro" class="card__cta cta">Upgrade to Pro</a>
-            </div>
+            @foreach (var plano in planos)
+            {
+                <div class="cards__card card">
+                    <h2 class="card__heading">@plano.Nome</h2>
+                    @if (plano.Preco == 0)
+                    {
+                        <p class="card__price">Gratuito</p>
+                    }
+                    else
+                    {
+                        <p class="card__price">@plano.Preco,00</p>
+                    }
 
-            <div class="cards__card card">
-                <h2 class="card__heading">Ultimate</h2>
-                <p class="card__price">R$50,00</p>
-                <ul role="list" class="card__bullets flow">
-                    <li>Postagens ilimitadas</li>
-                    <li>Possibilidade de saque em até 10 dias</li>
-                    <li>Selo de verificação imediato</li>
-                </ul>
-                <a href="#ultimate" class="card__cta cta">Go Ultimate</a>
-            </div>
-        </div>
+                    <ul role="list" class="card__bullets flow">
+                    @foreach (var vantagem in plano.Vantagens)
+                    {
+                        <li>@vantagem.descricao</li>
+                    }
+                    </ul>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                        if (user != null && user.plano_id == plano.Id)
+                        {
+                            <span class="card__cta cta">Já Adquirido</span>
+                        }
+                        else
+                        {
+                            <a href="#basic" class="card__cta cta">Adquira já</a>
+                        }
+                    }
+                    else
+                    {
+                        <a href="#basic" class="card__cta cta">Adquira já</a>
+                    }
+                </div>
+            }
 
         <div class="overlay cards__inner"></div>
     </div>

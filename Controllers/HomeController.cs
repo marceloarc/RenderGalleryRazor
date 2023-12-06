@@ -48,6 +48,17 @@ namespace RenderGalleyRazor.Controllers
 
         public IActionResult Planos()
         {
+            int user_id = 0;
+            List<Planos> planos = db.Planos.ToList();
+            ViewBag.Planos = planos;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+            }
+            ViewBag.user_id = user_id;
+
             return View();
         }
 

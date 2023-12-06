@@ -28,6 +28,9 @@ namespace RenderGalleyRazor.Models
         public DbSet<Categoria> Categorias{ get; set; }
 
         public DbSet<LikesDeslikes> LikeDeslikes { get; set; }
+
+        public DbSet<Planos> Planos { get; set; }
+        public DbSet<Vantagens> Vantagens { get; set;}
     }
 
 }

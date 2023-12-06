@@ -33,10 +33,8 @@ namespace RenderGallery.Util
 
         public static bool ImageExistsInSystem(string hash)
         {
-            // Diretório raiz onde todas as imagens estão armazenadas
             string rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
-            // Procurar em todos os subdiretórios de usuários
             foreach (var userDirectory in Directory.GetDirectories(rootDirectory))
             {
                 var files = Directory.EnumerateFiles(userDirectory);
@@ -57,7 +55,6 @@ namespace RenderGallery.Util
 
         public static (string path, bool alreadyExistsForUser, bool alreadyExistsInSystem) WriteFile(IFormFile img, int userId)
         {
-            // Ler os bytes da imagem
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 img.CopyTo(memoryStream);
@@ -110,9 +107,7 @@ namespace RenderGallery.Util
             }
             return path;
 
-
         }
-
 
         public static String GetTimestamp(DateTime value)
         {

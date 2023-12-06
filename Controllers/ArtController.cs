@@ -61,7 +61,7 @@ namespace RenderGallery.Controllers
             List<Art> arts = db.Arts.Where(x => EF.Functions.Like(x.Arte, "%"+search+"%") || EF.Functions.Like(x.Categoria.Nome, "%" + search + "%")).ToList();
             ViewBag.user_id = user_id;
             ViewBag.Arts = arts;
-            ViewBag.Title = "Pesquisando por "+search;
+            ViewBag.Title = "Pesquisando por " + search;
 
             return View();
         }

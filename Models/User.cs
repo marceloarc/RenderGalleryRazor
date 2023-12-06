@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RenderGalleyRazor.Models
 {
-    [JsonObject(IsReference = true)]
     public class User
     {
         [Key]
@@ -23,5 +22,8 @@ namespace RenderGalleyRazor.Models
 
         public string? Pic { get; set; }
 
+        public int? plano_id { get; set; }
+        [ForeignKey("plano_id")]
+        public virtual Planos? Plano { get; set; }
     }
 }

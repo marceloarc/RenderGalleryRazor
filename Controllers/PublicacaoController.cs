@@ -75,34 +75,51 @@ namespace RenderGallery.Controllers
                 User user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
                 if (user != null)
                 {
-                    publi.User_id = user.Id;
-                    publi.User = user;
+                    Planos planos = db.Planos.FirstOrDefault(p => p.Id == user.plano_id);
 
-                    foreach (Art art in publi.Artes)
+                    if (planos != null)
                     {
-                        var (path, alreadyExistsForUser, alreadyExistsInSystem) = Functions.WriteFile(art.File, user.Id);
+                        int numeroDePublicacoes = db.Publicacoes.Count(p => p.User_id == user.Id);
 
-                        if (alreadyExistsForUser)
+                        if (numeroDePublicacoes >= planos.LimitePublicacoes)
                         {
-                            ModelState.AddModelError("Error", "Arte já cadastrada no sistema.");
+                            ModelState.AddModelError("Error", "Você atingiu o limite de publicações para o plano " + planos.Nome + "!");
                             return View();
                         }
 
-                        if (alreadyExistsInSystem)
+                        publi.User_id = user.Id;
+                        publi.User = user;
+
+                        foreach (Art art in publi.Artes)
                         {
-                            ModelState.AddModelError("Error", "Arte já cadastrada por outro usuário.");
-                            return View();
+                            var (path, alreadyExistsForUser, alreadyExistsInSystem) = Functions.WriteFile(art.File, user.Id);
+
+                            if (alreadyExistsForUser)
+                            {
+                                ModelState.AddModelError("Error", "Arte já cadastrada no sistema.");
+                                return View();
+                            }
+
+                            if (alreadyExistsInSystem)
+                            {
+                                ModelState.AddModelError("Error", "Arte já cadastrada por outro usuário.");
+                                return View();
+                            }
+
+
+                            var fileName = Path.GetFileName(path);
+                            var name = "images/" + user.Id + "/" + fileName;
+                            art.Path = name;
                         }
 
-
-                        var fileName = Path.GetFileName(path);
-                        var name = "images/" + user.Id + "/" + fileName;
-                        art.Path = name;
+                        db.Publicacoes.Add(publi);
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "home");
                     }
-
-                    db.Publicacoes.Add(publi);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", "home");
+                    else 
+                    {
+                        ModelState.AddModelError("Error", "Plano não encontrado para este usuário.");
+                    }
                 }
                 else
                 {
