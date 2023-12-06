@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RenderGalleyRazor.Models;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Numerics;
 
 namespace RenderGalleyRazor.Controllers
 {
@@ -32,7 +33,7 @@ namespace RenderGalleyRazor.Controllers
                 User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
                 user_id = user.Id;
             }
-            List<Art> arts = db.Arts.Where(x => x.categoria_id == id).ToList();
+            List<Art> arts = db.Arts.Where(x => x.categoria_id == id && x.Quantidade > 0).ToList();
             Categoria cat = db.Categorias.Where(x=> x.Id == id).FirstOrDefault();
             ViewBag.user_id = user_id;
             ViewBag.Arts = arts;

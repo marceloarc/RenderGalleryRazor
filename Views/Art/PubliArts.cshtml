@@ -167,7 +167,7 @@
                 int likes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isLike == true).Count();
                 int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
 
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-src="../../@art.Path" data-aos="fade" data-sub-html="<div class='middle3'><button class='item-btn item-image-like msg2' user_id='@art.Publicacao.User.Id'><i class='far fa-comments icone'></i></button><button class='item-btn item-image-like'><i class='far fa-heart icone'></i></button><button art_id='@art.Id' user_id='@art.Publicacao.User.Id' class='item-btn item-image-like add-cart2'><i class='fas fa-cart-plus icone'></i></button>
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-src="../../@art.Path" data-aos="fade" data-sub-html="<div class='middle3'><button class='item-btn item-image-like msg2' user_id='@art.Publicacao.User.Id'><i class='far fa-comments icone'></i></button><button art_id='@art.Id' user_id='@art.Publicacao.User.Id' class='item-btn item-image-like add-favorito2'><i class='far fa-heart icone'></i></button><button art_id='@art.Id' user_id='@art.Publicacao.User.Id' class='item-btn item-image-like add-cart2'><i class='fas fa-cart-plus icone'></i></button>
                                 <button class='item-btn item-image-like like2' is_like='1' style='margin-top:10px !important;' art_id='@art.Id' style='' user_id='@art.Publicacao.User.Id'>
                                     <i class='far fa-thumbs-up fa-lg'></i>
                 @likes
@@ -342,7 +342,7 @@
 
                 })
                 $(".add-cart2").click(function () {
-                    if (@ViewBag.user_id== $(this).attr("user_id")) {
+                    if (@user_id== $(this).attr("user_id")) {
                         Swal.fire({
                             title: "Não é possivel comprar seu proprio produto!",
                             html: "Irá fechar em <b></b> milisegundos.",
@@ -367,94 +367,215 @@
                         return
                     }
                     Swal.fire({
-                        title: "Digite a quantidade",
-                        input: "text",
-                        inputAttributes: {
-                            autocapitalize: "off"
-                        },
+                        title: "Adicionar produto?",
+                        text: "Deseja adicionar este produto em seu carrinho?",
+                        icon: "question",
                         showCancelButton: true,
-                        confirmButtonText: "Confirmar",
-                        showLoaderOnConfirm: true,
-                        preConfirm: async (quantidade) => {
-                            if (quantidade > 0) {
-                                var formData = new FormData();
-                                var art_id = $(this).attr("art_id");
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Sim!",
+                        cancelButtonText: "Não"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
 
-                                formData.append("art_id", art_id);
-                                formData.append("quantidade", quantidade);
-                                $.ajax({
-                                    dataType: "json",
-                                    type: "POST",
-                                    url: "/Cart/AddItem",
-                                    cache: false,
-                                    contentType: false,
-                                    processData: false,
-                                    data: formData,
-                                    success: function (retorno) {
-                                        console.log(retorno);
-                                        if (retorno == "sucesso") {
-                                            var url = "/Cart/Produtos";
-                                            $.get(url, function (data) {
-                                                $("#cd-cart").html(data);
-                                            });
-                                            let timerInterval;
-                                            Swal.fire({
-                                                title: "Produto adicionado!",
-                                                html: "Irá fechar em <b></b> milisegundos.",
-                                                timer: 1000,
-                                                timerProgressBar: true,
-                                                didOpen: () => {
-                                                    Swal.showLoading();
-                                                    const timer = Swal.getPopup().querySelector("b");
-                                                    timerInterval = setInterval(() => {
-                                                        timer.textContent = `${Swal.getTimerLeft()}`;
-                                                    }, 100);
-                                                },
-                                                willClose: () => {
-                                                    clearInterval(timerInterval);
-                                                }
-                                            }).then((result) => {
-                                                /* Read more about handling dismissals below */
-                                                if (result.dismiss === Swal.DismissReason.timer) {
-                                                    OpenCloseCart();
+                            var formData = new FormData();
+                            var art_id = $(this).attr("art_id");
 
-                                                }
-                                            });
-                                        }
+                            formData.append("art_id", art_id);
+                            formData.append("quantidade", 1);
+                            $.ajax({
+                                dataType: "json",
+                                type: "POST",
+                                url: "/Cart/AddItem",
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                data: formData,
+                                success: function (retorno) {
+                                    console.log(retorno);
+                                    if (retorno['s']) {
+                                        var url = "/Cart/Produtos";
+                                        $.get(url, function (data) {
+                                            $("#cd-cart").html(data);
+                                        });
+                                        let timerInterval;
+                                        Swal.fire({
+                                            title: "Produto adicionado!",
+                                            html: "Irá fechar em <b></b> milisegundos.",
+                                            timer: 1000,
+                                            timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                                const timer = Swal.getPopup().querySelector("b");
+                                                timerInterval = setInterval(() => {
+                                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                                }, 100);
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval);
+                                            }
+                                        }).then((result) => {
+                                            /* Read more about handling dismissals below */
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                OpenCloseCart();
 
-                                        if (retorno == "erro-1") {
-                                            let timerInterval;
-                                            Swal.fire({
-                                                title: "Você precisa estar logado para adicionar produtos no carrinho!",
-                                                html: "Irá fechar em <b></b> milisegundos.",
-                                                timer: 3000,
-                                                timerProgressBar: true,
-                                                didOpen: () => {
-                                                    Swal.showLoading();
-                                                    const timer = Swal.getPopup().querySelector("b");
-                                                    timerInterval = setInterval(() => {
-                                                        timer.textContent = `${Swal.getTimerLeft()}`;
-                                                    }, 100);
-                                                },
-                                                willClose: () => {
-                                                    clearInterval(timerInterval);
-                                                }
-                                            }).then((result) => {
-                                                /* Read more about handling dismissals below */
-                                                if (result.dismiss === Swal.DismissReason.timer) {
-                                                    OpenCloseCart();
-                                                }
-                                            });
-                                        }
-
+                                            }
+                                        });
                                     }
-                                });
-                            }
-                        }
 
+                                    if (retorno['e']) {
+                                        let timerInterval;
+                                        Swal.fire({
+                                            title: retorno['e'],
+                                            html: "Irá fechar em <b></b> milisegundos.",
+                                            timer: 2000,
+                                            timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                                const timer = Swal.getPopup().querySelector("b");
+                                                timerInterval = setInterval(() => {
+                                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                                }, 100);
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval);
+                                            }
+                                        }).then((result) => {
+                                            /* Read more about handling dismissals below */
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+
+                                            }
+                                        });
+                                    }
+
+                                }
+                            });
+                        }
                     });
 
-                })
+
+
+
+
+
+                });
+
+
+
+                $(".add-favorito2").click(function () {
+                    if (@user_id== $(this).attr("user_id")) {
+                        Swal.fire({
+                            title: "Não é possivel adicionar seu proprio produto como favorito!",
+                            html: "Irá fechar em <b></b> milisegundos.",
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+
+                            }
+                        });
+                        return
+                    }
+                    Swal.fire({
+                        title: "Adicionar produto?",
+                        text: "Deseja adicionar este produto em seus favoritos?",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Sim!",
+                        cancelButtonText: "Não"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            var formData = new FormData();
+                            var art_id = $(this).attr("art_id");
+
+                            formData.append("art_id", art_id);
+                            formData.append("quantidade", 1);
+                            $.ajax({
+                                dataType: "json",
+                                type: "POST",
+                                url: "/Favoritos/AddItem",
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                data: formData,
+                                success: function (retorno) {
+                                    console.log(retorno);
+                                    if (retorno['s']) {
+                                        var url = "/Favoritos/Produtos";
+                                        $.get(url, function (data) {
+                                            $("#cd-favorito").html(data);
+                                        });
+                                        let timerInterval;
+                                        Swal.fire({
+                                            title: "Produto adicionado!",
+                                            html: "Irá fechar em <b></b> milisegundos.",
+                                            timer: 1000,
+                                            timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                                const timer = Swal.getPopup().querySelector("b");
+                                                timerInterval = setInterval(() => {
+                                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                                }, 100);
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval);
+                                            }
+                                        }).then((result) => {
+                                            /* Read more about handling dismissals below */
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                OpenCloseFavoritos();
+
+                                            }
+                                        });
+                                    }
+
+                                    if (retorno['e']) {
+                                        let timerInterval;
+                                        Swal.fire({
+                                            title: retorno['e'],
+                                            html: "Irá fechar em <b></b> milisegundos.",
+                                            timer: 1000,
+                                            timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                                const timer = Swal.getPopup().querySelector("b");
+                                                timerInterval = setInterval(() => {
+                                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                                }, 100);
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval);
+                                            }
+                                        }).then((result) => {
+                                            /* Read more about handling dismissals below */
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                OpenCloseFavoritos();
+                                            }
+                                        });
+                                    }
+
+
+                                }
+                            });
+                        }
+                    });
+
+                });
              }   
            foi++;
         }, "1000");

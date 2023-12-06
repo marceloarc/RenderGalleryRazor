@@ -37,7 +37,7 @@ namespace RenderGallery.Controllers
                 }
                 else
                 {
-                    return Json(TempData["n"] = "erro-1");
+                    TempData["e"] = "Voçê precisa estar logado para relizar esta ação";
                 }
 
                 if (user_id > 0)
@@ -60,16 +60,15 @@ namespace RenderGallery.Controllers
                             produto.User_id = user_id;
                             produto.Quantidade = quantidade;
                             db.Produtos.Add(produto);
-                      
+                            db.SaveChanges();
+                            TempData["s"] = "sucesso";
                         }
                         else
                         {
-                            produto.Quantidade += quantidade;
-                         
+                            TempData["e"] = "Produto já se encontra em seu carrinho!"; 
                         }
 
-                        db.SaveChanges();
-                        return Json(TempData["s"] = "sucesso");
+
 
                     }
  
@@ -78,7 +77,7 @@ namespace RenderGallery.Controllers
 
 
             }
-            return Json(TempData["n"]="erro");
+            return Json(TempData);
         }
 
         public IActionResult Produtos() {

@@ -32,9 +32,7 @@
   
             <!-- Upload Profile Picure & Age -->
             <div  id="art-rows">
-                <div class="myRows">
-                  
-                </div>
+
 
             </div>
 
@@ -53,11 +51,29 @@
 <script>
     window.onload = function () {
         $("#add-row").click(function () {
-            var nextId = $(".myRows").length-1;
+            var nextId = $(".myRows").length;
             var url = "/Publicacao/Arte/" + nextId;
             $.get(url, function (data) {
                 $("#art-rows").append(data);
             });
         });
+
+        @if (ViewBag.success)
+        {
+            <text>
+            Swal.fire({
+                title: "Sucesso!",
+            text: "Publicação criada com sucesso!",
+            icon: "success"
+                });
+
+
+            setTimeout(() => {
+                window.location.href = "/Home";
+            }, "2000");
+                </text>
+        }
+   
+
     }
 </script>

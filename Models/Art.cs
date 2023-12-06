@@ -14,6 +14,8 @@ namespace RenderGalleyRazor.Models
         public string? Path { get; set; }
 
         public float Valor { get; set; }
+
+        public int Tipo { get; set; }
         
         public int Quantidade { get; set; }
 

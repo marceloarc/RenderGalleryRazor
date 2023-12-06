@@ -10,15 +10,22 @@
 }
 <style>
     .myRows{
-        padding:10px;
+        padding:25px;
+        border: solid #eee;
+        margin:10px;
+    }
+    .fa{
+        color:red;
+        cursor:pointer;
     }
 </style>
-<h2>Arte</h2>
-<div class="myRows">
+
+<div class="myRows" id="arte-@id">
+    <h2>Nova Arte <span art_id="@id" class="remove-row"><i class="fa fa-times"></i></span></h2>
     <div class="row">
         <div class="input-group">
             <label>Nome </label>
-            <input class="input-publi" id="Artes_ @id _Arte" name="Artes[@id].Arte" type="text" placholder="Enter your email address">
+            <input class="input-publi" id="Artes_ @id _Arte" name="Artes[@id].Arte" type="text" placholder="Nome da arte">
         </div>
         <div class="input-group" style="align-content:center; align-items:center;">
             <label>Arte</label>
@@ -47,10 +54,37 @@
     </div>
     <div class="row">
         <div class="input-group">
+            <label>Tipo de venda</label>
+
+            <select class="input-publi tipo" art_id="@id" id="Artes_ @id _Tipo" name="Artes[@id].Tipo">
+          
+             <option value="1">Licença</option>
+                <option value="2">Arte Única</option>
+            </select>
+        </div>
+
+    </div>
+    <div class="row" id="row-@id">
+        <div class="input-group">
             <label>Quantidade</label>
 
-            <input class="input-publi" id="Artes_ @id _Quantidade" name="Artes[@id].Quantidade" type="number">
+            <input class="input-publi" art_id="@id" id="Artes_ @id _Quantidade" name="Artes[@id].Quantidade" value="1" type="number">
         </div>
 
     </div>
 </div>
+<script>
+    $(".remove-row").click(function () {
+        var id = $(this).attr("art_id");
+        $("#arte-" + id).remove(); 
+    })
+    $(".tipo").change(function () {
+
+        var id = $(this).attr("art_id");
+        if ($(this).val() == 2) {
+            $("#row-" + id).hide();
+        }else{
+            $("#row-" + id).show();
+        }
+    })
+</script>

@@ -18,29 +18,31 @@
 
     @foreach (var chat in ViewBag.chats)
      {
-            var message = chat.Messages[chat.Messages.Count - 1];
-
-            foreach(var msg in chat.Messages)
+            if(chat.Messages.Count >0)
             {
-                if (msg.visu_status == 0)
+                var message = chat.Messages[chat.Messages.Count - 1];
+
+                foreach (var msg in chat.Messages)
                 {
-                    if (msg.user_id_to == chat.user_one)
+                    if (msg.visu_status == 0)
                     {
-                        message_total++;
+                        if (msg.user_id_to == chat.user_one)
+                        {
+                            message_total++;
+                        }
+
                     }
-              
                 }
-            }
 
 
-            <div class="friend" user_id="@chat.user_two">
-            
+                <div class="friend" user_id="@chat.user_two">
+
                     <img class="" src="~/@chat.User2.Pic" />
-         
-              
-        
+
+
+
                     <strong>@chat.User2.Name</strong><br>
-               
+
                     @if (message.user_id_from == chat.user_one)
                     {
                         <span style="">Você: @message.msg_content</span>
@@ -58,13 +60,19 @@
                         {
                             <div class="status inactive"></div>
                         }
-                   
-       
-                }
-               
-            </div>
 
-            <br />
+
+                    }
+
+                </div>
+
+                <br />
+            }
+            else
+            {
+                <h2>Nenhuma mensagem!</h2>
+            }
+
         }
     </div>
 }

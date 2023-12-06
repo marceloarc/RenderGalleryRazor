@@ -12,43 +12,13 @@ namespace RenderGallery.Controllers
     public class ArtController : Controller
     {
         private readonly DatabaseContext db;
-        private string caminhoServidor;
+
 
         public ArtController(DatabaseContext db)
         {
             this.db = db;
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Upload([FromForm]Files arte)
-        {
-            User user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
-
-            string caminhoArquivo = Functions.WriteFile(arte.File, user.Id).path;
-
-            if (string.IsNullOrEmpty(caminhoArquivo))
-            {
-                return BadRequest("Erro ao fazer o upload da imagem");
-            }
-
-
-            TempData["sucesso"] = "Upload realizado com sucesso!";
-            TempData["path"] = caminhoArquivo;
-            return Ok(TempData);
-        }
-
-        [HttpPost("[action]")]
-        public async Task<IActionResult> SaveArt(Art arte)
-        {
-
-            arte.dataHora = DateTime.Now;
-
-            db.Arts.Add(arte);
-            db.SaveChanges();
-
-            TempData["sucesso"] = "Arte Cadastrada com sucesso!";
-            return Ok(TempData);
-        }
 
         public IActionResult Search(string search)
         {
@@ -58,10 +28,10 @@ namespace RenderGallery.Controllers
                 User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
                 user_id = user.Id;
             }
-            List<Art> arts = db.Arts.Where(x => EF.Functions.Like(x.Arte, "%"+search+"%") || EF.Functions.Like(x.Categoria.Nome, "%" + search + "%")).ToList();
+            List<Art> arts = db.Arts.Where(x => EF.Functions.Like(x.Arte, "%"+search+"%") || EF.Functions.Like(x.Categoria.Nome, "%" + search + "%") && x.Quantidade >0).ToList();
             ViewBag.user_id = user_id;
             ViewBag.Arts = arts;
-            ViewBag.Title = "Pesquisando por " + search;
+            ViewBag.Title = "Pesquisando por "+search;
 
             return View();
         }
@@ -74,7 +44,7 @@ namespace RenderGallery.Controllers
                 User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
                 user_id = user.Id;
             }
-            List<Art> arts = db.Arts.Where(x => x.publi_id == publi_id).ToList();
+            List<Art> arts = db.Arts.Where(x => x.publi_id == publi_id && x.Quantidade > 0).ToList();
             ViewBag.user_id = user_id;
             ViewBag.Arts = arts;
             ViewBag.Title = "teste";

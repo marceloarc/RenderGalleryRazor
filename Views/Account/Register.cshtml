@@ -143,7 +143,21 @@ box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);" src="~/images/user.jpg" id="out
             $(".text-danger").hide();
         })
 
+    @if (ViewBag.success)
+    {
+        <text>
+                Swal.fire({
+                    title: "Sucesso!",
+                    text: "Registro realizado!",
+                    icon: "success"
+                });
 
+
+            setTimeout(() => {
+                window.location.href = "/Home";
+            }, "1000");
+        </text>
+    }
     }
 
 </script>

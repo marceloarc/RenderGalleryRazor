@@ -5,5 +5,6 @@ namespace RenderGalleyRazor.Models
     {
         public VMLogin login { get; set; }
         public VMRegistro registro { get; set; }
+
     }
 }

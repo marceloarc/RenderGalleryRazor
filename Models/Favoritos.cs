@@ -8,16 +8,16 @@ namespace RenderGalleyRazor.Models
         [Key]
         public int Id { get; set; }
 
-        public int? cli_id { get; set; }
+        public int? user_id { get; set; }
 
-        public int? publi_id { get; set; }       
+        public int? art_id { get; set; }       
 
-        [ForeignKey("cli_id")]
-        public virtual Cliente? cliente { get; set; }
+        [ForeignKey("user_id")]
+        public virtual User? User { get; set; }
 
 
-        [ForeignKey("publi_id")]
-        public virtual Publicacao? Publicacao { get; set; }
+        [ForeignKey("art_id")]
+        public virtual Art? Art { get; set; }
 
     }
 }

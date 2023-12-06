@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Carrinho";
+}
+
+
+<link rel="stylesheet" href="~/css/styles.css" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+<div class="content-favorito">
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Total</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var produtos in ViewBag.favoritos)
+                {
+                    <tr>
+                        <td>
+                            <div class="product">
+                                <img src="~/@produtos.Art.Arte" alt="" />
+                                <div class="info">
+                                    <div class="name">@produtos.Art.Arte</div>
+                                    <div class="category">@produtos.Art.Categoria.Nome</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="add-cart"><i class="bx bx-x"></i></button>
+                        </td>
+                        <td>
+                            <button class="remove"><i class="bx bx-x"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+    <aside>
+        <div class="box">
+            <header>Resumo da compra</header>
+            <div class="info">
+                <div><span>Sub-total</span><span>R$ 418</span></div>
+            </div>
+            <footer>
+                <span>Total</span>
+                <span>R$ 418</span>
+            </footer>
+        </div>
+        <button>Finalizar Compra</button>
+    </aside>
+</div>

@@ -20,6 +20,7 @@ namespace RenderGalleyRazor.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            ViewBag.success = false;
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
@@ -30,6 +31,7 @@ namespace RenderGalleyRazor.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(VMRegistro registro)
         {
+            ViewBag.success = false;
             if (ModelState.IsValid)
             {
                 //Copia os dados do VMRegistro para o IdentityUser
@@ -46,44 +48,50 @@ namespace RenderGalleyRazor.Controllers
                 }
                 else
                 {
-                    var path = "";
-                    var name = "";
-                    if (registro.File != null)
-                    {
-                        path = Functions.WriteFilePerfil(registro.File);
-                        var fileName = Path.GetFileName(path);
-                        name = "images/"+ fileName;
-                    }
 
-                    if (name == "")
-                    {
-                        name = "images/user.jpg";
-                    }
-                    //Armazena os dados do usuário na tabela AspNetUsers
-                    IdentityResult result = await _userManager.CreateAsync(user, registro.Password);
+                
 
-                    //Se o usuário foi criado com sucesso, faz o login atravez do signInManager
-                    if (result.Succeeded)
-                    {
-                        User user1 = new User();
-                        user1.Name = registro.Nome;
-                        user1.Email = registro.Email;
-                        user1.Pic = name;
-                        user1.plano_id = 1;
-                        db.Users.Add(user1);
-                        db.SaveChanges();
-                        await _userManager.AddToRoleAsync(user, "Artista");
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return RedirectToAction("Index", "home");
-                    }
-
-                    //Se houver erros entrão inclui no ModelState
-                    if (result.Errors != null)
-                    {
-                        ModelState.AddModelError("Error", "A senha deve possuir mais de 6 caracteres, uma letra minúscula, uma maiúscula e um caractere especial.");
-
-                    }
+                var path = "";
+                var name = "";
+                if (registro.File != null)
+                {
+                    path = Functions.WriteFilePerfil(registro.File);
+                    var fileName = Path.GetFileName(path);
+                    name = "images/"+ fileName;
                 }
+
+                if (name == "")
+                {
+                    name = "images/user.jpg";
+                }
+                //Armazena os dados do usuário na tabela AspNetUsers
+                IdentityResult result = await _userManager.CreateAsync(user, registro.Password);
+
+                //Se o usuário foi criado com sucesso, faz o login atravez do signInManager
+                if (result.Succeeded)
+                {
+                    User user1 = new User();
+                    user1.Name = registro.Nome;
+                    user1.Email = registro.Email;
+                    user1.Pic = name;
+                    user1.plano_id = 1;
+                    db.Users.Add(user1);
+                    db.SaveChanges();
+                    await _userManager.AddToRoleAsync(user, "Artista");
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    ViewBag.success = true;
+                    return View();
+                }
+
+
+
+                //Se houver erros entrão inclui no ModelState
+                if (result.Errors != null)
+                {
+                    ModelState.AddModelError("Error", "A senha deve possuir mais de 6 caracteres, uma letra minúscula, uma maiúscula e um caractere especial.");
+
+                }
+            }
             }
             ViewBag.btn = "register";
             return View();
@@ -96,6 +104,7 @@ namespace RenderGalleyRazor.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(VMLogin login)
         {
+            ViewBag.success = false;
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);

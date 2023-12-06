@@ -59,7 +59,7 @@ namespace RenderGallery.Controllers
         [HttpGet]
         public IActionResult Create()
     {
-
+            ViewBag.success = false;
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
@@ -70,6 +70,7 @@ namespace RenderGallery.Controllers
         [HttpPost]
         public IActionResult Create(Publicacao publi)
         {
+            ViewBag.success = false;
             if (ModelState.IsValid)
             {
                 User user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
@@ -86,7 +87,6 @@ namespace RenderGallery.Controllers
                             ModelState.AddModelError("Error", "Você atingiu o limite de publicações para o plano " + planos.Nome + "!");
                             return View();
                         }
-
                         publi.User_id = user.Id;
                         publi.User = user;
 
@@ -114,9 +114,9 @@ namespace RenderGallery.Controllers
 
                         db.Publicacoes.Add(publi);
                         db.SaveChanges();
-                        return RedirectToAction("Index", "home");
+                        ViewBag.success = true;
                     }
-                    else 
+                    else
                     {
                         ModelState.AddModelError("Error", "Plano não encontrado para este usuário.");
                     }
@@ -130,6 +130,8 @@ namespace RenderGallery.Controllers
             {
                 ModelState.AddModelError("Error", "Todos os campos são obrigatórios.");
             }
+
+            
 
             return View();
         }

@@ -189,7 +189,7 @@
                         }
 
 
-                        <button class="item-btn item-image-like" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                        <button class="item-btn item-image-like add-favorito" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
                             <i class="far fa-heart fa-lg icone"></i>
 
                         </button>
@@ -328,124 +328,7 @@
             $("#modal1").modal("show");
             
         })
-            $(".add-cart").click(function(){
-            if (@ViewBag.user_id== $(this).attr("user_id")) {
-                Swal.fire({
-                    title: "Não é possivel comprar seu proprio produto!",
-                    html: "Irá fechar em <b></b> milisegundos.",
-                    timer: 1000,
-                    timerProgressBar: true,
-                    didOpen: () => {
-                        Swal.showLoading();
-                        const timer = Swal.getPopup().querySelector("b");
-                        timerInterval = setInterval(() => {
-                            timer.textContent = `${Swal.getTimerLeft()}`;
-                        }, 100);
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval);
-                    }
-                }).then((result) => {
-                    /* Read more about handling dismissals below */
-                    if (result.dismiss === Swal.DismissReason.timer) {
-
-                    }
-                });
-                return
-            }
-            Swal.fire({
-                title: "Digite a quantidade",
-                input: "text",
-                inputAttributes: {
-                    autocapitalize: "off"
-                },
-                showCancelButton: true,
-                confirmButtonText: "Confirmar",
-                showLoaderOnConfirm: true,
-                preConfirm: async (quantidade) => {
-                    if (quantidade > 0) {
-                        var formData = new FormData();
-                        var art_id = $(this).attr("art_id");
-                 
-                        formData.append("art_id", art_id);
-                        formData.append("quantidade", quantidade);
-                        $.ajax({
-                            dataType: "json",
-                            type: "POST",
-                            url: "/Cart/AddItem",
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            data: formData,
-                            success: function (retorno) {
-                                console.log(retorno);
-                                if (retorno=="sucesso") {
-                                    var url = "/Cart/Produtos";
-                                    $.get(url, function (data) {
-                                        $("#cd-cart").html(data);
-                                    });
-                                    let timerInterval;
-                                    Swal.fire({
-                                        title: "Produto adicionado!",
-                                        html: "Irá fechar em <b></b> milisegundos.",
-                                        timer: 1000,
-                                        timerProgressBar: true,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                            const timer = Swal.getPopup().querySelector("b");
-                                            timerInterval = setInterval(() => {
-                                                timer.textContent = `${Swal.getTimerLeft()}`;
-                                            }, 100);
-                                        },
-                                        willClose: () => {
-                                            clearInterval(timerInterval);
-                                        }
-                                    }).then((result) => {
-                                        /* Read more about handling dismissals below */
-                                        if (result.dismiss === Swal.DismissReason.timer) {
-                                            OpenCloseCart();
-
-                                        }
-                                    });
-                                }
-
-                                if(retorno=="erro-1"){
-                                    let timerInterval;
-                                    Swal.fire({
-                                        title: "Você precisa estar logado para adicionar produtos no carrinho!",
-                                        html: "Irá fechar em <b></b> milisegundos.",
-                                        timer: 3000,
-                                        timerProgressBar: true,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                            const timer = Swal.getPopup().querySelector("b");
-                                            timerInterval = setInterval(() => {
-                                                timer.textContent = `${Swal.getTimerLeft()}`;
-                                            }, 100);
-                                        },
-                                        willClose: () => {
-                                            clearInterval(timerInterval);
-                                        }
-                                    }).then((result) => {
-                                        /* Read more about handling dismissals below */
-                                        if (result.dismiss === Swal.DismissReason.timer) {
-                                            OpenCloseCart();
-                                        }
-                                    });
-                                }
-
-                            }
-                        });
-                    }
-                }
-       
-            });
-
-            })
-
-        
-
-
+           
 
 
 

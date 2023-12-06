@@ -32,21 +32,28 @@
                         <div class="cd-price">@produto.Quantidade x R$@produto.Arte.Valor</div>
                        
                     </div>
-                    <button class="cd-item-remove cd-img-replace" product_id="@produto.Id">Remove</button>
+                    <button class="cd-item-remove cd-img-replace remove-cart" product_id="@produto.Id">Remove</button>
          </div>
  
     
                 </li>
             }
             </ul>
+    <div class="cd-cart-total">
+        <p>Total <span>R$@total</span></p>
+    </div> <!-- cd-cart-total -->
+
+
+    <a href="#0" class="checkout-btn">Finzalizar Compra</a>
+}
+else
+{
+
+    <h2>Nenhum produto no carrinho!</h2>
+
 }
   
-<div class="cd-cart-total">
-        <p>Total <span>R$@total</span></p>
-</div> <!-- cd-cart-total -->
 
-
-<a href="#0" class="checkout-btn">Finzalizar Compra</a>
 
 @* <p class="cd-go-to-cart"><a href="#0">Go to cart page</a></p> *@
 
@@ -57,7 +64,7 @@
             OpenCloseCart();
 
         });
-        $(".cd-item-remove").click(function () {
+        $(".remove-cart").click(function () {
             Swal.fire({
                 title: "Tem certeza?",
                 text: "Isto irá remover o produto de seu carrinho!",
