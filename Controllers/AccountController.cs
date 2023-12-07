@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using RenderGallery.Util;
 using RenderGalleyRazor.Models;
+using System.IO;
 
 namespace RenderGalleyRazor.Controllers
 {
@@ -127,11 +129,10 @@ namespace RenderGalleyRazor.Controllers
             return RedirectToAction("Index", "home");
         }
 
-
+        [HttpGet]
         public IActionResult Editar()
         {
             int user_id = 0;
-
             if (User.Identity.IsAuthenticated)
             {
                 User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
@@ -141,5 +142,73 @@ namespace RenderGalleyRazor.Controllers
 
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar(VMEditar editar)
+        {
+            if (ModelState.IsValid)
+            {
+                string userEmail = User.Identity.Name;
+                IdentityUser identityUser = await _userManager.FindByEmailAsync(userEmail); 
+
+                if (identityUser != null)
+                {
+                    // Atualiza os dados do IdentityUser
+                    identityUser.Email = editar.Email;
+                    identityUser.UserName = editar.Email;
+
+                    var result = await _userManager.UpdateAsync(identityUser);
+
+                    if (result.Succeeded)
+                    {
+                        // Atualiza a senha se foi fornecida
+                        if (!string.IsNullOrEmpty(editar.Password))
+                        {
+                            var changePasswordResult = await _userManager.ChangePasswordAsync(identityUser, editar.Password, editar.RepeatePassword);
+
+                            if (!changePasswordResult.Succeeded)
+                            {
+                                foreach (var error in changePasswordResult.Errors)
+                                {
+                                    ModelState.AddModelError("Error", error.Description);
+                                }
+                                return View(editar);
+                            }
+                        }
+
+
+                        // Atualiza os dados do seu modelo de usuário personalizado (caso necessário)
+                        User user = db.Users.FirstOrDefault(u => u.Email == userEmail);
+                        if (user != null)
+                        {
+                            user.Name = editar.Nome;
+                            user.Telefone = editar.Telefone;
+                            var path = "";
+                            var name = "";
+                            if (editar.File != null)
+                            {
+                                path = Functions.WriteFilePerfil(editar.File);
+                                var fileName = Path.GetFileName(path);
+                                name = "images/" + fileName;
+                            }
+                            user.Pic = name;
+                            db.SaveChanges();
+                        }
+
+                        // Redireciona para alguma página de confirmação/sucesso
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+
+            // Se ocorrerem erros de validação ou outras falhas, retorna para a view de edição com os erros
+            return View(editar);
+        }
+
     }
 }

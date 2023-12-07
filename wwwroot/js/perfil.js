@@ -25,3 +25,4 @@ function previewImage(input) {
 function atualizarDetalhes() {
     // Adicione aqui a lógica para atualizar os detalhes da conta, incluindo o novo avatar.
 }
+
