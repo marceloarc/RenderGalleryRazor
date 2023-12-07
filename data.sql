@@ -6,8 +6,8 @@ insert into Categorias (Nome,Image,Descricao) VALUES ('Retrô','images/retrô2.p
 insert into Categorias (Nome,Image,Descricao) VALUES ('Cyberpunk','images/cyber2.png','Cyberpunk');
 
 -- Inserir o Plano Básico
-INSERT INTO Planos (Nome, Preco, LimitePublicacoes, Taxa)
-VALUES ('Básico', 0, 10, 0.07);
+INSERT INTO Planos (Nome, Preco, LimitePublicacoes, Taxa, Cor)
+VALUES ('Básico', 0, 10, 0.07, '#00FFFF');
 
 -- Obter o ID do último plano inserido (Básico)
 DECLARE @planoBasicoId INT;
@@ -20,8 +20,8 @@ VALUES (@planoBasicoId, 'Limite de 10 postagens'),
        (@planoBasicoId, 'Ao atingir 50 curtidas, recebe o selo de verificado');
 
 -- Inserir o Plano Pro
-INSERT INTO Planos (Nome, Preco, LimitePublicacoes, Taxa)
-VALUES ('Pro', 30.0, 50, 0.05);
+INSERT INTO Planos (Nome, Preco, LimitePublicacoes, Taxa, Cor)
+VALUES ('Pro', 30.0, 50, 0.05, '#A020F0');
 
 -- Obter o ID do último plano inserido (Pro)
 DECLARE @planoProId INT;
@@ -34,8 +34,8 @@ VALUES (@planoProId, 'Limite de 30 postagens'),
        (@planoProId, 'Ao atingir 20 curtidas, recebe o selo de verificado');
 
 -- Inserir o Plano Ultimate
-INSERT INTO Planos (Nome, Preco, LimitePublicacoes, Taxa)
-VALUES ('Ultimate', 30.0, 50, 0.05);
+INSERT INTO Planos (Nome, Preco, LimitePublicacoes, Taxa, Cor)
+VALUES ('Ultimate', 30.0, 50, 0.05, '#FF0000');
 
 -- Obter o ID do último plano inserido (Ultimate)
 DECLARE @planoUltimateId INT;

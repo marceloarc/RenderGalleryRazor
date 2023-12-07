@@ -12,6 +12,7 @@ namespace RenderGalleyRazor.Models
         public int LimitePublicacoes { get; set; }
         public float taxa { get; set; }
         public virtual ICollection<Vantagens> Vantagens { get; set; }
+        public string cor { get; set; }
 
     }
 }

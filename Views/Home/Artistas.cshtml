@@ -1,0 +1,167 @@
+﻿﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@using RenderGalleyRazor.Models;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+
+@{
+    var user_id = 0;
+    var users = dbContext.Users.ToList();
+    var arts = dbContext.Arts.ToList();
+    var numCard = 1;
+
+    if (SignInManager.IsSignedIn(User))
+    {
+
+        var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+        user_id = user.Id;
+    }
+}
+
+
+
+<link rel="stylesheet" href="~/css/card.css">
+<style>
+    .msg{
+        cursor:pointer;
+    }
+</style>
+<body>
+    @foreach (var user in users)
+    {
+        <div class="pCard_card">
+            <div class="pCard_up" style="background-image: url('../../@user.Pic');">
+                <div class="pCard_text">
+                    <div style="position: relative;">
+                        <div style="position: absolute; background-color: #1f2937; padding: 0.2em; border-radius: 40.25em; z-index: 1; width: 70%; height:40px; left: 50%; transform: translateX(-50%); text-align: center;">
+                            <h2 style="margin: 0; padding: 0;">@user.Name <i class="fa fa-check-circle" style="color: @user.Plano.cor"></i></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="pCard_add" data-button-index=@numCard><i class="fa fa-plus"></i></div>
+            </div>
+            <div class="pCard_down">
+                <div>
+                    <p>Artes</p>
+                    <p>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</p>
+                </div>
+                <div>
+                    <br />
+                    <i class="fas fa-comments fa-lg" style="color:#3498DB;"></i>
+                </div>
+                @{
+                    var publi = dbContext.Publicacoes
+                    .Where(p => p.User.Id == user.Id)
+                    .SelectMany(p => p.Artes)
+                    .ToList();
+
+                    var artIds = publi.Select(a => a.Id).ToList();
+
+                    int totalLikes = dbContext.LikeDeslikes
+                    .Where(ld => ld.isLike && artIds.Contains(ld.art_id ?? 0))
+                    .Count();
+                }
+                <div>
+                    <p>LCurtidas</p>
+                    <p>@totalLikes</p>
+                </div>
+            </div>
+            <div class="pCard_back">
+                <p>Veja minhas ultimas publicações</p>
+                @{
+                    // Filtrando apenas as artes relacionadas ao usuário atual
+                    var userArts = dbContext.Arts
+                    .Where(art => art.Publicacao.User.Id == user.Id)
+                    .ToList();
+
+                    var userArtPaths = userArts
+                    .Select(art => art.Path)
+                    .ToList();
+                }
+                @foreach (var artPath in userArtPaths)
+                {
+                    <a href="#"><img src="~/@artPath" alt=""></a>
+                }
+                <p>Deixe seu Like!</p>
+            </div>
+
+            <div class="pCard_up">
+                <div class="pCard_text">
+                    <div style="position: relative;">
+                        <div style="position: absolute; background-color: #1f2937; padding: 0.2em; border-radius: 40.25em; z-index: 1; width: 70%; height:40px; left: 50%; transform: translateX(-50%); text-align: center;">
+                            <h2 style="margin: 0; padding: 0;">@user.Name <i class="fa fa-check-circle" style="color: @user.Plano.cor"></i></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="pCard_add" data-button-index=@numCard><i class="fa fa-plus"></i></div>
+            </div>
+            <div class="pCard_down">
+                <div>
+                    <p>Artes</p>
+                    <p>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</p>
+                </div>
+                <div>
+                    <br />
+                    <i class="fas fa-comments fa-lg msg" user_id="@user.Id" style="color:#3498DB;"></i>
+                </div>
+                <div>
+                    <p>Curtidas</p>
+                    <p>@totalLikes</p>
+                </div>
+            </div>
+            <div class="pCard_back">
+                <p>Veja minhas ultimas publicações</p>
+                @foreach (var artPath in userArtPaths)
+                {
+                    <a href="#"><img src="~/@artPath" alt=""></a>
+                }
+                <p>Deixe seu Like!</p>
+            </div>
+        </div>
+        numCard++;
+    }
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".pCard_add").click(function () {
+                var card = $(this).closest('.pCard_card'); // Encontra o elemento .pCard_card mais próximo
+                card.toggleClass("pCard_on");
+                 // Alterna a exibição do .pCard_back dentro do cartão clicado
+                $(this).find("i").toggleClass("fa-minus");
+            });
+            $(".msg").click(function () {
+                $("#msg-content").val("");
+
+                if (@user_id== $(this).attr("user_id")) {
+                    Swal.fire({
+                        title: "Não é possivel mandar mensagens para si mesmo!",
+                        html: "Irá fechar em <b></b> milisegundos.",
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+
+                        }
+                    });
+                    return
+                }
+
+                updateChat($(this).attr("user_id"));
+                $("#modal1").modal("show");
+
+            })
+        });
+    </script>
+</body>

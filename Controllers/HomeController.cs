@@ -68,5 +68,24 @@ namespace RenderGalleyRazor.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        public IActionResult Artistas()
+        {
+            int user_id = 0;
+            List<User> users = db.Users.ToList();
+            ViewBag.Users = users;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+            }
+            ViewBag.user_id = user_id;
+            List<Art> arts = db.Arts.ToList();
+            ViewBag.Arts = arts;
+
+            return View();
+        }
     }
 }
