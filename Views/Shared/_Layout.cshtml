@@ -577,6 +577,18 @@
 
         });
 
+
+        setInterval(function () {
+
+
+
+            if ($(".chat__conversation-board")[0].scrollHeight - $(".chat__conversation-board").scrollTop() == $(".chat__conversation-board").outerHeight()) {
+                var id = $("#chat").attr("to_id");
+                updateChat(id);
+            }
+
+
+        }, 3000);
 </script>
 
 </body>

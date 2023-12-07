@@ -7,7 +7,6 @@
     var user_id = 0;
     var users = dbContext.Users.ToList();
     var arts = dbContext.Arts.ToList();
-    var numCard = 1;
 
     if (SignInManager.IsSignedIn(User))
     {
@@ -37,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pCard_add" data-button-index=@numCard><i class="fa fa-plus"></i></div>
+                <div class="pCard_add" ><i class="fa fa-plus"></i></div>
             </div>
             <div class="pCard_down">
                 <div>
@@ -71,15 +70,13 @@
                     // Filtrando apenas as artes relacionadas ao usuário atual
                     var userArts = dbContext.Arts
                     .Where(art => art.Publicacao.User.Id == user.Id)
-                    .ToList();
-
-                    var userArtPaths = userArts
-                    .Select(art => art.Path)
+                    .OrderByDescending(art => art.Id) // Ordena as artes pela data de criação, da mais recente para a mais antiga
+                    .Take(6) // Seleciona apenas as seis primeiras artes
                     .ToList();
                 }
-                @foreach (var artPath in userArtPaths)
+                @foreach (var art in userArts)
                 {
-                    <a href="#"><img src="~/@artPath" alt=""></a>
+                    <a href="#"><img src="~/@art.Path" alt=""></a>
                 }
                 <p>Deixe seu Like!</p>
             </div>
@@ -92,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pCard_add" data-button-index=@numCard><i class="fa fa-plus"></i></div>
+                <div class="pCard_add" ><i class="fa fa-plus"></i></div>
             </div>
             <div class="pCard_down">
                 <div>
@@ -101,7 +98,8 @@
                 </div>
                 <div>
                     <br />
-                    <i class="fas fa-comments fa-lg msg" user_id="@user.Id" style="color:#3498DB;"></i>
+                        <i class="fas fa-comments fa-lg msg" user_id="@user.Id" style="color:#3498DB;"></i>
+                    
                 </div>
                 <div>
                     <p>Curtidas</p>
@@ -110,14 +108,13 @@
             </div>
             <div class="pCard_back">
                 <p>Veja minhas ultimas publicações</p>
-                @foreach (var artPath in userArtPaths)
+                @foreach (var art in userArts)
                 {
-                    <a href="#"><img src="~/@artPath" alt=""></a>
+                    <a href="#"><img src="~/@art.Path" alt=""></a>
                 }
                 <p>Deixe seu Like!</p>
             </div>
         </div>
-        numCard++;
     }
 
 
@@ -130,6 +127,7 @@
                  // Alterna a exibição do .pCard_back dentro do cartão clicado
                 $(this).find("i").toggleClass("fa-minus");
             });
+            
             $(".msg").click(function () {
                 $("#msg-content").val("");
 
@@ -156,6 +154,10 @@
                         }
                     });
                     return
+                }
+                else if (!@user_id) {
+                    window.location.href = '/Account/Register'; 
+                    return;
                 }
 
                 updateChat($(this).attr("user_id"));

@@ -237,18 +237,6 @@
     window.onload = function () {
 
 
-        setInterval(function () {
-
-
-
-            if ($(".chat__conversation-board")[0].scrollHeight - $(".chat__conversation-board").scrollTop() == $(".chat__conversation-board").outerHeight()) {
-                var id = $("#chat").attr("to_id");
-                updateChat(id);
-            }
-        
-        
-        }, 5000);
-
         $(".like").click(function(){
             var btn = $(this)
             var formData = new FormData();
@@ -257,7 +245,7 @@
             var is_like = $(this).attr("is_like");
         
             if(user_id == 0 ){
-                alert("deslogado!");
+                window.location.href = '/Account/Register';
                 return
             }
 
@@ -322,6 +310,9 @@
                     }
                 });
                 return
+            } else if (!@ViewBag.user_id) {
+                window.location.href = '/Account/Register';
+                return;
             }
 
             updateChat($(this).attr("user_id"));
