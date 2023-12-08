@@ -88,10 +88,31 @@ namespace RenderGalleyRazor.Controllers
 
 
                 //Se houver erros entrão inclui no ModelState
-                if (result.Errors != null)
+                if (!result.Succeeded)
                 {
-                    ModelState.AddModelError("Error", "A senha deve possuir mais de 6 caracteres, uma letra minúscula, uma maiúscula e um caractere especial.");
-
+                    foreach (var error in result.Errors)
+                    {
+                        if (error.Code == "PasswordMismatch")
+                        {
+                            ModelState.AddModelError("Password", "Senha Incorreta.");
+                        }
+                        else if (error.Code == "PasswordRequiresLower")
+                        {
+                            ModelState.AddModelError("Password", "As senhas devem ter pelo menos uma letra minúscula ('a'-'z').");
+                        }
+                        else if (error.Code == "PasswordRequiresUpper")
+                        {
+                            ModelState.AddModelError("Password", "As senhas devem ter pelo menos uma letra maiúscula ('A'-'Z').");
+                        }
+                        else if (error.Code == "PasswordTooShort")
+                        {
+                            ModelState.AddModelError("Password", "As senhas devem ter pelo menos 5 caracteres.");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Password", error.Code);
+                        }
+                    }
                 }
             }
             }
@@ -109,14 +130,35 @@ namespace RenderGalleyRazor.Controllers
             ViewBag.success = false;
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByEmailAsync(login.Email);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("Email", "Email não encontrado.");
+                    return View("Register");
+                }
+
                 var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
 
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "home");
                 }
-
-                ModelState.AddModelError("Error", "Login Inválido");
+                else
+                {
+                    if (result.IsNotAllowed)
+                    {
+                        ModelState.AddModelError("Email", "Login não permitido.");
+                    }
+                    else if (result.IsLockedOut)
+                    {
+                        ModelState.AddModelError("Email", "A conta está bloqueada. Tente novamente mais tarde.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Password", "Senha incorreta.");
+                    }
+                }
             }
             ViewBag.btn = "login";
             return View("Register");
@@ -164,13 +206,32 @@ namespace RenderGalleyRazor.Controllers
                         // Atualiza a senha se foi fornecida
                         if (!string.IsNullOrEmpty(editar.Password))
                         {
-                            var changePasswordResult = await _userManager.ChangePasswordAsync(identityUser, editar.Password, editar.RepeatePassword);
+                            var changePasswordResult = await _userManager.ChangePasswordAsync(identityUser, editar.Password, editar.NewPassword);
 
                             if (!changePasswordResult.Succeeded)
                             {
                                 foreach (var error in changePasswordResult.Errors)
                                 {
-                                    ModelState.AddModelError("Error", error.Description);
+                                    if (error.Code == "PasswordMismatch")
+                                    {
+                                        ModelState.AddModelError("Password", "Senha Incorreta.");
+                                    }
+                                    else if(error.Code == "PasswordRequiresLower")
+                                    {
+                                        ModelState.AddModelError("NewPassword", "As senhas devem ter pelo menos uma letra minúscula ('a'-'z').");
+                                    }
+                                    else if (error.Code == "PasswordRequiresUpper")
+                                    {
+                                        ModelState.AddModelError("NewPassword", "As senhas devem ter pelo menos uma letra maiúscula ('A'-'Z').");
+                                    }
+                                    else if (error.Code == "PasswordTooShort")
+                                    {
+                                        ModelState.AddModelError("NewPassword", "As senhas devem ter pelo menos 5 caracteres.");
+                                    }
+                                    else
+                                    {
+                                        ModelState.AddModelError("NewPassword", error.Code);
+                                    }
                                 }
                                 return View(editar);
                             }
@@ -190,8 +251,8 @@ namespace RenderGalleyRazor.Controllers
                                 path = Functions.WriteFilePerfil(editar.File);
                                 var fileName = Path.GetFileName(path);
                                 name = "images/" + fileName;
+                                user.Pic = name;
                             }
-                            user.Pic = name;
                             db.SaveChanges();
                         }
 

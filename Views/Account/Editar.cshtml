@@ -39,6 +39,7 @@
                 <!-- Adiciona um campo de input para a imagem, mas o mantém oculto -->
 
                 <input asp-for="File" type="file" class="form-control-file" id="avatarInput" accept="image/" style="display: none" onchange="previewImage(this)">
+                <span asp-validation-for="Error" class="text-danger"></span>
 
                 <div class="form-group">
                     <label for="Email">Email<span></span></label>
@@ -59,15 +60,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="Password">Nova Senha<span></span></label> 
+                    <label for="Password">Senha Antiga<span></span></label> 
                     <input asp-for="Password" type="password" class="form-control" id="exampleInputSenha" aria-describedby="emailHelp" placeholder="" value="">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="ReplacePassword">Confirme Sua Senha<span></span></label>
-                    <input asp-for="RepeatePassword" type="password" class="form-control" id="exampleInputConfirmSenha" aria-describedby="emailHelp" placeholder="" value="">
-                    <span asp-validation-for="RepeatePassword" class="text-danger"></span>
+                    <label for="NewPassword">Nova Senha<span></span></label>
+                    <input asp-for="NewPassword" type="password" class="form-control" id="exampleInputConfirmSenha" aria-describedby="emailHelp" placeholder="" value="">
+                    <span asp-validation-for="NewPassword" class="text-danger"></span>
                 </div>
 
                 <button formaction="~/Account/Editar" class="button-login btn-login" type="submit">Atualizar detalhes da conta</button>
