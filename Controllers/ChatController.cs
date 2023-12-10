@@ -56,7 +56,6 @@ namespace RenderGallery.Controllers
                         conversa.status = 0;
                         db.Chats.Add(conversa);
                         db.SaveChanges();
-
                     }
                 }
                 if(conversa.Messages != null)

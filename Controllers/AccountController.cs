@@ -46,75 +46,69 @@ namespace RenderGalleyRazor.Controllers
 
                 if(userExists != null) {
                     ModelState.AddModelError("Email", "Email já cadastrado!");
-
                 }
                 else
                 {
-
-                
-
-                var path = "";
-                var name = "";
-                if (registro.File != null)
-                {
-                    path = Functions.WriteFilePerfil(registro.File);
-                    var fileName = Path.GetFileName(path);
-                    name = "images/"+ fileName;
-                }
-
-                if (name == "")
-                {
-                    name = "images/user.jpg";
-                }
-                //Armazena os dados do usuário na tabela AspNetUsers
-                IdentityResult result = await _userManager.CreateAsync(user, registro.Password);
-
-                //Se o usuário foi criado com sucesso, faz o login atravez do signInManager
-                if (result.Succeeded)
-                {
-                    User user1 = new User();
-                    user1.Name = registro.Nome;
-                    user1.Email = registro.Email;
-                    user1.Pic = name;
-                    user1.plano_id = 1;
-                    db.Users.Add(user1);
-                    db.SaveChanges();
-                    await _userManager.AddToRoleAsync(user, "Artista");
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    ViewBag.success = true;
-                    return View();
-                }
-
-
-
-                //Se houver erros entrão inclui no ModelState
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
+                    var path = "";
+                    var name = "";
+                    if (registro.File != null)
                     {
-                        if (error.Code == "PasswordMismatch")
+                        path = Functions.WriteFilePerfil(registro.File);
+                        var fileName = Path.GetFileName(path);
+                        name = "images/"+ fileName;
+                    }
+
+                    if (name == "")
+                    {
+                        name = "images/user.jpg";
+                    }
+                    //Armazena os dados do usuário na tabela AspNetUsers
+                    IdentityResult result = await _userManager.CreateAsync(user, registro.Password);
+
+                    //Se o usuário foi criado com sucesso, faz o login atravez do signInManager
+                    if (result.Succeeded)
+                    {
+                        User user1 = new User();
+                        user1.Name = registro.Nome;
+                        user1.Email = registro.Email;
+                        user1.Pic = name;
+                        user1.plano_id = 1;
+                        db.Users.Add(user1);
+                        db.SaveChanges();
+                        await _userManager.AddToRoleAsync(user, "Artista");
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        ViewBag.success = true;
+                        return View();
+                    }
+
+                    //Se houver erros entrão inclui no ModelState
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
                         {
-                            ModelState.AddModelError("Password", "Senha Incorreta.");
-                        }
-                        else if (error.Code == "PasswordRequiresLower")
-                        {
-                            ModelState.AddModelError("Password", "As senhas devem ter pelo menos uma letra minúscula ('a'-'z').");
-                        }
-                        else if (error.Code == "PasswordRequiresUpper")
-                        {
-                            ModelState.AddModelError("Password", "As senhas devem ter pelo menos uma letra maiúscula ('A'-'Z').");
-                        }
-                        else if (error.Code == "PasswordTooShort")
-                        {
-                            ModelState.AddModelError("Password", "As senhas devem ter pelo menos 5 caracteres.");
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("Password", error.Code);
+                            if (error.Code == "PasswordMismatch")
+                            {
+                                ModelState.AddModelError("Password", "Senha Incorreta.");
+                            }
+                            else if (error.Code == "PasswordRequiresLower")
+                            {
+                                ModelState.AddModelError("Password", "As senhas devem ter pelo menos uma letra minúscula ('a'-'z').");
+                            }
+                            else if (error.Code == "PasswordRequiresUpper")
+                            {
+                                ModelState.AddModelError("Password", "As senhas devem ter pelo menos uma letra maiúscula ('A'-'Z').");
+                            }
+                            else if (error.Code == "PasswordTooShort")
+                            {
+                                ModelState.AddModelError("Password", "As senhas devem ter pelo menos 5 caracteres.");
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("Password", error.Code);
+                            }
                         }
                     }
                 }
-            }
             }
             ViewBag.btn = "register";
             return View();
@@ -238,7 +232,7 @@ namespace RenderGalleyRazor.Controllers
                         }
 
 
-                        // Atualiza os dados do seu modelo de usuário personalizado (caso necessário)
+                        // Atualiza os dados 
                         User user = db.Users.FirstOrDefault(u => u.Email == userEmail);
                         if (user != null)
                         {
@@ -256,7 +250,6 @@ namespace RenderGalleyRazor.Controllers
                             db.SaveChanges();
                         }
 
-                        // Redireciona para alguma página de confirmação/sucesso
                         return RedirectToAction("Index", "Home");
                     }
 
@@ -267,7 +260,6 @@ namespace RenderGalleyRazor.Controllers
                 }
             }
 
-            // Se ocorrerem erros de validação ou outras falhas, retorna para a view de edição com os erros
             return View(editar);
         }
 
