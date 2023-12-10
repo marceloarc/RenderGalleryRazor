@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "";
-    int total = 0;
+
     int products_total = 0;
 }
 <button class="close-cart">
@@ -19,7 +19,7 @@
 
     @foreach (var produto in ViewBag.produtos)
             {
-            total += (produto.Quantidade * produto.Arte.Valor);
+  
             products_total += produto.Quantidade;
             <li>
 
@@ -29,7 +29,7 @@
                         <span class="cd-qty"></span> @produto.Arte.Arte
                         <br>
                         <br>
-                        <div class="cd-price">@produto.Quantidade x R$@produto.Arte.Valor</div>
+                        <div class="cd-price">@produto.Quantidade x @produto.Valor</div>
                        
                     </div>
                     <button class="cd-item-remove cd-img-replace remove-cart" product_id="@produto.Id">Remove</button>
@@ -40,11 +40,11 @@
             }
             </ul>
     <div class="cd-cart-total">
-        <p>Total <span>R$@total</span></p>
+        <p>Total <span>@ViewBag.Total</span></p>
     </div> <!-- cd-cart-total -->
 
 
-    <a href="#0" class="checkout-btn">Finzalizar Compra</a>
+    <a href="~/Cart/Checkout" class="checkout-btn">Finzalizar Compra</a>
 }
 else
 {

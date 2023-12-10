@@ -20,7 +20,7 @@
 }
 
 .dropdown2:hover .dropdown-content2 {
-  display: block;
+  display:flow;
 }
     .day{
         position: absolute;
@@ -41,6 +41,7 @@
     }
     .active2{
         color: #3498DB !important;
+        cursor:pointer;
     }
     .active2:before{
             position: absolute;
@@ -57,7 +58,23 @@
         display:none;
     }
 
+    @@media (max-width: 1024px) {
+    .nav-bar-render{
+        text-align:right !important;
+    }
 
+        .dropdown-content2 {
+            left: 0px;
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+            text-align:start !important;
+        }
+    }
 </style>
 
 @if (SignInManager.IsSignedIn(User))
@@ -85,9 +102,9 @@
         hide = "";
     }
 
-    <div class="col-6 col-xl-2 text-right" data-aos="fade-down">
+    <div class="col-6 col-xl-2 nav-bar-render" data-aos="fade-down">
         <div class="d-none d-xl-inline-block">
-            <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-right mb-0" data-class="social">
+            <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex  mb-0 " data-class="social">
 
                 <li id="cart">
                    
@@ -117,15 +134,15 @@
 
 
 
-                <li style="padding-right: 40px;">
+                <li>
                     <div class="dropdown2">
-                        <a class="active2" >@user.Name</a>
-                        <div class="dropdown-content2" style="" >
+                        <a class="active2">@user.Name</a>
+                        <div class="dropdown-content2">
 
-                            <a style="width: auto; color: black;" class="nav-link btn btn-link py-0" href="~/Publicacao/Create">Nova publicação</a>
-                            <a style="width: auto; color: black;" class="nav-link btn btn-link py-0" href="~/Account/Editar">Editar Perfil</a>
+                            <a style="width: auto; color: black;" class="btn btn-link py-0" href="~/Publicacao/Create">Nova publicação</a>
+                            <a style="width: auto; color: black;" class=" btn btn-link py-0" href="~/Account/Editar">Editar Perfil</a>
                             <form method="post" asp-controller="account" asp-action="logout">
-                                <button type="submit" style="width: auto; color: black;" class="nav-link btn btn-link py-0">Sair</button>
+                                <button type="submit" style="width: auto; color: black;" class=" btn btn-link py-0">Sair</button>
                             </form>
                         </div>
 

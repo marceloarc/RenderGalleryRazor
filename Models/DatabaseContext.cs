@@ -28,6 +28,10 @@ namespace RenderGalleyRazor.Models
 
         public DbSet<LikesDeslikes> LikeDeslikes { get; set; }
 
+        public DbSet<Pedido> Pedidos { get; set; }
+
+        public DbSet<ProdutoPedido> ProdutosPedido { get; set; }
+
         public DbSet<Planos> Planos { get; set; }
         public DbSet<Vantagens> Vantagens { get; set; }
     }

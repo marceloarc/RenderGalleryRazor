@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
+using System.Globalization;
 
 namespace RenderGallery.Controllers
 {
@@ -80,8 +81,99 @@ namespace RenderGallery.Controllers
             return Json(TempData);
         }
 
+        public IActionResult Checkout()
+        {
+            int user_id = 0;
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+
+            }
+            else
+            {
+                return RedirectToAction("Register", "Account");
+            }
+
+            List<ProdutoCarrinho> produtos = db.Produtos.Where(x => x.User_id == user_id).ToList();
+
+            if (produtos.Count > 0)
+            {
+                float total = 0;
+
+                foreach(ProdutoCarrinho produto in produtos)
+                { 
+                    total += produto.Arte.Valor * produto.Quantidade;
+                    produto.Valor = produto.Arte.Valor.ToString("C", CultureInfo.CurrentCulture);
+                }
+                ViewBag.Total = total.ToString("C", CultureInfo.CurrentCulture);
+                ViewBag.Produtos = produtos;
+            }
+            else
+            {
+                return RedirectToAction("Register", "Account");
+                         
+            }
+
+            ViewBag.Title = "Checkout";
+            return View();
+        }
+
+        public JsonResult Finalizar()
+        {
+            int user_id = 0;
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+            }
+            else
+            {
+                TempData["erro"] = "Usuário não encontrado!";
+            }
+
+            if(user_id != 0)
+            {
+                Pedido pedido = new Pedido();
+                float total = 0;
+                List<ProdutoCarrinho> produtos = db.Produtos.Where(x => x.User_id == user_id).ToList();
+                List<ProdutoPedido> produtoPedidos = new List<ProdutoPedido>();
+                if (produtos.Count() > 0)
+                {
+                    foreach (ProdutoCarrinho produto in produtos)
+                    {
+                        total += (produto.Arte.Valor * produto.Quantidade);
+                        ProdutoPedido produtoPedido = new ProdutoPedido();
+
+                        produtoPedido.art_id = produto.Arte.Id;
+                        produtoPedido.publi_id = produto.Arte.publi_id;
+                        produtoPedido.Quantidade = produto.Quantidade;
+                        produtoPedido.User_id = user_id;
+
+                        produtoPedidos.Add(produtoPedido);
+
+                        produto.Arte.Quantidade -= produto.Quantidade;
+                    }
+
+                }
+
+                pedido.User_id = user_id;
+                pedido.Produtos = produtoPedidos;
+                pedido.total = total;
+                pedido.sub_total = total;
+                db.Pedidos.Add(pedido);
+                db.Produtos.RemoveRange(produtos);
+                db.SaveChanges();
+                TempData["sucesso"] = "Pedido Relizado com sucesso!";
+
+            }
+
+            return Json(TempData);
+        }
+
         public IActionResult Produtos() {
             int user_id = 0;
+            float total = 0;
             if (User.Identity.IsAuthenticated)
             {
                 User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
@@ -93,9 +185,14 @@ namespace RenderGallery.Controllers
 
             if(produtos.Count > 0)
             {
+                foreach(ProdutoCarrinho produto in produtos)
+                {
+                    total += produto.Arte.Valor * produto.Quantidade;
+                    produto.Valor = produto.Arte.Valor.ToString("C", CultureInfo.CurrentCulture);
+                }
+
                 ViewBag.produtos = produtos;
-
-
+                ViewBag.Total = total.ToString("C", CultureInfo.CurrentCulture);
             }
 
          
