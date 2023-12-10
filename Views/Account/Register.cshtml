@@ -121,43 +121,43 @@ box-shadow: 14px 14px 30px -23px rgba(0,0,0,1);" src="~/images/user.jpg" id="out
 <script>
     window.onload = function () {
 
-    @if (ViewBag.btn == "register")
-    {
-        <text>
+        @if (ViewBag.btn == "register")
+        {
+            <text>
+                    $("#container-login").addClass("right-panel-active");
+             </text>
+        }
+          $(".container-image").click(function () {
+            $("#input-pic").click();
+        })
+            $("#input-pic").change(function(){
+                $('.btn-center').hide();
+            });
+            $('.btn-center').off('click');
+            $("#signUp").click(function () {
                 $("#container-login").addClass("right-panel-active");
-         </text>
-    }
-      $(".container-image").click(function () {
-        $("#input-pic").click();
-    })
-        $("#input-pic").change(function(){
-            $('.btn-center').hide();
-        });
-        $('.btn-center').off('click');
-        $("#signUp").click(function () {
-            $("#container-login").addClass("right-panel-active");
-            $(".text-danger").hide();
-        })
-        $("#signIn").click(function () {
-            $("#container-login").removeClass("right-panel-active");
-            $(".text-danger").hide();
-        })
+                $(".text-danger").hide();
+            })
+            $("#signIn").click(function () {
+                $("#container-login").removeClass("right-panel-active");
+                $(".text-danger").hide();
+            })
 
-    @if (ViewBag.success)
-    {
-        <text>
-                Swal.fire({
-                    title: "Sucesso!",
-                    text: "Registro realizado!",
-                    icon: "success"
-                });
+        @if (ViewBag.success)
+        {
+            <text>
+                    Swal.fire({
+                        title: "Sucesso!",
+                        text: "Registro realizado!",
+                        icon: "success"
+                    });
 
 
-            setTimeout(() => {
-                window.location.href = "/Home";
-            }, "1000");
-        </text>
-    }
+                setTimeout(() => {
+                    window.location.href = "/Home";
+                }, "1000");
+            </text>
+        }
     }
 
 </script>

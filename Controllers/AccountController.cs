@@ -249,8 +249,8 @@ namespace RenderGalleyRazor.Controllers
                             }
                             db.SaveChanges();
                         }
-
-                        return RedirectToAction("Index", "Home");
+                        ViewBag.success = true;
+                        return View();
                     }
 
                     foreach (var error in result.Errors)

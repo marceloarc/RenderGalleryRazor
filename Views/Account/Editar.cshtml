@@ -80,3 +80,22 @@
 </div>
 <!-- partial -->
 <script src="~/js/perfil.js"></script>
+<script>
+    window.onload = function () {
+    @if (ViewBag.success != null && (bool)ViewBag.success)
+    {
+        <text>
+                Swal.fire({
+                    title: "Sucesso!",
+                    text: "Alterações Salvas!",
+                    icon: "success"
+                });
+
+            setTimeout(() => {
+                window.location.href = "/Home";
+            }, "1000");
+        </text>
+    }
+
+    }
+</script>
