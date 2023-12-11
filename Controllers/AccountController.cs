@@ -20,7 +20,7 @@ namespace RenderGalleyRazor.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Login()
         {
             ViewBag.success = false;
             if (User.Identity.IsAuthenticated)
@@ -79,7 +79,7 @@ namespace RenderGalleyRazor.Controllers
                         await _userManager.AddToRoleAsync(user, "Artista");
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         ViewBag.success = true;
-                        return View();
+                        return View("Login");
                     }
 
                     //Se houver erros entrão inclui no ModelState
@@ -112,7 +112,7 @@ namespace RenderGalleyRazor.Controllers
                 }
             }
             ViewBag.btn = "register";
-            return View();
+            return View("Login");
         }
 
 
@@ -130,7 +130,7 @@ namespace RenderGalleyRazor.Controllers
                 if (user == null)
                 {
                     ModelState.AddModelError("Email", "Email não encontrado.");
-                    return View("Register");
+                    return View("Login");
                 }
 
                 var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
@@ -156,7 +156,7 @@ namespace RenderGalleyRazor.Controllers
                 }
             }
             ViewBag.btn = "login";
-            return View("Register");
+            return View("Login");
         }
 
         [HttpPost]
@@ -262,6 +262,12 @@ namespace RenderGalleyRazor.Controllers
             }
 
             return View(editar);
+        }
+
+        [HttpGet]
+        public ActionResult AccessDenied()
+        {
+            return View();
         }
 
     }
