@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
 
 namespace RenderGallery.Controllers
 {
+    [Authorize]
     public class FavoritosController : Controller
     {
         private readonly DatabaseContext db;

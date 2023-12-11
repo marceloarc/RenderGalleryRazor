@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
 using System.Globalization;
 
 namespace RenderGallery.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly DatabaseContext db;

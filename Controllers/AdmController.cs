@@ -143,14 +143,36 @@ namespace RenderGalleyRazor.Controllers
             var user = db.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
-                return NotFound();
+                TempData["e"] = "Usuário não encontrado";
+                return Json(TempData);
             }
 
             user.status = 0;
 
             db.SaveChanges();
 
-            return View("Index");
+            TempData["success"] = true;
+            return Json(TempData);
+        }
+
+        [HttpPost]
+        public IActionResult activeUser(VMEditar editar)
+        {
+            var userId = editar.id_user;
+
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                TempData["e"] = "Usuário não encontrado";
+                return Json(TempData);
+            }
+
+            user.status = (User.tipo)1;
+
+            db.SaveChanges();
+
+            TempData["success"] = true;
+            return Json(TempData);
         }
 
 

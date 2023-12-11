@@ -1,5 +1,6 @@
 ﻿﻿﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @using RenderGalleyRazor.Models;
 @inject RenderGalleyRazor.Models.DatabaseContext dbContext
 
@@ -28,94 +29,100 @@
     {
         if (@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count() > 0)
         {
-            <div class="pCard_card">
-                <div class="pCard_up" style="background-image: url('../../@user.Pic');">
-                    <div class="pCard_text">
-                        <div style="position: relative;">
-                            <div style="position: absolute; background-color: #1f2937; padding: 0.2em; border-radius: 40.25em; z-index: 1; width: 70%; height:40px; left: 50%; transform: translateX(-50%); text-align: center;">
-                                <h2 style="margin: 0; padding: 0;">@user.Name <i class="fa fa-check-circle" style="color: @user.Plano.cor"></i></h2>
+            var use = await UserManager.FindByEmailAsync(user.Email);
+            var isAdmin = use != null && await UserManager.IsInRoleAsync(use, "Admin");
+
+            if (!isAdmin)
+            {
+                <div class="pCard_card">
+                    <div class="pCard_up" style="background-image: url('../../@user.Pic');">
+                        <div class="pCard_text">
+                            <div style="position: relative;">
+                                <div style="position: absolute; background-color: #1f2937; padding: 0.2em; border-radius: 40.25em; z-index: 1; width: 70%; height:40px; left: 50%; transform: translateX(-50%); text-align: center;">
+                                    <h2 style="margin: 0; padding: 0;">@user.Name <i class="fa fa-check-circle" style="color: @user.Plano.cor"></i></h2>
+                                </div>
                             </div>
                         </div>
+                        <div class="pCard_add"><i class="fa fa-plus"></i></div>
                     </div>
-                    <div class="pCard_add"><i class="fa fa-plus"></i></div>
-                </div>
-                <div class="pCard_down">
-                    <div>
-                        <p>Artes</p>
-                        <p>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</p>
-                    </div>
-                    <div>
-                        <br />
-                        <i class="fas fa-comments fa-lg" style="color:#3498DB;"></i>
-                    </div>
-                    @{
-                        var publi = dbContext.Publicacoes
-                        .Where(p => p.User.Id == user.Id)
-                        .SelectMany(p => p.Artes)
-                        .ToList();
+                    <div class="pCard_down">
+                        <div>
+                            <p>Artes</p>
+                            <p>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</p>
+                        </div>
+                        <div>
+                            <br />
+                            <i class="fas fa-comments fa-lg" style="color:#3498DB;"></i>
+                        </div>
+                        @{
+                            var publi = dbContext.Publicacoes
+                            .Where(p => p.User.Id == user.Id)
+                            .SelectMany(p => p.Artes)
+                            .ToList();
 
-                        var artIds = publi.Select(a => a.Id).ToList();
+                            var artIds = publi.Select(a => a.Id).ToList();
 
-                        int totalLikes = dbContext.LikeDeslikes
-                        .Where(ld => ld.isLike && artIds.Contains(ld.art_id ?? 0))
-                        .Count();
-                    }
-                    <div>
-                        <p>Curtidas</p>
-                        <p>@totalLikes</p>
-                    </div>
-                </div>
-                <div class="pCard_back">
-                    <p>Veja minhas ultimas publicações</p>
-                    @{
-                        // Filtrando apenas as artes relacionadas ao usuário atual
-                        var userArts = dbContext.Arts
-                        .Where(art => art.Publicacao.User.Id == user.Id)
-                        .OrderByDescending(art => art.Id) // Ordena as artes pela data de criação, da mais recente para a mais antiga
-                        .Take(6) // Seleciona apenas as seis primeiras artes
-                        .ToList();
-                    }
-                    @foreach (var art in userArts)
-                    {
-                        <a href="#"><img src="~/@art.Path" alt=""></a>
-                    }
-                    <p>Deixe seu Like!</p>
-                </div>
-
-                <div class="pCard_up">
-                    <div class="pCard_text">
-                        <div style="position: relative;">
-                            <div style="position: absolute; background-color: #1f2937; padding: 0.2em; border-radius: 40.25em; z-index: 1; width: 70%; height:40px; left: 50%; transform: translateX(-50%); text-align: center;">
-                                <h2 style="margin: 0; padding: 0;">@user.Name <i class="fa fa-check-circle" style="color: @user.Plano.cor"></i></h2>
-                            </div>
+                            int totalLikes = dbContext.LikeDeslikes
+                            .Where(ld => ld.isLike && artIds.Contains(ld.art_id ?? 0))
+                            .Count();
+                        }
+                        <div>
+                            <p>Curtidas</p>
+                            <p>@totalLikes</p>
                         </div>
                     </div>
-                    <div class="pCard_add"><i class="fa fa-plus"></i></div>
-                </div>
-                <div class="pCard_down">
-                    <div>
-                        <p>Artes</p>
-                        <p>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</p>
+                    <div class="pCard_back">
+                        <p>Veja minhas ultimas publicações</p>
+                        @{
+                            // Filtrando apenas as artes relacionadas ao usuário atual
+                            var userArts = dbContext.Arts
+                            .Where(art => art.Publicacao.User.Id == user.Id)
+                            .OrderByDescending(art => art.Id) // Ordena as artes pela data de criação, da mais recente para a mais antiga
+                            .Take(6) // Seleciona apenas as seis primeiras artes
+                            .ToList();
+                        }
+                        @foreach (var art in userArts)
+                        {
+                            <a href="#"><img src="~/@art.Path" alt=""></a>
+                        }
+                        <p>Deixe seu Like!</p>
                     </div>
-                    <div>
-                        <br />
-                        <i class="fas fa-comments fa-lg msg" user_id="@user.Id" style="color:#3498DB;"></i>
 
+                    <div class="pCard_up">
+                        <div class="pCard_text">
+                            <div style="position: relative;">
+                                <div style="position: absolute; background-color: #1f2937; padding: 0.2em; border-radius: 40.25em; z-index: 1; width: 70%; height:40px; left: 50%; transform: translateX(-50%); text-align: center;">
+                                    <h2 style="margin: 0; padding: 0;">@user.Name <i class="fa fa-check-circle" style="color: @user.Plano.cor"></i></h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pCard_add"><i class="fa fa-plus"></i></div>
                     </div>
-                    <div>
-                        <p>Curtidas</p>
-                        <p>@totalLikes</p>
+                    <div class="pCard_down">
+                        <div>
+                            <p>Artes</p>
+                            <p>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</p>
+                        </div>
+                        <div>
+                            <br />
+                            <i class="fas fa-comments fa-lg msg" user_id="@user.Id" style="color:#3498DB;"></i>
+
+                        </div>
+                        <div>
+                            <p>Curtidas</p>
+                            <p>@totalLikes</p>
+                        </div>
+                    </div>
+                    <div class="pCard_back">
+                        <p>Veja minhas ultimas publicações</p>
+                        @foreach (var art in userArts)
+                        {
+                            <a href="#"><img src="~/@art.Path" alt=""></a>
+                        }
+                        <p>Deixe seu Like!</p>
                     </div>
                 </div>
-                <div class="pCard_back">
-                    <p>Veja minhas ultimas publicações</p>
-                    @foreach (var art in userArts)
-                    {
-                        <a href="#"><img src="~/@art.Path" alt=""></a>
-                    }
-                    <p>Deixe seu Like!</p>
-                </div>
-            </div>
+            }
         }
     }
 

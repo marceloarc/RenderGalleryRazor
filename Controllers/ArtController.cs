@@ -4,11 +4,10 @@ using RenderGalleyRazor.Models;
 using RenderGallery.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RenderGallery.Controllers
 {
-    
-
     public class ArtController : Controller
     {
         private readonly DatabaseContext db;

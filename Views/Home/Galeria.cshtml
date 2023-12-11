@@ -3,6 +3,7 @@
 }
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<IdentityUser> SignInManager;
+@inject UserManager<IdentityUser> UserManager
 @inject RenderGalleyRazor.Models.DatabaseContext dbContext;
 
 @{
@@ -164,20 +165,26 @@
 
         @foreach(var art in ViewBag.arts)
         {
+            var user = await UserManager.FindByEmailAsync(art.Publicacao.User.Email);
+            var isAdmin = user != null && await UserManager.IsInRoleAsync(user, "Admin");
+
+
+            if (!isAdmin)
+            {
                 int art_id = art.Id;
                 int likes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isLike == true).Count();
                 int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
 
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-src="~/@art.Path" data-aos="fade" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
-                    <img src="~/@art.Path"  alt="IMage" onclick="teste('@art.publi_id','@art.Id')" class="img-fluid hover">
+                    <img src="~/@art.Path" alt="IMage" onclick="teste('@art.publi_id','@art.Id')" class="img-fluid hover">
                     <div class="middle">
 
                         <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
                             <i class="far fa-user-circle fa-xl " aria-hidden="true"></i>
                             <a>@art.Publicacao.User.Name</a>
                         </button>
-                       
-     
+
+
                         @if (SignInManager.IsSignedIn(User))
                         {
 
@@ -218,8 +225,8 @@
                     </div>
 
                 </div>
+            }
 
-            
         }
         </div>
     </div>

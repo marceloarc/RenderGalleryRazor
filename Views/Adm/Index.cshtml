@@ -38,6 +38,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="table-wrap">
+                    <h3>Usuários Ativos</h3>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -53,27 +54,68 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var user in users)
+                            @foreach (var user in users.Where(u => u.status != 0))
                             {
                                 <tr>
                                     <form method="post" action="~/Adm/editOrRemove">
-                                        <td>@user.Id</td>
-                                        <td><input asp-for="Nome" type="text" class="inputgrande" value="@user.Name" /></td>
-                                        <td><input asp-for="Email" type="email" class="inputgrande" value="@user.Email" /></td>
-                                        <td><input asp-for="Telefone" type="tel" class="inputpequeno" value="@user.Telefone" /></td>
-                                        <td><input asp-for="plano_id" type="number" class="inputpequeno" value="@user.plano_id" /></td>
-                                        <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).Count()</td>
-                                        <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</td>
-                                        <td>@user.status</td>
-                                        <input asp-for="id_user" type="hidden" name="id_user" value="@user.Id" />
-                                        <td>
-                                            <button type="submit" name="action" value="edit" class="btn btn-primary">
-                                                <i class="fas fa-check"></i> <!-- Ícone de edição -->
-                                            </button>
-                                            <button type="submit" name="action" value="remove" class="btn btn-danger">
-                                                <i class="fas fa-times"></i> <!-- Ícone de remoção -->
-                                            </button>
-                                        </td>
+                                    <td>@user.Id</td>
+                                    <td><input asp-for="Nome" type="text" class="inputgrande" value="@user.Name" /></td>
+                                    <td><input asp-for="Email" type="email" class="inputgrande" value="@user.Email" /></td>
+                                    <td><input asp-for="Telefone" type="tel" class="inputpequeno" value="@user.Telefone" /></td>
+                                    <td><input asp-for="plano_id" type="number" class="inputpequeno" value="@user.plano_id" /></td>
+                                    <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).Count()</td>
+                                    <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</td>
+                                    <td>@user.status</td>
+                                    <input asp-for="id_user" type="hidden" name="id_user" value="@user.Id" />
+                                    <td>
+                                        <button type="submit" name="action" value="edit" class="btn btn-primary">
+                                            <i class="fas fa-check"></i> <!-- Ícone de edição -->
+                                        </button>
+                                        <button type="submit" name="action" value="remove" class="btn btn-danger remove-user">
+                                            <i class="fas fa-times"></i> <!-- Ícone de remoção -->
+                                        </button>
+                                    </td>
+                                    </form>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+
+                    <h3>Usuários Desativados</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Plano</th>
+                                <th>Publicações</th>
+                                <th>Artes</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in users.Where(u => u.status == 0)) 
+                            {
+                                <tr>
+                                    <form method="post">
+                                    <td>@user.Id</td>
+                                    <td><input asp-for="Nome" type="text" class="inputgrande" value="@user.Name" readonly style="pointer-events: none;"/></td>
+                                    <td><input asp-for="Email" type="email" class="inputgrande" value="@user.Email" readonly style="pointer-events: none;" /></td>
+                                    <td><input asp-for="Telefone" type="tel" class="inputpequeno" value="@user.Telefone" readonly style="pointer-events: none;" /></td>
+                                    <td><input asp-for="plano_id" type="number" class="inputpequeno" value="@user.plano_id" readonly style="pointer-events: none;" /></td>
+                                    <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).Count()</td>
+                                    <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</td>
+                                    <td>@user.status</td>
+                                    <input asp-for="id_user" type="hidden" name="id_user" value="@user.Id" />
+                                    <td>
+                                        <button type="submit" name="action" value="edit" class="btn btn-primary activate-user">
+                                            Ativar
+                                        </button>
+                                    </td>
                                     </form>
                                 </tr>
                             }
@@ -86,8 +128,10 @@
 </div>
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     window.onload = function () {
+
         @if (ViewBag.success != null && (bool)ViewBag.success)
         {
             <text>
@@ -99,6 +143,76 @@
             </text>
         }
 
-    }
+        $(".remove-user").click(function (event) {
+            event.preventDefault(); // Evita o comportamento padrão do botão
+
+            var userId = $(this).closest('tr').find('input[name="id_user"]').val(); // Obtém o ID do usuário
+            var userName = $(this).closest('tr').find('input[name="Nome"]').val(); // Obtém o nome do usuário
+
+            Swal.fire({
+                title: `Desativar o usuário ${userName}?`,
+                text: "Esta ação fara com que ele não tenha acesso a sua conta!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sim, Desativar!",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Faça a requisição para a action de remoção do usuário com o userId
+                    $.post("/Adm/deactivateUser", { id_user: userId }, function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                title: "Desativado!",
+                                text: "O usuário foi desativado com sucesso.",
+                                icon: "success"
+                            }).then(() => {
+                                location.reload(); // Recarrega a página após a remoção
+                            });
+                        } else {
+                            Swal.fire("Erro!", "Ocorreu um erro ao tentar desativar o usuário.", "error");
+                        }
+                    });
+                }
+            });
+        });
+
+
+        $(".activate-user").click(function (event) {
+            event.preventDefault(); // Evita o comportamento padrão do botão
+
+            var userId = $(this).closest('tr').find('input[name="id_user"]').val(); // Obtém o ID do usuário
+            var userName = $(this).closest('tr').find('input[name="Nome"]').val(); // Obtém o nome do usuário
+
+            Swal.fire({
+                title: `Ativar o usuário ${userName}?`,
+                text: "Esta ação fara com que ele recupere o acesso a sua conta!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sim, Ativar!",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Faça a requisição para a action de remoção do usuário com o userId
+                    $.post("/Adm/activeUser", { id_user: userId }, function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                title: "Ativo!",
+                                text: "O usuário foi ativo com sucesso.",
+                                icon: "success"
+                            }).then(() => {
+                                location.reload(); // Recarrega a página após a remoção
+                            });
+                        } else {
+                            Swal.fire("Erro!", "Ocorreu um erro ao tentar ativar o usuário.", "error");
+                        }
+                    });
+                }
+            });
+        });
+    };
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+

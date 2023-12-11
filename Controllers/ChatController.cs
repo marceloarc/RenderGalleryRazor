@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
 
 namespace RenderGallery.Controllers
 {
-
+    [Authorize]
     public class ChatController : Controller
     {
         private readonly DatabaseContext db;
