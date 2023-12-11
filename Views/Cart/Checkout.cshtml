@@ -529,6 +529,91 @@
                 }
             })
 
+        $("#checkout-pix").click(function(){
+            if ($("#cpf").val() == "") {
+                Swal.fire({
+                    title: "Digite um cpf!",
+                    html: "Irá fechar em <b></b> milisegundos.",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+
+                    }
+                });
+                imgQrCode.src = '';
+                return;
+            }
+
+            if (!cpf($("#cpf").val())) {
+                Swal.fire({
+                    title: "CPF Inválido!",
+                    html: "Irá fechar em <b></b> milisegundos.",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+
+                    }
+                });
+                imgQrCode.src = '';
+                return;
+            }
+            var formData = new FormData();
+
+            $.ajax({
+                dataType: "json",
+                type: "POST",
+                url: "/Cart/Finalizar",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (retorno) {
+
+                    if (retorno['sucesso']) {
+                        Swal.fire({
+                            title: "Sucesso!",
+                            text: retorno['sucesso'],
+                            icon: "success"
+                        });
+                        setTimeout(() => {
+                            window.location.href = "/Home";
+                        }, "1000");
+                    } else {
+                        Swal.fire({
+                            title: "Erro!",
+                            text: retorno['erro'],
+                            icon: "error"
+                        });
+                    }
+                }
+            });
+        })
+
+
             $("#checkout-card").click(function () {
                 if (($("#cardnumber").val() == "") || ($("#name").val() == "") || ($("#expirationdate").val() == "") || ($("#securitycode").val() == "")) {
                     Swal.fire({
