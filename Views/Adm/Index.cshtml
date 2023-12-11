@@ -1,0 +1,94 @@
+﻿﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@using RenderGalleyRazor.Models;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext
+@model VMEditar
+
+@{
+    var user_id = 0;
+    var users = dbContext.Users.ToList();
+    var arts = dbContext.Arts.ToList();
+
+}
+
+
+<style>
+    input{
+        color: #777777;
+        background-color: black;
+        border: none;
+    }
+</style>
+
+<div class="site-section" data-aos="fade">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <h2 class="heading-section">Lista de Usuários</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-wrap">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Plano</th>
+                                <th>Publicações</th>
+                                <th>Artes</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in users)
+                            {
+                                <tr>
+                                    <form method="post" action="~/Adm/editOrRemove">
+                                        <td>@user.Id</td>
+                                        <td><input asp-for="Nome" type="text" value="@user.Name" /></td>
+                                        <td><input asp-for="Email" type="email" value="@user.Email" /></td>
+                                        <td><input asp-for="Telefone" type="tel" value="@user.Telefone" /></td>
+                                        <td><input asp-for="plano_id" type="number" value="@user.plano_id" /></td>
+                                        <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).Count()</td>
+                                        <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</td>
+                                        <input asp-for="id_user" type="hidden" name="id_user" value="@user.Id" />
+                                        <td>
+                                            <button type="submit" name="action" value="edit" class="btn btn-primary">
+                                                <i class="fas fa-check"></i> <!-- Ícone de edição -->
+                                            </button>
+                                            <button type="submit" name="action" value="remove" class="btn btn-danger">
+                                                <i class="fas fa-times"></i> <!-- Ícone de remoção -->
+                                            </button>
+                                        </td>
+                                    </form>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    window.onload = function () {
+        @if (ViewBag.success != null && (bool)ViewBag.success)
+        {
+            <text>
+                    Swal.fire({
+                        title: "Sucesso!",
+                        text: "Alterações Salvas!",
+                        icon: "success"
+                    });
+            </text>
+        }
+
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
