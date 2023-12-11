@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
+using System;
 
 namespace RenderGallery.Controllers
 {
-    [Authorize]
+
     public class ChatController : Controller
     {
         private readonly DatabaseContext db;
@@ -19,6 +19,11 @@ namespace RenderGallery.Controllers
 
         public IActionResult Chat([FromQuery(Name = "to")] int to)
         {
+
+            ViewBag.Chat = new Chat();
+            ViewBag.Chat.Messages = null;
+            ViewBag.from = 0;
+            ViewBag.to = 0;
             int Id = 0;
             if (!User.Identity.IsAuthenticated)
             {
@@ -35,9 +40,11 @@ namespace RenderGallery.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+      
+
             List<Categoria> categorias = db.Categorias.ToList();
             ViewBag.Categorias = categorias;
-            if (Id > 0)
+            if ((Id > 0)&&(to > 0))
             {
                 var userDetails = db.Users.Where(x => x.Id == Id).FirstOrDefault();
 
