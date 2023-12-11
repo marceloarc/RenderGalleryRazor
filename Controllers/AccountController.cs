@@ -73,6 +73,7 @@ namespace RenderGalleyRazor.Controllers
                         user1.Email = registro.Email;
                         user1.Pic = name;
                         user1.plano_id = 1;
+                        user1.Saldo = 0;
                         db.Users.Add(user1);
                         db.SaveChanges();
                         await _userManager.AddToRoleAsync(user, "Artista");

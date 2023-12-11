@@ -1,0 +1,120 @@
+﻿@{
+	ViewData["Title"] = ViewBag.Title;
+}
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> SignInManager;
+@inject RenderGalleyRazor.Models.DatabaseContext dbContext;
+
+@{
+	var user_id = 0;
+	if (SignInManager.IsSignedIn(User))
+	{
+
+		var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+		user_id = user.Id;
+	}
+}
+<style>
+	.btn-order {
+		color:white !important;
+	}
+	.msg{
+		cursor:pointer;
+		color: #3498DB;
+	}
+</style>
+
+<div class="site-section" data-aos="fade">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-6 text-center mb-5">
+				<h2 class="heading-section">@ViewBag.Title</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-wrap">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Thumb</th>
+								<th>Arte</th>
+								<th>Artista</th>
+								<th>Preço</th>
+								<th>Contato</th>
+								<th>Ação</th>
+							</tr>
+						</thead>
+						<tbody>
+							@if(ViewBag.produtos != null)
+							{
+								foreach (var produto in ViewBag.produtos)
+								{
+									<tr>
+										<th scope="row"><img src="~/@produto.Arte.Path" width="50"></th>
+										<td>@produto.Arte.Arte</td>
+										<td>@produto.Arte.Publicacao.User.Name</td>
+										<td>@produto.Valor</td>
+										<td><i class="far fa-comments fa-lg msg" user_id="@produto.Arte.Publicacao.User.Id"></i></td>
+										<td>
+
+											@if (produto.Pedido.Status == 0)
+											{
+												<a disabled class="btn btn-danger btn-order "><i class="fa fa-download"></i> Download indisponível</a>
+											}
+											else
+											{
+												<a href="~/@produto.Arte.Path" download="@produto.Arte.Arte" class="btn btn-success btn-order "><i class="fa fa-download"></i> Download</a>
+											}
+
+										</td>
+									</tr>
+
+								}
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	window.onload = function () {
+		$(".msg").click(function () {
+			$("#msg-content").val("");
+
+			if (@user_id== $(this).attr("user_id")) {
+				Swal.fire({
+					title: "Não é possivel mandar mensagens para si mesmo!",
+					html: "Irá fechar em <b></b> milisegundos.",
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+							timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+					}
+				}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+
+					}
+				});
+				return
+			} else if (!@user_id) {
+				window.location.href = '/Account/Register';
+				return;
+			}
+
+			updateChat($(this).attr("user_id"));
+			$("#modal1").modal("show");
+
+		})
+	}
+</script>

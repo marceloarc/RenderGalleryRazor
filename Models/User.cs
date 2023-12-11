@@ -23,23 +23,25 @@ namespace RenderGalleyRazor.Models
 
         public string? Pic { get; set; }
 
+        public float Saldo { get; set; }
+
         public int? plano_id { get; set; }
         [ForeignKey("plano_id")]
         public virtual Planos? Plano { get; set; }
+
         public virtual ICollection<Chat> Chats { get; set; }
+
         [InverseProperty("User1")]
-        public virtual ICollection<Chat> ChatsAsUser1 { get; set; }
+		public virtual ICollection<Chat> ChatsAsUser1 { get; set; }
 
-        [InverseProperty("User2")]
-        public virtual ICollection<Chat> ChatsAsUser2 { get; set; }
-        public virtual ICollection<Favoritos> Favoritos { get; set; }
-        public virtual ICollection<LikesDeslikes> LikesDeslikes { get; set; }
-        public virtual ICollection<Pedido> Pedidos { get; set; }
-        public virtual ICollection<ProdutoCarrinho> ProdutosCarrinho { get; set; }
-        public virtual ICollection<ProdutoPedido> ProdutosPedido { get; set; }
-        public virtual ICollection<Publicacao> Publicacoes { get; set; }
+		[InverseProperty("User2")]
+		public virtual ICollection<Chat> ChatsAsUser2 { get; set; }
+		public virtual ICollection<Favoritos> Favoritos { get; set; }
+		public virtual ICollection<LikesDeslikes> LikesDeslikes { get; set; }
+		public virtual ICollection<Pedido> Pedidos { get; set; }
+		public virtual ICollection<ProdutoCarrinho> ProdutosCarrinho { get; set; }
+		public virtual ICollection<ProdutoPedido> ProdutosPedido { get; set; }
+		public virtual ICollection<Publicacao> Publicacoes { get; set; }
 
-
-
-    }
+	}
 }

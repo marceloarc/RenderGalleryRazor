@@ -84,7 +84,8 @@
         var user = dbContext.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
         var messages = dbContext.Messages.Where(x => x.user_id_to == user.Id && x.visu_status == 0).ToList();
         var produtos = dbContext.Produtos.Where((x => x.User_id == user.Id)).ToList();
-        foreach (var produto in produtos)
+        int publicacoes = dbContext.Publicacoes.Where(x => x.User_id == user.Id).Count();
+    foreach (var produto in produtos)
         {
             total += produto.Quantidade;
         }
@@ -140,6 +141,14 @@
                         <div class="dropdown-content2">
 
                             <a style="width: auto; color: black;" class="btn btn-link py-0" href="~/Publicacao/Create">Nova publicação</a>
+                            <a style="width: auto; color: black;" class=" btn btn-link py-0" href="~/Pedidos">Meus Pedidos</a>
+
+                            @if (publicacoes > 0)                         
+                                {
+                                      <a style="width: auto; color: black;" class=" btn btn-link py-0" href="~/Pedidos/Vendas">Minhas Vendas</a>
+
+                                }
+
                             <a style="width: auto; color: black;" class=" btn btn-link py-0" href="~/Account/Editar">Editar Perfil</a>
                             <form method="post" asp-controller="account" asp-action="logout">
                                 <button type="submit" style="width: auto; color: black;" class=" btn btn-link py-0">Sair</button>

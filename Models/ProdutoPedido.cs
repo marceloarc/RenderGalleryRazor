@@ -23,8 +23,11 @@ namespace RenderGalleyRazor.Models
         [ForeignKey("art_id")]
         public virtual Art? Arte { get; set; }
 
-       
+		[ForeignKey("PedidoId")]
+		public virtual Pedido? Pedido { get; set; }
 
 
-    }
+		[NotMapped]
+		public string? Valor { get; set; }
+	}
 }

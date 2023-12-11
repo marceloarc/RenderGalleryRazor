@@ -16,7 +16,7 @@ namespace RenderGalleyRazor.Models
         public string? NewPassword { get; set; }
         public IFormFile? File { get; set; }
         public string? Error { get; set; }
-        public int ? plano_id { get; set; }
+        public int? plano_id { get; set; }
 
         public int? id_user { get; set; }
 
