@@ -255,9 +255,9 @@
            
             var url = "/Chat/Chat/2?to=" + id;
             $.get(url, function (data) {
-                var scroll = $(".chat__conversation-board").scrollTop();
+        
                 $("#content-chat").html(data);
-                $(".chat__conversation-board").scrollTop(scroll);
+                $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
             });
             var url = "/Chat/Messages";
             $.get(url, function (data) {
