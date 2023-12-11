@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.IdentityModel.Tokens;
@@ -6,6 +7,7 @@ using RenderGalleyRazor.Models;
 
 namespace RenderGalleyRazor.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdmController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -17,7 +19,6 @@ namespace RenderGalleyRazor.Controllers
             _signInManager = signInManager;
             this.db = db;
         }
-
         public IActionResult Index()
         {
             int user_id = 0;
@@ -37,33 +38,49 @@ namespace RenderGalleyRazor.Controllers
         }
 
         [HttpPost]
-        public IActionResult editUser(VMEditar editar)
+        public async Task<IActionResult> editUser(VMEditar editar)
         {
             if (ModelState.IsValid)
             {
-                // Obter usuário pelo Id
-
                 var user = db.Users.FirstOrDefault(u => u.Id == editar.id_user);
-
-
                 if (user != null)
                 {
-                    // Atualizar os dados do usuário com os novos valores do formulário
-                    user.Name = editar.Nome;
-                    user.Email = editar.Email;
-                    user.Telefone = editar.Telefone;
-                    user.plano_id = editar.plano_id;
+                    // Buscar o usuário pelo ID diretamente
+                    var userToEdit = await _userManager.FindByEmailAsync(user.Email);
+                    if (userToEdit != null)
+                    {
+                        // Mudar o nome de usuário (caso necessário)
+                        var result = await _userManager.SetUserNameAsync(userToEdit, editar.Email);
 
-                    // Salvar as alterações no banco de dados
-                    db.SaveChanges();
+                        // Mudar o email sem gerar um token de autenticação de dois fatores
+                        userToEdit.Email = editar.Email;
+                        userToEdit.UserName = editar.Email;
 
-                    ViewBag.success = true;
-                    return View("Index");
+                        var updateResult = await _userManager.UpdateAsync(userToEdit);
+
+                        if (updateResult.Succeeded)
+                        {
+                            // Atualizar os dados do usuário com os novos valores do formulário
+                            user.Name = editar.Nome;
+                            user.Email = editar.Email;
+                            user.Telefone = editar.Telefone;
+                            user.plano_id = editar.plano_id;
+
+                            // Salvar as alterações no banco de dados
+                            db.SaveChanges();
+
+                            ViewBag.success = true;
+                            return View("Index");
+                        }
+                    }
                 }
             }
 
             return View("Index");
         }
+
+
+
 
 
         [HttpPost]
@@ -102,13 +119,13 @@ namespace RenderGalleyRazor.Controllers
 
 
         [HttpPost]
-        public IActionResult EditOrRemove(VMEditar editar)
+        public async Task<IActionResult> EditOrRemove(VMEditar editar)
         {
             var userId = editar.id_user;
 
             if (editar.action == "edit")
             {
-                return editUser(editar);
+                return await editUser(editar);
             }
             else if (editar.action == "remove")
             {

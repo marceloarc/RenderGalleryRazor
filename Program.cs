@@ -57,10 +57,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-await CriarRolesUsuariosAsync(app);
+await CriarPerfisUsuariosAsync(app);
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 
 app.MapControllerRoute(
@@ -69,7 +69,7 @@ app.MapControllerRoute(
 
 app.Run();
 
-async Task CriarRolesUsuariosAsync(WebApplication app)
+async Task CriarPerfisUsuariosAsync(WebApplication app)
 {
     var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
 
@@ -77,5 +77,7 @@ async Task CriarRolesUsuariosAsync(WebApplication app)
     {
         var service = scope.ServiceProvider.GetService<ISeedUserRoleInitial>();
         await service.SeedRolesAsync();
+        await service.SeedUsersAsync();
     }
 }
+
