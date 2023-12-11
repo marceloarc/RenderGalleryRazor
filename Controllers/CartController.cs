@@ -150,6 +150,8 @@ namespace RenderGallery.Controllers
                         produtoPedido.Quantidade = produto.Quantidade;
                         produtoPedido.User_id = user_id;
 
+                        produto.Arte.Publicacao.User.Saldo += (produto.Arte.Valor * produto.Quantidade);
+
                         produtoPedidos.Add(produtoPedido);
 
                         produto.Arte.Quantidade -= produto.Quantidade;
@@ -161,6 +163,7 @@ namespace RenderGallery.Controllers
                 pedido.Produtos = produtoPedidos;
                 pedido.total = total;
                 pedido.sub_total = total;
+                pedido.Status = 1;
                 db.Pedidos.Add(pedido);
                 db.Produtos.RemoveRange(produtos);
                 db.SaveChanges();

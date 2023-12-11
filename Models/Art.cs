@@ -40,5 +40,7 @@ namespace RenderGalleyRazor.Models
         [ForeignKey("publi_id")]
         public virtual Publicacao? Publicacao { get; set; }
 
+
+
     }
 }

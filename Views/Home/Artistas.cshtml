@@ -1,4 +1,4 @@
-﻿﻿@using Microsoft.AspNetCore.Identity
+﻿﻿﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @using RenderGalleyRazor.Models;
 @inject RenderGalleyRazor.Models.DatabaseContext dbContext
@@ -20,8 +20,8 @@
 
 <link rel="stylesheet" href="~/css/card.css">
 <style>
-    .msg{
-        cursor:pointer;
+    .msg {
+        cursor: pointer;
     }
 </style>
 <body>
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pCard_add" ><i class="fa fa-plus"></i></div>
+                <div class="pCard_add"><i class="fa fa-plus"></i></div>
             </div>
             <div class="pCard_down">
                 <div>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pCard_add" ><i class="fa fa-plus"></i></div>
+                <div class="pCard_add"><i class="fa fa-plus"></i></div>
             </div>
             <div class="pCard_down">
                 <div>
@@ -98,8 +98,8 @@
                 </div>
                 <div>
                     <br />
-                        <i class="fas fa-comments fa-lg msg" user_id="@user.Id" style="color:#3498DB;"></i>
-                    
+                    <i class="fas fa-comments fa-lg msg" user_id="@user.Id" style="color:#3498DB;"></i>
+
                 </div>
                 <div>
                     <p>Curtidas</p>
@@ -124,10 +124,10 @@
             $(".pCard_add").click(function () {
                 var card = $(this).closest('.pCard_card'); // Encontra o elemento .pCard_card mais próximo
                 card.toggleClass("pCard_on");
-                 // Alterna a exibição do .pCard_back dentro do cartão clicado
+                // Alterna a exibição do .pCard_back dentro do cartão clicado
                 $(this).find("i").toggleClass("fa-minus");
             });
-            
+
             $(".msg").click(function () {
                 $("#msg-content").val("");
 
@@ -156,7 +156,7 @@
                     return
                 }
                 else if (!@user_id) {
-                    window.location.href = '/Account/Register'; 
+                    window.location.href = '/Account/Register';
                     return;
                 }
 

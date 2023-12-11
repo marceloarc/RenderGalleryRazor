@@ -10,9 +10,13 @@ namespace RenderGalleyRazor.Models
 
         public float? total { get; set; }
 
-        public  int? User_id { get; set; }   
-        
+        [NotMapped]
+        public string? total_formatted { get; set; }
 
+        public  int? User_id { get; set; }
+
+        public int? Status { get; set; }
+        
         [ForeignKey("User_id")]
         public virtual User? User { get; set; }
 
