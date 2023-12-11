@@ -252,11 +252,12 @@
         
     }
         function updateChat(id) {
-            $("#content-chat").html("");
+           
             var url = "/Chat/Chat/2?to=" + id;
             $.get(url, function (data) {
+                var scroll = $(".chat__conversation-board").scrollTop();
                 $("#content-chat").html(data);
-                $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
+                $(".chat__conversation-board").scrollTop(scroll);
             });
             var url = "/Chat/Messages";
             $.get(url, function (data) {
@@ -296,6 +297,7 @@
                         updateChat(to);
                         $("#msg-content").val("");
                         $("#msg-content").focus();
+                        $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
                     }
                 });
             }
@@ -577,18 +579,26 @@
 
         });
 
-
-        setInterval(function () {
-
-
-
-            if ($(".chat__conversation-board")[0].scrollHeight - $(".chat__conversation-board").scrollTop() == $(".chat__conversation-board").outerHeight()) {
-                var id = $("#chat").attr("to_id");
-                updateChat(id);
-            }
+        @if (SignInManager.IsSignedIn(User)) {
+            <text>
+                setInterval(function () {
 
 
-        }, 3000);
+
+
+
+                    var id = $("#chat").attr("to_id");
+
+                    updateChat(id);
+
+
+
+
+                }, 3000);
+            </text>
+
+        }
+
 </script>
 
 </body>
