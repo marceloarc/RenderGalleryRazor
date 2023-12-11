@@ -18,6 +18,14 @@
         background-color: black;
         border: none;
     }
+
+    .inputgrande{
+        width: 140px;
+    }
+
+    .inputpequeno{
+        width: 85px;
+    }
 </style>
 
 <div class="site-section" data-aos="fade">
@@ -40,6 +48,7 @@
                                 <th>Plano</th>
                                 <th>Publicações</th>
                                 <th>Artes</th>
+                                <th>Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -49,12 +58,13 @@
                                 <tr>
                                     <form method="post" action="~/Adm/editOrRemove">
                                         <td>@user.Id</td>
-                                        <td><input asp-for="Nome" type="text" value="@user.Name" /></td>
-                                        <td><input asp-for="Email" type="email" value="@user.Email" /></td>
-                                        <td><input asp-for="Telefone" type="tel" value="@user.Telefone" /></td>
-                                        <td><input asp-for="plano_id" type="number" value="@user.plano_id" /></td>
+                                        <td><input asp-for="Nome" type="text" class="inputgrande" value="@user.Name" /></td>
+                                        <td><input asp-for="Email" type="email" class="inputgrande" value="@user.Email" /></td>
+                                        <td><input asp-for="Telefone" type="tel" class="inputpequeno" value="@user.Telefone" /></td>
+                                        <td><input asp-for="plano_id" type="number" class="inputpequeno" value="@user.plano_id" /></td>
                                         <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).Count()</td>
                                         <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</td>
+                                        <td>@user.status</td>
                                         <input asp-for="id_user" type="hidden" name="id_user" value="@user.Id" />
                                         <td>
                                             <button type="submit" name="action" value="edit" class="btn btn-primary">

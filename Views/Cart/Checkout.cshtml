@@ -889,4 +889,19 @@
 
         };
 
+        @if (ViewBag.esgotou != null && (bool)ViewBag.esgotou)
+        {
+            <text>
+                Swal.fire({
+                    title: "Falha!",
+                    text: "O Produto " + ViewBag.nome + "está esgotado!",
+                    icon: "fail"
+                });
+
+            setTimeout(() => {
+                window.location.href = "/Home";
+            }, "3000");
+            </text>
+        }
+
     </script>

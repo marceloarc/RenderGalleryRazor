@@ -74,6 +74,7 @@ namespace RenderGalleyRazor.Controllers
                         user1.Pic = name;
                         user1.plano_id = 1;
                         user1.Saldo = 0;
+                        user1.status = (User.tipo)1;
                         db.Users.Add(user1);
                         db.SaveChanges();
                         await _userManager.AddToRoleAsync(user, "Artista");
@@ -133,6 +134,12 @@ namespace RenderGalleyRazor.Controllers
                     return View("Login");
                 }
 
+                User userId = db.Users.Where(x => x.Email == user.Email).FirstOrDefault();
+
+                if (userId.status == 0)
+                {
+                    return RedirectToAction("AccessDenied", "Account");
+                }
                 var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
 
                 if (result.Succeeded)
@@ -190,16 +197,13 @@ namespace RenderGalleyRazor.Controllers
 
                 if (identityUser != null)
                 {
-                    // Atualiza os dados do IdentityUser
-                    identityUser.Email = editar.Email;
-                    identityUser.UserName = editar.Email;
 
                     var result = await _userManager.UpdateAsync(identityUser);
 
                     if (result.Succeeded)
                     {
                         // Atualiza a senha se foi fornecida
-                        if (!string.IsNullOrEmpty(editar.Password))
+                        if (!string.IsNullOrEmpty(editar.NewPassword))
                         {
                             var changePasswordResult = await _userManager.ChangePasswordAsync(identityUser, editar.Password, editar.NewPassword);
 

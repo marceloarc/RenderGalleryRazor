@@ -92,7 +92,7 @@ namespace RenderGallery.Controllers
             }
             else
             {
-                return RedirectToAction("Register", "Account");
+                return RedirectToAction("Login", "Account");
             }
 
             List<ProdutoCarrinho> produtos = db.Produtos.Where(x => x.User_id == user_id).ToList();
@@ -102,16 +102,21 @@ namespace RenderGallery.Controllers
                 float total = 0;
 
                 foreach(ProdutoCarrinho produto in produtos)
-                { 
-                    total += produto.Arte.Valor * produto.Quantidade;
-                    produto.Valor = produto.Arte.Valor.ToString("C", CultureInfo.CurrentCulture);
+                {
+                    if (produto.Quantidade > 0)
+                    {
+                        total += produto.Arte.Valor * produto.Quantidade;
+                        produto.Valor = produto.Arte.Valor.ToString("C", CultureInfo.CurrentCulture);
+                    }
+                    ViewBag.esgotou = true;
+                    ViewBag.nome = produto.Arte.Arte;
                 }
                 ViewBag.Total = total.ToString("C", CultureInfo.CurrentCulture);
                 ViewBag.Produtos = produtos;
             }
             else
             {
-                return RedirectToAction("Register", "Account");
+                return RedirectToAction("Login", "Account");
                          
             }
 

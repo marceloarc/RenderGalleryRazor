@@ -129,8 +129,26 @@ namespace RenderGalleyRazor.Controllers
             }
             else if (editar.action == "remove")
             {
-                return removeUser(editar);
+                return deactivateUser(editar);
             }
+
+            return View("Index");
+        }
+
+        [HttpPost]
+        public IActionResult deactivateUser(VMEditar editar)
+        {
+            var userId = editar.id_user;
+
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.status = 0;
+
+            db.SaveChanges();
 
             return View("Index");
         }

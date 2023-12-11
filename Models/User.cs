@@ -25,6 +25,11 @@ namespace RenderGalleyRazor.Models
 
         public float Saldo { get; set; }
 
+        [EnumDataType(typeof(tipo))]
+        [Required]
+        public tipo status { get; set; }
+        public enum tipo { desativado = 0, ativo = 1 }
+
         public int? plano_id { get; set; }
         [ForeignKey("plano_id")]
         public virtual Planos? Plano { get; set; }
