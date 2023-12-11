@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @using RenderGalleyRazor.Models;
 @inject RenderGalleyRazor.Models.DatabaseContext dbContext
@@ -255,7 +255,7 @@
            
             var url = "/Chat/Chat/2?to=" + id;
             $.get(url, function (data) {
-        
+              
                 $("#content-chat").html(data);
                 $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
             });
@@ -294,10 +294,19 @@
                     data: formData,
                     success: function (retorno) {
                         console.log(retorno);
-                        updateChat(to);
+                        var url = "/Chat/Chat/2?to=" + to;
+                        $.get(url, function (data) {
+                            
+                            $("#content-chat").html(data);
+                            $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
+                        });
+                        var url = "/Chat/Messages";
+                        $.get(url, function (data) {
+                            $("#cd-message").html(data);
+                        });
                         $("#msg-content").val("");
                         $("#msg-content").focus();
-                        $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
+                        
                     }
                 });
             }
@@ -589,7 +598,24 @@
 
                     var id = $("#chat").attr("to_id");
 
-                    updateChat(id);
+                    var url = "/Chat/Chat/2?to=" + id;
+                    $.get(url, function (data) {
+                        var scroll = $(".chat__conversation-board").scrollTop();
+                      
+
+                        if ($(".chat__conversation-board")[0].scrollHeight - $(".chat__conversation-board").scrollTop() == $(".chat__conversation-board").outerHeight()) {
+                            $("#content-chat").html(data);
+                            $(".chat__conversation-board").scrollTop($(".chat__conversation-board")[0].scrollHeight);
+
+                        }else{
+                            $("#content-chat").html(data);
+                            $(".chat__conversation-board").scrollTop(scroll);
+                        }
+});
+                    var url = "/Chat/Messages";
+                    $.get(url, function (data) {
+                        $("#cd-message").html(data);
+                    });
 
 
 
