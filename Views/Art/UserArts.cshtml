@@ -168,11 +168,11 @@
                 int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
 
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-src="../../@art.Path" data-aos="fade" data-sub-html="<div class='middle3'><button class='item-btn item-image-like msg2' user_id='@art.Publicacao.User.Id'><i class='far fa-comments icone'></i></button><button art_id='@art.Id' user_id='@art.Publicacao.User.Id' class='item-btn item-image-like add-favorito2'><i class='far fa-heart icone'></i></button><button art_id='@art.Id' user_id='@art.Publicacao.User.Id' class='item-btn item-image-like add-cart2'><i class='fas fa-cart-plus icone'></i></button>
-                                <button class='item-btn item-image-like like2' is_like='1' style='margin-top:10px !important;' art_id='@art.Id' style='' user_id='@art.Publicacao.User.Id'>
+                                <button class='item-btn item-image-like like3' is_like='1' style='margin-top:10px !important;' art_id='@art.Id' style='' user_id='@art.Publicacao.User.Id'>
                                     <i class='far fa-thumbs-up fa-lg'></i>
                 @likes
                                 </button>
-                                <button class='item-btn item-image-like like2' is_like='0' style='margin-top:10px !important;' art_id='@art.Id' user_id='@art.Publicacao.User.Id'>
+                                <button class='item-btn item-image-like like3' is_like='0' style='margin-top:10px !important;' art_id='@art.Id' user_id='@art.Publicacao.User.Id'>
                                     <i class='far fa-thumbs-down fa-lg'></i>
                 @deslikes
                                 </button></div>">
@@ -260,7 +260,7 @@
                }
            })
              if(foi ==1){
-                $(".like2").click(function (e) {
+                $(".like3").click(function (e) {
 
                     var btn = $(this)
                     var formData = new FormData();
