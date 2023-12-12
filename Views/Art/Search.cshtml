@@ -3,6 +3,7 @@
 }
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<IdentityUser> SignInManager;
+@inject UserManager<IdentityUser> UserManager
 @inject RenderGalleyRazor.Models.DatabaseContext dbContext;
 
 @{
@@ -160,61 +161,67 @@
 
             @foreach (var art in ViewBag.arts)
             {
-                int art_id = art.Id;
-                int likes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isLike == true).Count();
-                int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
-
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-src="~/@art.Path" data-aos="fade" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
-                    <img src="~/@art.Path" alt="IMage" onclick="teste('@art.publi_id','@art.Id')" class="img-fluid hover">
-                    <div class="middle">
-
-                        <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
-                            <i class="far fa-user-circle fa-xl " aria-hidden="true"></i>
-                            <a>@art.Publicacao.User.Name</a>
-                        </button>
+                var user = await UserManager.FindByEmailAsync(art.Publicacao.User.Email);
+                var isAdmin = user != null && await UserManager.IsInRoleAsync(user, "Admin");
 
 
-                        @if (SignInManager.IsSignedIn(User))
-                        {
+                if (!isAdmin)
+                {
+                    int art_id = art.Id;
+                    int likes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isLike == true).Count();
+                    int deslikes = dbContext.LikeDeslikes.Where(x => x.art_id == art_id && x.isDeslike == true).Count();
 
-                            <button class="item-btn item-image-like msg" style="" user_id="@art.Publicacao.User.Id">
-                                <i class="far fa-comments fa-lg icone"></i>
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-src="~/@art.Path" data-aos="fade" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor doloremque hic excepturi fugit, sunt impedit fuga tempora, ad amet aliquid?</p>">
+                        <img src="~/@art.Path" alt="IMage" onclick="teste('@art.publi_id','@art.Id')" class="img-fluid hover">
+                        <div class="middle">
+
+                            <button class="item-btn item-image-profile profile" style="" user_id="@art.Publicacao.User.Id">
+                                <i class="far fa-user-circle fa-xl " aria-hidden="true"></i>
+                                <a>@art.Publicacao.User.Name</a>
+                            </button>
+
+
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+
+                                <button class="item-btn item-image-like msg" style="" user_id="@art.Publicacao.User.Id">
+                                    <i class="far fa-comments fa-lg icone"></i>
+
+                                </button>
+
+                            }
+
+
+                            <button class="item-btn item-image-like add-favorito" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                                <i class="far fa-heart fa-lg icone"></i>
 
                             </button>
 
-                        }
+
+                            <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                                <i class="fas fa-cart-plus icone"></i>
+
+                            </button>
 
 
-                        <button class="item-btn item-image-like" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="far fa-heart fa-lg icone"></i>
+                        </div>
 
-                        </button>
-
-
-                        <button class="item-btn item-image-like add-cart" style="" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="fas fa-cart-plus icone"></i>
-
-                        </button>
+                        <div class="middle2">
 
 
-                    </div>
+                            <button class="item-btn item-image-like like" is_like="1" style="margin-top:10px !important;" art_id="@art.Id" style="" user_id="@art.Publicacao.User.Id">
+                                <i class="far fa-thumbs-up fa-lg"></i>
+                                @likes
+                            </button>
+                            <button class="item-btn item-image-like like" is_like="0" style="margin-top:10px !important;" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
+                                <i class="far fa-thumbs-down fa-lg"></i>
+                                @deslikes
+                            </button>
 
-                    <div class="middle2">
-
-
-                        <button class="item-btn item-image-like like" is_like="1" style="margin-top:10px !important;" art_id="@art.Id" style="" user_id="@art.Publicacao.User.Id">
-                            <i class="far fa-thumbs-up fa-lg"></i>
-                            @likes
-                        </button>
-                        <button class="item-btn item-image-like like" is_like="0" style="margin-top:10px !important;" art_id="@art.Id" user_id="@art.Publicacao.User.Id">
-                            <i class="far fa-thumbs-down fa-lg"></i>
-                            @deslikes
-                        </button>
+                        </div>
 
                     </div>
-
-                </div>
-
+                }
 
             }
         </div>
@@ -224,26 +231,34 @@
 </div>
 <div id="teste123" style="display:none;">
 </div>
-
+<div class="modal" id="modal-card" tabindex="-1" role="dialog" style="z-index:999999999999999999999999999999999999;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color:rgba(10, 14, 14, 0.50); color:white;">
+            <div class="modal-header" style="border-bottom:0 !important;">
+                <h5 class="modal-title">Informaçoes do artista</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" id="card">
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
 
 
 
     window.onload = function () {
 
-
-        setInterval(function () {
-
-
-
-            if ($(".chat__conversation-board")[0].scrollHeight - $(".chat__conversation-board").scrollTop() == $(".chat__conversation-board").outerHeight()) {
-                var id = $("#chat").attr("to_id");
-                updateChat(id);
-            }
-
-
-        }, 5000);
-
+        $(".profile").click(function () {
+            var artista_id = $(this).attr("user_id");
+            var url = "/Art/Card/?artista_id=" + artista_id;
+            $.get(url, function (data) {
+                $("#card").html(data);
+                $("#modal-card").modal("show");
+            });
+        })
         $(".like").click(function () {
             var btn = $(this)
             var formData = new FormData();
@@ -252,7 +267,7 @@
             var is_like = $(this).attr("is_like");
 
             if (user_id == 0) {
-                alert("deslogado!");
+                window.location.href = '/Account/Register';
                 return
             }
 
@@ -317,129 +332,15 @@
                     }
                 });
                 return
+            } else if (!@ViewBag.user_id) {
+                window.location.href = '/Account/Register';
+                return;
             }
 
             updateChat($(this).attr("user_id"));
             $("#modal1").modal("show");
 
         })
-        $(".add-cart").click(function () {
-            if (@ViewBag.user_id== $(this).attr("user_id")) {
-                Swal.fire({
-                    title: "Não é possivel comprar seu proprio produto!",
-                    html: "Irá fechar em <b></b> milisegundos.",
-                    timer: 1000,
-                    timerProgressBar: true,
-                    didOpen: () => {
-                        Swal.showLoading();
-                        const timer = Swal.getPopup().querySelector("b");
-                        timerInterval = setInterval(() => {
-                            timer.textContent = `${Swal.getTimerLeft()}`;
-                        }, 100);
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval);
-                    }
-                }).then((result) => {
-                    /* Read more about handling dismissals below */
-                    if (result.dismiss === Swal.DismissReason.timer) {
-
-                    }
-                });
-                return
-            }
-            Swal.fire({
-                title: "Digite a quantidade",
-                input: "text",
-                inputAttributes: {
-                    autocapitalize: "off"
-                },
-                showCancelButton: true,
-                confirmButtonText: "Confirmar",
-                showLoaderOnConfirm: true,
-                preConfirm: async (quantidade) => {
-                    if (quantidade > 0) {
-                        var formData = new FormData();
-                        var art_id = $(this).attr("art_id");
-
-                        formData.append("art_id", art_id);
-                        formData.append("quantidade", quantidade);
-                        $.ajax({
-                            dataType: "json",
-                            type: "POST",
-                            url: "/Cart/AddItem",
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            data: formData,
-                            success: function (retorno) {
-                                console.log(retorno);
-                                if (retorno == "sucesso") {
-                                    var url = "/Cart/Produtos";
-                                    $.get(url, function (data) {
-                                        $("#cd-cart").html(data);
-                                    });
-                                    let timerInterval;
-                                    Swal.fire({
-                                        title: "Produto adicionado!",
-                                        html: "Irá fechar em <b></b> milisegundos.",
-                                        timer: 1000,
-                                        timerProgressBar: true,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                            const timer = Swal.getPopup().querySelector("b");
-                                            timerInterval = setInterval(() => {
-                                                timer.textContent = `${Swal.getTimerLeft()}`;
-                                            }, 100);
-                                        },
-                                        willClose: () => {
-                                            clearInterval(timerInterval);
-                                        }
-                                    }).then((result) => {
-                                        /* Read more about handling dismissals below */
-                                        if (result.dismiss === Swal.DismissReason.timer) {
-                                            OpenCloseCart();
-
-                                        }
-                                    });
-                                }
-
-                                if (retorno == "erro-1") {
-                                    let timerInterval;
-                                    Swal.fire({
-                                        title: "Você precisa estar logado para adicionar produtos no carrinho!",
-                                        html: "Irá fechar em <b></b> milisegundos.",
-                                        timer: 3000,
-                                        timerProgressBar: true,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                            const timer = Swal.getPopup().querySelector("b");
-                                            timerInterval = setInterval(() => {
-                                                timer.textContent = `${Swal.getTimerLeft()}`;
-                                            }, 100);
-                                        },
-                                        willClose: () => {
-                                            clearInterval(timerInterval);
-                                        }
-                                    }).then((result) => {
-                                        /* Read more about handling dismissals below */
-                                        if (result.dismiss === Swal.DismissReason.timer) {
-                                            OpenCloseCart();
-                                        }
-                                    });
-                                }
-
-                            }
-                        });
-                    }
-                }
-
-            });
-
-        })
-
-
-
 
 
 
