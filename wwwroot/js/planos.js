@@ -8,7 +8,7 @@ const overlay = document.querySelector(".overlay");
 const applyOverlayMask = (e) => {
   const overlayEl = e.currentTarget;
   const x = e.pageX - cardsContainer.offsetLeft;
-  const y = e.pageY - cardsContainer.offsetTop;
+  const y = e.pageY - cardsContainer.offsetTop-120;
 
   overlayEl.style = `--opacity: 1; --x: ${x}px; --y:${y}px;`;
 };

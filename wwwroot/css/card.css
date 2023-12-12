@@ -1,14 +1,3 @@
-body {
-  font-family: "Open Sans", sans-serif;
-  background-color: #030303;
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  -ms-box-sizing: content-box;
-  -o-box-sizing: content-box;
-  box-sizing: content-box;
-  padding: 0;
-  margin: 0;
-}
 
 .pCard_card {
   width: 400px;
