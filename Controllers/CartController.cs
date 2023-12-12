@@ -125,6 +125,48 @@ namespace RenderGallery.Controllers
             ViewBag.Title = "Checkout";
             return View();
         }
+        public IActionResult CheckoutPlano(int id)
+        {
+            int user_id = 0;
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            List<Planos> planos = db.Planos.Where(x => x.Id == id).ToList();
+
+            if (planos.Count > 0)
+            {
+                float total = 0;
+
+                foreach (Planos plano in planos)
+                {
+               
+                        total += plano.Preco;
+                        plano.Preco_formatted = plano.Preco.ToString("C", CultureInfo.CurrentCulture);
+                    
+
+                    ViewBag.nome = plano.Nome;
+                }
+                ViewBag.Total = total.ToString("C", CultureInfo.CurrentCulture);
+                ViewBag.Planos = planos;
+                ViewBag.plano_id = id; 
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+
+            }
+
+            ViewBag.Title = "Checkout";
+            return View();
+        }
 
         public JsonResult Finalizar()
         {
@@ -180,6 +222,33 @@ namespace RenderGallery.Controllers
 
             return Json(TempData);
         }
+
+        public JsonResult FinalizarPlano(int plano_id)
+        {
+            User user = new User();
+            int user_id = 0;
+            if (User.Identity.IsAuthenticated)
+            {
+                user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+            }
+            else
+            {
+                TempData["erro"] = "Usuário não encontrado!";
+            }
+
+            if (user_id != 0)
+            {
+
+                user.plano_id = plano_id;
+                db.SaveChanges();
+                TempData["sucesso"] = "Pedido Relizado com sucesso!";
+
+            }
+
+            return Json(TempData);
+        }
+
 
         public IActionResult Produtos() {
             int user_id = 0;

@@ -5,9 +5,8 @@
 @inject RenderGalleyRazor.Models.DatabaseContext dbContext
 
 @{
+    Layout = "";
     var user_id = 0;
-    var users = dbContext.Users.ToList();
-    var arts = dbContext.Arts.ToList();
 
     if (SignInManager.IsSignedIn(User))
     {
@@ -23,10 +22,19 @@
     .msg {
         cursor: pointer;
     }
+
+    .pCard_card {
+        margin: 0 auto;
+    }
+    .black{
+        color:black !important;
+    }
+
 </style>
-<body>
-    @foreach (var user in users)
+
+    @if(ViewBag.user != null)
     {
+        User user = ViewBag.user;
         if (@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count() > 0)
         {
             var use = await UserManager.FindByEmailAsync(user.Email);
@@ -52,7 +60,7 @@
                         </div>
                         <div>
                             <br />
-                            <i class="fas fa-comments fa-lg" style="color:#3498DB; font-size:26px;"></i>
+                            <i class="fas fa-comments fa-lg msg2" style="color:#3498DB; font-size:26px;"></i>
                         </div>
                         @{
                             var publi = dbContext.Publicacoes
@@ -72,7 +80,7 @@
                         </div>
                     </div>
                     <div class="pCard_back">
-                        <p>Veja minhas ultimas publicações</p>
+                    <p class="black">Veja minhas ultimas publicações</p>
                         @{
                             // Filtrando apenas as artes relacionadas ao usuário atual
                             var userArts = dbContext.Arts
@@ -85,7 +93,7 @@
                         {
                             <a onclick="UserArts('@art.Publicacao.User.Id','@art.Id')"><img src="~/@art.Path" alt=""></a>
                         }
-                        <p>Deixe seu Like!</p>
+                        <p class="black">Deixe seu Like!</p>
                     </div>
 
                     <div class="pCard_up">
@@ -105,7 +113,7 @@
                         </div>
                         <div>
                             <br />
-                            <i class="fas fa-comments fa-lg msg" user_id="@user.Id" style="color:#3498DB;  font-size:30px"></i>
+                            <i class="fas fa-comments fa-lg msg2" user_id="@user.Id" style="color:#3498DB;  font-size:30px"></i>
 
                         </div>
                         <div>
@@ -114,12 +122,12 @@
                         </div>
                     </div>
                     <div class="pCard_back">
-                        <p>Veja minhas ultimas publicações</p>
+                    <p class="black">Veja minhas ultimas publicações</p>
                         @foreach (var art in userArts)
                         {
                             <a onclick="UserArts('@art.Publicacao.User.Id','@art.Id')" href="#"><img src="~/@art.Path" alt=""></a>
                         }
-                        <p>Deixe seu Like!</p>
+                    <p class="black">Deixe seu Like!</p>
                     </div>
                 </div>
             }
@@ -128,7 +136,6 @@
     <div id="user-gallery" style="display:none;">
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function UserArts(artista_id, art_id) {
             var url = "/Art/UserArts/?artista_id=" + artista_id + "&art_id=" + art_id;
@@ -145,7 +152,7 @@
                 $(this).find("i").toggleClass("fa-plus");
             });
 
-            $(".msg").click(function () {
+            $(".msg2").click(function () {
                 $("#msg-content").val("");
 
                 if (@user_id== $(this).attr("user_id")) {
@@ -183,4 +190,3 @@
             })
         });
     </script>
-</body>

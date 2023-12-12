@@ -51,6 +51,35 @@ namespace RenderGallery.Controllers
             return View();
         }
 
+        public IActionResult UserArts([FromQuery(Name = "artista_id")] int artista_id, [FromQuery(Name = "art_id")] int art_id)
+        {
+            int user_id = 0;
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                user_id = user.Id;
+            }
+            List<Art> arts = db.Arts.Where(x => x.Publicacao.User_id == artista_id && x.Quantidade > 0).ToList();
+            ViewBag.user_id = user_id;
+            ViewBag.Arts = arts;
+            ViewBag.Title = "teste";
+            ViewBag.art_id = art_id;
+            return View();
+        }
+
+
+        public IActionResult Card([FromQuery(Name = "artista_id")] int artista_id)
+        {
+            User user = db.Users.Where(x => x.Id == artista_id).FirstOrDefault();
+            
+
+            if(user != null)
+            {
+                ViewBag.user = user;
+            }
+            return View();
+        }
+
 
         public JsonResult LikeDeslike(int user_id,int art_id, bool isLike, bool isDeslike)
         {

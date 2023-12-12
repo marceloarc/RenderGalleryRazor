@@ -35,7 +35,7 @@ VALUES (@planoProId, 'Limite de 30 postagens'),
 
 -- Inserir o Plano Ultimate
 INSERT INTO Planos (Nome, Preco, LimitePublicacoes, Taxa, Cor)
-VALUES ('Ultimate', 30.0, 50, 0.05, '#FF0000');
+VALUES ('Ultimate', 60.0, 50, 0.05, '#FF0000');
 
 -- Obter o ID do último plano inserido (Ultimate)
 DECLARE @planoUltimateId INT;

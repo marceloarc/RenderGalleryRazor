@@ -179,7 +179,7 @@
                     <img src="~/@art.Path" alt="IMage" onclick="teste('@art.publi_id','@art.Id')" class="img-fluid hover">
                     <div class="middle">
 
-                        <button class="item-btn item-image-profile" style="" user_id="@art.Publicacao.User.Id">
+                        <button class="item-btn item-image-profile profile" style="" user_id="@art.Publicacao.User.Id">
                             <i class="far fa-user-circle fa-xl " aria-hidden="true"></i>
                             <a>@art.Publicacao.User.Name</a>
                         </button>
@@ -236,14 +236,35 @@
 <div id="teste123" style="display:none;">
 
 </div>
+<div class="modal" id="modal-card" tabindex="-1" role="dialog" style="z-index:999999999999999999999999999999999999;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color:rgba(10, 14, 14, 0.50); color:white;">
+            <div class="modal-header" style="border-bottom:0 !important;">
+                <h5 class="modal-title"> dsad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" id="card">
 
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
 
 
 
     window.onload = function () {
 
-
+        $(".profile").click(function(){
+            var artista_id = $(this).attr("user_id");
+            var url = "/Art/Card/?artista_id=" + artista_id;
+            $.get(url, function (data) {
+                $("#card").html(data);
+                $("#modal-card").modal("show");
+            });
+        })
         $(".like").click(function(){
             var btn = $(this)
             var formData = new FormData();
@@ -336,7 +357,7 @@
 
 </script>
 <script>
-            function teste(publi_id, art_id) {
+           function teste(publi_id, art_id) {
             var url = "/Art/PubliArts/?publi_id=" + publi_id+"&art_id="+art_id;
             $.get(url, function (data) {
                 $("#teste123").html(data);
