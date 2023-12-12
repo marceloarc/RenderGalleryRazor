@@ -57,6 +57,22 @@
         width: 80px;
 
     }
+
+    .out-stock {
+   
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        padding: 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        
+    }
     .item-btn{
         cursor: pointer;
         background-color: black;
@@ -144,7 +160,7 @@
         .hover{
         cursor: pointer;
         }
-
+        
 </style>
 
 <div class="site-section" data-aos="fade">
@@ -223,6 +239,13 @@
                         </button>
 
                     </div>
+
+                        @if(art.Quantidade < 1)
+                        {
+                            <div class="out-stock">
+                                <button type="button" class="btn btn-danger" style="background-color:red;">Produto esgotado</button>
+                            </div>
+                        }
 
                 </div>
             }

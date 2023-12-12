@@ -57,6 +57,20 @@
         width: 80px;
     }
 
+    .out-stock {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        padding: 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
     .item-btn {
         cursor: pointer;
         background-color: black;
@@ -140,7 +154,6 @@
     .hover {
         cursor: pointer;
     }
-
 </style>
 
 <div class="site-section" data-aos="fade">
@@ -220,6 +233,13 @@
 
                         </div>
 
+                        @if (art.Quantidade < 1)
+                        {
+                            <div class="out-stock">
+                                <button type="button" class="btn btn-danger" style="background-color:red;">Produto esgotado</button>
+                            </div>
+                        }
+
                     </div>
                 }
 
@@ -231,20 +251,7 @@
 </div>
 <div id="teste123" style="display:none;">
 </div>
-<div class="modal" id="modal-card" tabindex="-1" role="dialog" style="z-index:999999999999999999999999999999999999;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background-color:rgba(10, 14, 14, 0.50); color:white;">
-            <div class="modal-header" style="border-bottom:0 !important;">
-                <h5 class="modal-title">Informaçoes do artista</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center" id="card">
-            </div>
-        </div>
-    </div>
-</div>
+
 <script type="text/javascript">
 
 
