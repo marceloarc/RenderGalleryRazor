@@ -49,31 +49,35 @@ namespace RenderGallery.Controllers
 
                     if(art!= null)
                     {
-
-
-                        ProdutoCarrinho produto = new ProdutoCarrinho();
-
-                        produto = db.Produtos.Where(x => x.art_id == art_id && x.User_id == user_id).FirstOrDefault();
-
-                        if(produto == null)
+                        if(art.Quantidade < 1)
                         {
-                            produto = new ProdutoCarrinho();
-                            produto.art_id = art_id;
-                            produto.publi_id = art.publi_id;
-                            produto.User_id = user_id;
-                            produto.Quantidade = quantidade;
-                            db.Produtos.Add(produto);
-                            db.SaveChanges();
-                            TempData["s"] = "sucesso";
+							TempData["e"] = "Produto fora de estoque!";
                         }
                         else
                         {
-                            TempData["e"] = "Produto já se encontra em seu carrinho!"; 
-                        }
+							ProdutoCarrinho produto = new ProdutoCarrinho();
 
+							produto = db.Produtos.Where(x => x.art_id == art_id && x.User_id == user_id).FirstOrDefault();
 
+							if (produto == null)
+							{
+								produto = new ProdutoCarrinho();
+								produto.art_id = art_id;
+								produto.publi_id = art.publi_id;
+								produto.User_id = user_id;
+								produto.Quantidade = quantidade;
+								db.Produtos.Add(produto);
+								db.SaveChanges();
+								TempData["s"] = "sucesso";
+							}
+							else
+							{
+								TempData["e"] = "Produto já se encontra em seu carrinho!";
+							}
 
-                    }
+						}
+
+					}
  
                 
                 }
@@ -239,10 +243,15 @@ namespace RenderGallery.Controllers
 
             if (user_id != 0)
             {
-
-                user.plano_id = plano_id;
-                db.SaveChanges();
-                TempData["sucesso"] = "Pedido Relizado com sucesso!";
+                if(user.plano_id == plano_id) {
+                    TempData["erro"] = "Seu perfil já está com este plano!";
+                }
+                else
+                {
+                    user.plano_id = plano_id;
+                    db.SaveChanges();
+                    TempData["sucesso"] = "Pedido Relizado com sucesso!";
+                }
 
             }
 

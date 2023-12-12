@@ -27,7 +27,7 @@ namespace RenderGallery.Controllers
                 User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
                 user_id = user.Id;
             }
-            List<Art> arts = db.Arts.Where(x => EF.Functions.Like(x.Arte, "%"+search+"%") || EF.Functions.Like(x.Categoria.Nome, "%" + search + "%") && x.Quantidade >0).ToList();
+            List<Art> arts = db.Arts.Where(x => EF.Functions.Like(x.Arte, "%"+search+"%") || EF.Functions.Like(x.Categoria.Nome, "%" + search + "%")).ToList();
             ViewBag.user_id = user_id;
             ViewBag.Arts = arts;
             ViewBag.Title = "Pesquisando por "+search;
@@ -43,7 +43,7 @@ namespace RenderGallery.Controllers
                 User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
                 user_id = user.Id;
             }
-            List<Art> arts = db.Arts.Where(x => x.publi_id == publi_id && x.Quantidade > 0).ToList();
+            List<Art> arts = db.Arts.Where(x => x.publi_id == publi_id).ToList();
             ViewBag.user_id = user_id;
             ViewBag.Arts = arts;
             ViewBag.Title = "teste";
@@ -59,7 +59,7 @@ namespace RenderGallery.Controllers
                 User user = db.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
                 user_id = user.Id;
             }
-            List<Art> arts = db.Arts.Where(x => x.Publicacao.User_id == artista_id && x.Quantidade > 0).ToList();
+            List<Art> arts = db.Arts.Where(x => x.Publicacao.User_id == artista_id).ToList();
             ViewBag.user_id = user_id;
             ViewBag.Arts = arts;
             ViewBag.Title = "teste";

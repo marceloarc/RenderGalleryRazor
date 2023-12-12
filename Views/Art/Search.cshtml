@@ -267,7 +267,7 @@
             var is_like = $(this).attr("is_like");
 
             if (user_id == 0) {
-                window.location.href = '/Account/Login';
+                window.location.href = '/Account/Register';
                 return
             }
 
@@ -333,7 +333,7 @@
                 });
                 return
             } else if (!@ViewBag.user_id) {
-                window.location.href = '/Account/Login';
+                window.location.href = '/Account/Register';
                 return;
             }
 
