@@ -248,6 +248,15 @@
     <script src="~/js/main.js"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/datatables.min.js"></script>
 <script>
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "PrintScreen" || event.key === "PrintScreen OS") {
+                event.preventDefault();
+                // Você pode exibir uma mensagem informando que a operação foi bloqueada
+                console.log("A funcionalidade de captura de tela está bloqueada.");
+            }
+        });
+
+
     $("#cart").click(function () {
         OpenCloseCart();
     })

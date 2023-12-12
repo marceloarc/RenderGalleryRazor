@@ -56,27 +56,46 @@
                         <tbody>
                             @foreach (var user in users.Where(u => u.status != 0))
                             {
-                                <tr>
-                                    <form method="post" action="~/Adm/editOrRemove">
-                                    <td>@user.Id</td>
-                                    <td><input asp-for="Nome" type="text" class="inputgrande" value="@user.Name" /></td>
-                                    <td><input asp-for="Email" type="email" class="inputgrande" value="@user.Email" /></td>
-                                    <td><input asp-for="Telefone" type="tel" class="inputpequeno" value="@user.Telefone" /></td>
-                                    <td><input asp-for="plano_id" type="number" class="inputpequeno" value="@user.plano_id" /></td>
-                                    <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).Count()</td>
-                                    <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</td>
-                                    <td>@user.status</td>
-                                    <input asp-for="id_user" type="hidden" name="id_user" value="@user.Id" />
-                                    <td>
-                                        <button type="submit" name="action" value="edit" class="btn btn-primary">
-                                            <i class="fas fa-check"></i> <!-- Ícone de edição -->
-                                        </button>
-                                        <button type="submit" name="action" value="remove" class="btn btn-danger remove-user">
-                                            <i class="fas fa-times"></i> <!-- Ícone de remoção -->
-                                        </button>
-                                    </td>
-                                    </form>
-                                </tr>
+                                if(user.Id == 1)
+                                {
+                                    <tr>
+                                        <form method="post" action="~/Adm/editOrRemove">
+                                        <td>@user.Id</td>
+                                        <td><input asp-for="Nome" type="text" class="inputgrande" value="@user.Name" readonly style="pointer-events: none;" /></td>
+                                        <td><input asp-for="Email" type="email" class="inputgrande" value="@user.Email" readonly style="pointer-events: none;" /></td>
+                                        <td><input asp-for="Telefone" type="tel" class="inputpequeno" value="@user.Telefone" readonly style="pointer-events: none;" /></td>
+                                        <td><input asp-for="plano_id" type="number" class="inputpequeno" value="@user.plano_id" readonly style="pointer-events: none;" /></td>
+                                        <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).Count()</td>
+                                        <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</td>
+                                        <td>@user.status</td>
+                                        <input asp-for="id_user" type="hidden" name="id_user" value="@user.Id" />
+                                        </form>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <form method="post" action="~/Adm/editOrRemove">
+                                        <td>@user.Id</td>
+                                        <td><input asp-for="Nome" type="text" class="inputgrande" value="@user.Name" /></td>
+                                        <td><input asp-for="Email" type="email" class="inputgrande" value="@user.Email" /></td>
+                                        <td><input asp-for="Telefone" type="tel" class="inputpequeno" value="@user.Telefone" /></td>
+                                        <td><input asp-for="plano_id" type="number" class="inputpequeno" value="@user.plano_id" /></td>
+                                        <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).Count()</td>
+                                        <td>@dbContext.Publicacoes.Where(p => p.User.Id == user.Id).SelectMany(p => p.Artes).Count()</td>
+                                        <td>@user.status</td>
+                                        <input asp-for="id_user" type="hidden" name="id_user" value="@user.Id" />
+                                        <td>
+                                            <button type="submit" name="action" value="edit" class="btn btn-primary">
+                                                <i class="fas fa-check"></i> <!-- Ícone de edição -->
+                                            </button>
+                                            <button type="submit" name="action" value="remove" class="btn btn-danger remove-user">
+                                                <i class="fas fa-times"></i> <!-- Ícone de remoção -->
+                                            </button>
+                                        </td>
+                                        </form>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
