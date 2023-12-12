@@ -69,7 +69,7 @@
                             .Count();
                         }
                         <div>
-                            <p>Curtidas</p>
+                            <p>Likes</p>
                             <p>@totalLikes</p>
                         </div>
                     </div>
@@ -113,12 +113,12 @@
 
                         </div>
                         <div>
-                            <p>Curtidas</p>
+                            <p>Likes</p>
                             <p>@totalLikes</p>
                         </div>
                     </div>
                     <div class="pCard_back">
-                        <p>Veja minhas ultimas publicações</p>
+                        <p>Veja minhas últimas publicações</p>
                         @foreach (var art in userArts)
                         {
                             <a onclick="UserArts('@art.Publicacao.User.Id','@art.Id')" href="#"><img src="~/@art.Path" alt=""></a>
