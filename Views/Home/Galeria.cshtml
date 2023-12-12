@@ -240,7 +240,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="background-color:rgba(10, 14, 14, 0.50); color:white;">
             <div class="modal-header" style="border-bottom:0 !important;">
-                <h5 class="modal-title"> dsad</h5>
+                <h5 class="modal-title">Artista</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -273,7 +273,7 @@
             var is_like = $(this).attr("is_like");
         
             if(user_id == 0 ){
-                window.location.href = '/Account/Register';
+                window.location.href = '/Account/Login';
                 return
             }
 
@@ -339,7 +339,7 @@
                 });
                 return
             } else if (!@ViewBag.user_id) {
-                window.location.href = '/Account/Register';
+                window.location.href = '/Account/Login';
                 return;
             }
 

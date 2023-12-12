@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Name = "AspNetCore.Cookies";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
         options.SlidingExpiration = true;
-        options.LoginPath = "~/Account/Register"; // Página de login
+        options.LoginPath = "~/Account/Login"; // Página de login
         options.AccessDeniedPath = "~/Account/AccessDenied"; // Página de acesso negado
     });
 
