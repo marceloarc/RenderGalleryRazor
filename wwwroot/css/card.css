@@ -275,6 +275,7 @@ Back
 }
 
 .pCard_card .pCard_back a img {
+  object-fit: cover;
   margin: 10px;
   width: 90px;
   height: 90px; /* Ajuste a altura desejada */
