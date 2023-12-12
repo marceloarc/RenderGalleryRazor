@@ -255,10 +255,11 @@
             })
 
            $(".lg-thumb-item").click(function () {
-               if(!$(this).hasClass("active")){
+             if(!$(this).hasClass("active")){
                foi = 0;
-               }
+             }
            })
+           
              if(foi ==1){
                 $(".like3").click(function (e) {
 
@@ -316,7 +317,7 @@
                         Swal.fire({
                             title: "Não é possivel mandar mensagens para si mesmo!",
                             html: "Irá fechar em <b></b> milisegundos.",
-                            timer: 1000,
+                            timer: 2000,
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading();
@@ -346,7 +347,7 @@
                         Swal.fire({
                             title: "Não é possivel comprar seu proprio produto!",
                             html: "Irá fechar em <b></b> milisegundos.",
-                            timer: 1000,
+                            timer: 2000,
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading();
@@ -467,7 +468,7 @@
                         Swal.fire({
                             title: "Não é possivel adicionar seu proprio produto como favorito!",
                             html: "Irá fechar em <b></b> milisegundos.",
-                            timer: 1000,
+                            timer: 2000,
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading();
@@ -523,7 +524,7 @@
                                         Swal.fire({
                                             title: "Produto adicionado!",
                                             html: "Irá fechar em <b></b> milisegundos.",
-                                            timer: 1000,
+                                            timer: 2000,
                                             timerProgressBar: true,
                                             didOpen: () => {
                                                 Swal.showLoading();
@@ -549,7 +550,7 @@
                                         Swal.fire({
                                             title: retorno['e'],
                                             html: "Irá fechar em <b></b> milisegundos.",
-                                            timer: 1000,
+                                            timer: 2000,
                                             timerProgressBar: true,
                                             didOpen: () => {
                                                 Swal.showLoading();
