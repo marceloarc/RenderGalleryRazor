@@ -34,17 +34,17 @@ span.sub-text {
 }
 
 .btn-login {
-  border-radius: 20px;
-  border: 1px solid #022d5e;
-  background-color: #022d5e;
-  color: #FFFFFF;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 12px 45px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  transition: transform 80ms ease-in;
-  width: 100%;
+    border-radius: 20px;
+    border: 1px solid #022d5e;
+    background-color: #022d5e;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    width: 100%;
 }
 
 .btn-login:active {

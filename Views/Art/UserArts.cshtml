@@ -263,6 +263,11 @@
              if(foi ==1){
                 $(".like3").click(function (e) {
 
+
+                    if (@user_id == 0) {
+                        return;
+                    }
+
                     var btn = $(this)
                     var formData = new FormData();
                     var art_id = $(this).attr("art_id");
@@ -313,6 +318,9 @@
                    
                     $("#msg-content").val("");
 
+                    if (@user_id == 0) {
+                        return;
+                    }
                     if (@ViewBag.user_id== $(this).attr("user_id")) {
                         Swal.fire({
                             title: "Não é possivel mandar mensagens para si mesmo!",
@@ -343,6 +351,9 @@
 
                 })
                 $(".add-cart2").click(function () {
+                    if (@user_id == 0) {
+                        return;
+                    }
                     if (@user_id== $(this).attr("user_id")) {
                         Swal.fire({
                             title: "Não é possivel comprar seu proprio produto!",
@@ -464,6 +475,11 @@
 
 
                 $(".add-favorito2").click(function () {
+
+                    if (@user_id == 0) {
+                        return;
+                    }
+
                     if (@user_id== $(this).attr("user_id")) {
                         Swal.fire({
                             title: "Não é possivel adicionar seu proprio produto como favorito!",

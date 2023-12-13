@@ -274,7 +274,7 @@
             var is_like = $(this).attr("is_like");
 
             if (user_id == 0) {
-                window.location.href = '/Account/Register';
+                window.location.href = '/Account/Login';
                 return
             }
 
@@ -340,7 +340,7 @@
                 });
                 return
             } else if (!@ViewBag.user_id) {
-                window.location.href = '/Account/Register';
+                window.location.href = '/Account/Login';
                 return;
             }
 

@@ -164,6 +164,7 @@
 
 
         $(".add-cart2").click(function () {
+
             if (@ViewBag.user_id== $(this).attr("user_id")) {
                 Swal.fire({
                     title: "Não é possivel comprar seu proprio produto!",
