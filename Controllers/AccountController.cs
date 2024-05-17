@@ -274,5 +274,111 @@ namespace RenderGalleyRazor.Controllers
             return View();
         }
 
+        [HttpPost("api/mobile/login")]
+        public async Task<IActionResult> MobileLogin([FromBody] VMLogin login)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(login.Email);
+
+                if (user == null)
+                {
+                    return BadRequest(new { Message = "Email não encontrado" });
+                }
+
+                User userId = db.Users.FirstOrDefault(x => x.Email == user.Email);
+
+                if (userId.status == 0)
+                {
+                    return BadRequest(new { Message = "Acesso negado" });
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
+
+                if (result.Succeeded)
+                {
+                    var favoritosDoUsuario = db.Favoritos
+                        .Where(f => f.user_id == userId.Id)
+                        .Select(f => new
+                        {
+                            Id = f.Art.Id,
+                            Name = f.Art.Arte,
+                            Path = f.Art.Path,
+                            Valor = f.Art.Valor,
+                            Tipo = f.Art.Tipo,
+                            Quantidade = f.Art.Quantidade,
+                            Categoria = f.Art.categoria_id,
+                            Publicacao = f.Art.publi_id
+                        })
+                        .ToList();
+
+                    var pedidosDoUsuario = db.Pedidos
+                        .Where(p => p.User_id == userId.Id)
+                        .Select(p => new
+                        {
+                            IdPedido = p.Id,
+                            Subtotal = p.sub_total,
+                            Total = p.total,
+                            Status = p.Status,
+                            Produtos = p.Produtos.Select(pp => new
+                            {
+                                IdProduto = pp.Arte.Id,
+                                NomeProduto = pp.Arte.Arte,
+                                Path = pp.Arte.Path,
+                                ValorProduto = pp.Arte.Valor,
+                                Quantidade = pp.Quantidade,
+                                Categoria = pp.Arte.categoria_id,
+                                Publicacao = pp.Arte.publi_id
+                            }).ToList()
+                        })
+                        .ToList();
+
+                    var produtosCarrinhoDoUsuario = db.Produtos
+                        .Where(pc => pc.User_id == userId.Id)
+                        .Select(pc => new
+                        {
+                            IdProduto = pc.Arte.Id,
+                            NomeProduto = pc.Arte.Arte,
+                            Path = pc.Arte.Path,
+                            ValorProduto = pc.Arte.Valor,
+                            Quantidade = pc.Quantidade,
+                            Categoria = pc.Arte.categoria_id,
+                            Publicacao = pc.Arte.publi_id
+                        })
+                        .ToList();
+
+                    var userInfo = new
+                    {
+                        Id = userId.Id,
+                        Name = userId.Name,
+                        Email = userId.Email,
+                        Pic = userId.Pic,
+                        Saldo = userId.Saldo,
+                        Plano = userId.plano_id,
+                        Favoritos = favoritosDoUsuario,
+                        Pedidos = pedidosDoUsuario,
+                        Carrinho = produtosCarrinhoDoUsuario,
+                    };
+
+                    return Ok(userInfo);
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Senha incorreta" });
+                }
+            }
+
+            var info = new
+            {
+                email = login.Email,
+                password = login.Password,
+            };
+
+            return BadRequest(info);
+        }
+
+
+
+
     }
 }

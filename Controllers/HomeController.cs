@@ -87,5 +87,78 @@ namespace RenderGalleyRazor.Controllers
 
             return View();
         }
+
+        [HttpGet("api/mobile/home")]
+        public IActionResult GetAllArts()
+        {
+            try
+            {
+                var arts = db.Arts
+                .Select(a => new
+                {
+                    Id = a.Id,
+                    Name = a.Arte,
+                    Path = "http://192.168.0.13:5000/" + a.Path,
+                    Price = a.Valor,
+                    Tipo = a.Tipo,
+                    Quantidade = a.Quantidade,
+                    CategoriaId = a.categoria_id,
+                    PublicacaoId = a.publi_id,
+                    User = a.Publicacao.User_id,
+                    Description = a.dataHora
+                })
+                .ToList();
+                return Ok(arts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
+        }
+
+        [HttpGet("api/mobile/product/{id}")]
+        public IActionResult GetArt(int id)
+        {
+            try
+            {
+                var art = db.Arts
+                    .Where(a => a.Id == id)
+                    .Select(a => new
+                    {
+                        Id = a.Id,
+                        Name = a.Arte,
+                        Path = "http://192.168.0.13:5000/" + a.Path,
+                        Price = a.Valor,
+                        Tipo = a.Tipo,
+                        Quantidade = a.Quantidade,
+                        CategoriaId = a.categoria_id,
+                        PublicacaoId = a.publi_id,
+                        User = new
+                        {
+                            Id = a.Publicacao.User.Id,
+                            Name = a.Publicacao.User.Name,
+                            Email = a.Publicacao.User.Email,
+                            Pic = a.Publicacao.User.Pic,
+                            Saldo = a.Publicacao.User.Saldo,
+                            Plano = a.Publicacao.User.plano_id
+                        },
+                    })
+                    .FirstOrDefault();
+
+                if (art != null)
+                {
+                    return Ok(art);
+                }
+                else
+                {
+                    return NotFound("Arte não encontrada");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
+        }
+
     }
 }
