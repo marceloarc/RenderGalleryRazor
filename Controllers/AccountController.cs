@@ -303,8 +303,8 @@ namespace RenderGalleyRazor.Controllers
                         {
                             Id = f.Art.Id,
                             Name = f.Art.Arte,
-                            Path = f.Art.Path,
-                            Valor = f.Art.Valor,
+                            Path = "http://192.168.0.13:5000/" + f.Art.Path,
+                            Price = f.Art.Valor,
                             Tipo = f.Art.Tipo,
                             Quantidade = f.Art.Quantidade,
                             Categoria = f.Art.categoria_id,
@@ -324,8 +324,8 @@ namespace RenderGalleyRazor.Controllers
                             {
                                 IdProduto = pp.Arte.Id,
                                 NomeProduto = pp.Arte.Arte,
-                                Path = pp.Arte.Path,
-                                ValorProduto = pp.Arte.Valor,
+                                Path = "http://192.168.0.13:5000/" + pp.Arte.Path,
+                                Price = pp.Arte.Valor,
                                 Quantidade = pp.Quantidade,
                                 Categoria = pp.Arte.categoria_id,
                                 Publicacao = pp.Arte.publi_id
@@ -339,25 +339,44 @@ namespace RenderGalleyRazor.Controllers
                         {
                             IdProduto = pc.Arte.Id,
                             NomeProduto = pc.Arte.Arte,
-                            Path = pc.Arte.Path,
-                            ValorProduto = pc.Arte.Valor,
+                            Path = "http://192.168.0.13:5000/" + pc.Arte.Path,
+                            Price = pc.Arte.Valor,
                             Quantidade = pc.Quantidade,
                             Categoria = pc.Arte.categoria_id,
                             Publicacao = pc.Arte.publi_id
                         })
                         .ToList();
 
+                    var publicacoesDoUsuario = db.Publicacoes
+                        .Where(p => p.User_id == userId.Id)
+                        .SelectMany(p => p.Artes) 
+                        .Select(a => new
+                        {
+                            Id = a.Id,
+                            Nome = a.Arte,
+                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Price = a.Valor,
+                            Tipo = a.Tipo,
+                            Quantidade = a.Quantidade,
+                            CategoriaId = a.categoria_id,
+                            PublicacaoId = a.publi_id,
+                            User = a.Publicacao.User_id,
+                        })
+                        .ToList();
+
+
                     var userInfo = new
                     {
                         Id = userId.Id,
                         Name = userId.Name,
                         Email = userId.Email,
-                        Pic = userId.Pic,
+                        Pic = "http://192.168.0.13:5000/" + userId.Pic,
                         Saldo = userId.Saldo,
                         Plano = userId.plano_id,
                         Favoritos = favoritosDoUsuario,
                         Pedidos = pedidosDoUsuario,
                         Carrinho = produtosCarrinhoDoUsuario,
+                        Publicacoes = publicacoesDoUsuario
                     };
 
                     return Ok(userInfo);

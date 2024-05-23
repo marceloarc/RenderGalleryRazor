@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -9,7 +10,7 @@ namespace RenderGalleyRazor.Controllers
 {
     public class HomeController : Controller
     {
-       
+
         private readonly DatabaseContext db;
         public HomeController(DatabaseContext db)
         {
@@ -34,11 +35,11 @@ namespace RenderGalleyRazor.Controllers
                 user_id = user.Id;
             }
             List<Art> arts = db.Arts.Where(x => x.categoria_id == id).ToList();
-            Categoria cat = db.Categorias.Where(x=> x.Id == id).FirstOrDefault();
+            Categoria cat = db.Categorias.Where(x => x.Id == id).FirstOrDefault();
             ViewBag.user_id = user_id;
             ViewBag.Arts = arts;
             ViewBag.Title = cat.Nome;
-      
+
             return View();
         }
 
@@ -88,27 +89,93 @@ namespace RenderGalleyRazor.Controllers
             return View();
         }
 
-        [HttpGet("api/mobile/home")]
-        public IActionResult GetAllArts()
+        [HttpPost("api/mobile/home")]
+        public IActionResult GetAllArts([FromBody] VMCategory category)
         {
             try
             {
-                var arts = db.Arts
-                .Select(a => new
+                var art = 0;
+                if (category.categoryId != 0)
                 {
-                    Id = a.Id,
-                    Name = a.Arte,
-                    Path = "http://192.168.0.13:5000/" + a.Path,
-                    Price = a.Valor,
-                    Tipo = a.Tipo,
-                    Quantidade = a.Quantidade,
-                    CategoriaId = a.categoria_id,
-                    PublicacaoId = a.publi_id,
-                    User = a.Publicacao.User_id,
-                    Description = a.dataHora
-                })
-                .ToList();
-                return Ok(arts);
+                    if (category.searchText != null || category.searchText != "")
+                    {
+                        var arts = db.Arts.Where(a => a.categoria_id == category.categoryId).Where(a => EF.Functions.Like(a.Arte, "%" + category.searchText + "%") || EF.Functions.Like(a.Publicacao.Nome, "%" + category.searchText + "%")).Select(a => new
+                        {
+                            Id = a.Id,
+                            Name = a.Arte,
+                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Price = a.Valor,
+                            Tipo = a.Tipo,
+                            Quantidade = a.Quantidade,
+                            CategoriaId = a.categoria_id,
+                            PublicacaoId = a.publi_id,
+                            User = a.Publicacao.User_id,
+                            Description = a.dataHora
+                        })
+                        .ToList();
+                        return Ok(arts);
+                    } 
+                    else
+                    {
+                        var arts = db.Arts.Where(a => a.categoria_id == category.categoryId).Select(a => new
+                        {
+                            Id = a.Id,
+                            Name = a.Arte,
+                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Price = a.Valor,
+                            Tipo = a.Tipo,
+                            Quantidade = a.Quantidade,
+                            CategoriaId = a.categoria_id,
+                            PublicacaoId = a.publi_id,
+                            User = a.Publicacao.User_id,
+                            Description = a.dataHora
+                        })
+                        .ToList();
+                        return Ok(arts);
+                    }
+
+                }
+                else
+                {
+                    if(category.searchText != null || category.searchText != "")
+                    {
+                        var arts = db.Arts.Where(a => EF.Functions.Like(a.Arte, "%" + category.searchText + "%") || EF.Functions.Like(a.Publicacao.Nome, "%" + category.searchText + "%")).Select(a => new
+                        {
+                            Id = a.Id,
+                            Name = a.Arte,
+                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Price = a.Valor,
+                            Tipo = a.Tipo,
+                            Quantidade = a.Quantidade,
+                            CategoriaId = a.categoria_id,
+                            PublicacaoId = a.publi_id,
+                            User = a.Publicacao.User_id,
+                            Description = a.dataHora
+                        })
+                        .ToList();
+                        return Ok(arts);
+                    }
+                    else
+                    {
+                        var arts = db.Arts
+                        .Select(a => new
+                        {
+                            Id = a.Id,
+                            Name = a.Arte,
+                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Price = a.Valor,
+                            Tipo = a.Tipo,
+                            Quantidade = a.Quantidade,
+                            CategoriaId = a.categoria_id,
+                            PublicacaoId = a.publi_id,
+                            User = a.Publicacao.User_id,
+                            Description = a.dataHora
+                        })
+                        .ToList();
+                        return Ok(arts);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -131,7 +198,11 @@ namespace RenderGalleyRazor.Controllers
                         Price = a.Valor,
                         Tipo = a.Tipo,
                         Quantidade = a.Quantidade,
-                        CategoriaId = a.categoria_id,
+                        Categoria = new
+                        {
+                            Id = a.categoria_id,
+                            Name = a.Categoria.Nome
+                        },
                         PublicacaoId = a.publi_id,
                         User = new
                         {

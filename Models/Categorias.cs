@@ -18,4 +18,11 @@ namespace RenderGalleyRazor.Models
         public virtual List<Tags>? Tags { get; set; }
 
     }
+
+    public class VMCategory
+    {
+        public int? categoryId { get; set; }
+        public string? searchText { get; set; }
+
+    }
 }
