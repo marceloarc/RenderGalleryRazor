@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RenderGalleyRazor.Models
 {
@@ -29,4 +30,17 @@ namespace RenderGalleyRazor.Models
 
 
     }
+
+    public class AdicionarItemCarrinhoModel
+    {
+        [Required(ErrorMessage = "O ID do usuário é obrigatório")]
+        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "O ID da arte é obrigatório")]
+        public int ArtId { get; set; }
+
+        public int? Quantidade { get; set; }
+    }
+
+
 }

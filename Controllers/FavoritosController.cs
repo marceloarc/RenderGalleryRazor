@@ -171,5 +171,46 @@ namespace RenderGallery.Controllers
             return Json(TempData);
         }
 
+        [HttpPost("api/mobile/toggleFavorito")]
+        public IActionResult ToggleFavorito([FromBody] AdicionarItemCarrinhoModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.FirstOrDefault(u => u.Id == model.UserId);
+                if (user == null)
+                {
+                    return BadRequest(new { Message = "Usuário não encontrado" });
+                }
+
+                var art = db.Arts.FirstOrDefault(a => a.Id == model.ArtId);
+                if (art == null)
+                {
+                    return BadRequest(new { Message = "Arte não encontrada" });
+                }
+
+                var favorito = db.Favoritos.FirstOrDefault(f => f.art_id == model.ArtId && f.user_id == model.UserId);
+                if (favorito != null)
+                {
+                    db.Favoritos.Remove(favorito);
+                    db.SaveChanges();
+                    return Ok(new { Message = "Produto removido dos favoritos com sucesso" });
+                }
+                else
+                {
+                    favorito = new Favoritos
+                    {
+                        art_id = model.ArtId,
+                        user_id = model.UserId
+                    };
+                    db.Favoritos.Add(favorito);
+                    db.SaveChanges();
+                    return Ok(new { Message = "Produto adicionado aos favoritos com sucesso" });
+                }
+            }
+
+            return BadRequest(ModelState);
+        }
+
+
     }
 }

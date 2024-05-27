@@ -353,7 +353,7 @@ namespace RenderGalleyRazor.Controllers
                         .Select(a => new
                         {
                             Id = a.Id,
-                            Nome = a.Arte,
+                            Name = a.Arte,
                             Path = "http://192.168.0.13:5000/" + a.Path,
                             Price = a.Valor,
                             Tipo = a.Tipo,
@@ -396,6 +396,154 @@ namespace RenderGalleyRazor.Controllers
             return BadRequest(info);
         }
 
+        [HttpPost("api/mobile/UserInfoAll")]
+        public IActionResult UserInfoAll([FromBody] User user)
+        {
+            try
+            {   
+                var loggedInUser = db.Users.FirstOrDefault(u => u.Id == user.Id);
+                if (loggedInUser == null)
+                {
+                    return BadRequest(new { Message = "Usuário não encontrado" });
+                }
+
+                var favoritosDoUsuario = db.Favoritos
+                .Where(f => f.user_id == user.Id)
+                .Select(f => new
+                {
+                    Id = f.Art.Id,
+                    Name = f.Art.Arte,
+                    Path = "http://192.168.0.13:5000/" + f.Art.Path,
+                    Price = f.Art.Valor,
+                    Tipo = f.Art.Tipo,
+                    Quantidade = f.Art.Quantidade,
+                    Categoria = f.Art.categoria_id,
+                    Publicacao = f.Art.publi_id
+                })
+                .ToList();
+
+                var pedidosDoUsuario = db.Pedidos
+                    .Where(p => p.User_id == user.Id)
+                    .Select(p => new
+                    {
+                        IdPedido = p.Id,
+                        Subtotal = p.sub_total,
+                        Total = p.total,
+                        Status = p.Status,
+                        Produtos = p.Produtos.Select(pp => new
+                        {
+                            IdProduto = pp.Arte.Id,
+                            NomeProduto = pp.Arte.Arte,
+                            Path = "http://192.168.0.13:5000/" + pp.Arte.Path,
+                            Price = pp.Arte.Valor,
+                            Quantidade = pp.Quantidade,
+                            Categoria = pp.Arte.categoria_id,
+                            Publicacao = pp.Arte.publi_id
+                        }).ToList()
+                    })
+                    .ToList();
+
+                var produtosCarrinhoDoUsuario = db.Produtos
+                    .Where(pc => pc.User_id == user.Id)
+                    .Select(pc => new
+                    {
+                        IdProduto = pc.Arte.Id,
+                        NomeProduto = pc.Arte.Arte,
+                        Path = "http://192.168.0.13:5000/" + pc.Arte.Path,
+                        Price = pc.Arte.Valor,
+                        Quantidade = pc.Quantidade,
+                        Categoria = pc.Arte.categoria_id,
+                        Publicacao = pc.Arte.publi_id
+                    })
+                    .ToList();
+
+                var publicacoesDoUsuario = db.Publicacoes
+                    .Where(p => p.User_id == user.Id)
+                    .SelectMany(p => p.Artes)
+                    .Select(a => new
+                    {
+                        Id = a.Id,
+                        Name = a.Arte,
+                        Path = "http://192.168.0.13:5000/" + a.Path,
+                        Price = a.Valor,
+                        Tipo = a.Tipo,
+                        Quantidade = a.Quantidade,
+                        CategoriaId = a.categoria_id,
+                        PublicacaoId = a.publi_id,
+                        User = a.Publicacao.User_id,
+                    })
+                    .ToList();
+
+
+                var userInfo = new
+                {
+                    Id = loggedInUser.Id,
+                    Name = loggedInUser.Name,
+                    Email = loggedInUser.Email,
+                    Pic = "http://192.168.0.13:5000/" + loggedInUser.Pic,
+                    Saldo = loggedInUser.Saldo,
+                    Plano = loggedInUser.plano_id,
+                    Favoritos = favoritosDoUsuario,
+                    Pedidos = pedidosDoUsuario,
+                    Carrinho = produtosCarrinhoDoUsuario,
+                    Publicacoes = publicacoesDoUsuario
+                };
+
+                return Ok(userInfo);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
+        }
+
+        [HttpGet("api/mobile/GetUser/{id}")]
+        public IActionResult GetUser(int id)
+        {
+            try
+            {
+                var publicacoesDoUsuario = db.Publicacoes
+                .Where(p => p.User_id == id)
+                .SelectMany(p => p.Artes)
+                .Select(a => new
+                {
+                    Id = a.Id,
+                    Name = a.Arte,
+                    Path = a.Path,
+                    Price = a.Valor,
+                    Tipo = a.Tipo,
+                    Quantidade = a.Quantidade,
+                    CategoriaId = a.categoria_id,
+                    PublicacaoId = a.publi_id,
+                    User = a.Publicacao.User_id,
+                })
+                .ToList();
+
+                var user = db.Users
+                    .Where(a => a.Id == id)
+                    .Select(a => new
+                    {
+                        Id = a.Id,
+                        Name = a.Name,
+                        Path = a.Pic,
+                        Publicacoes = publicacoesDoUsuario,
+                    })
+                    .FirstOrDefault();
+
+                if (id != null)
+                {
+                    return Ok(user);
+                }
+                else
+                {
+                    return NotFound("Usuário não encontrado");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
+        }
 
 
 
