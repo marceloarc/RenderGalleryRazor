@@ -172,10 +172,12 @@ namespace RenderGallery.Controllers
         }
 
         [HttpPost("api/mobile/toggleFavorito")]
-        public IActionResult ToggleFavorito([FromBody] AdicionarItemCarrinhoModel model)
+        public async Task<IActionResult> ToggleFavorito([FromBody] AdicionarItemCarrinhoModel model)
         {
             if (ModelState.IsValid)
             {
+                var userid = model.UserId;
+                var artid = model.ArtId;
                 var user = db.Users.FirstOrDefault(u => u.Id == model.UserId);
                 if (user == null)
                 {

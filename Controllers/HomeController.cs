@@ -103,7 +103,7 @@ namespace RenderGalleyRazor.Controllers
                         {
                             Id = a.Id,
                             Name = a.Arte,
-                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Path = "http://" + Request.Host.ToString() + "/" + a.Path,
                             Price = a.Valor,
                             Tipo = a.Tipo,
                             Quantidade = a.Quantidade,
@@ -121,7 +121,7 @@ namespace RenderGalleyRazor.Controllers
                         {
                             Id = a.Id,
                             Name = a.Arte,
-                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Path = "http://" + Request.Host.ToString() + "/" + a.Path,
                             Price = a.Valor,
                             Tipo = a.Tipo,
                             Quantidade = a.Quantidade,
@@ -143,7 +143,7 @@ namespace RenderGalleyRazor.Controllers
                         {
                             Id = a.Id,
                             Name = a.Arte,
-                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Path = "http://" + Request.Host.ToString() + "/" + a.Path,
                             Price = a.Valor,
                             Tipo = a.Tipo,
                             Quantidade = a.Quantidade,
@@ -162,7 +162,7 @@ namespace RenderGalleyRazor.Controllers
                         {
                             Id = a.Id,
                             Name = a.Arte,
-                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Path = "http://" + Request.Host.ToString() + "/" + a.Path,
                             Price = a.Valor,
                             Tipo = a.Tipo,
                             Quantidade = a.Quantidade,
@@ -194,7 +194,7 @@ namespace RenderGalleyRazor.Controllers
                     {
                         Id = a.Id,
                         Name = a.Arte,
-                        Path = "http://192.168.0.13:5000/" + a.Path,
+                        Path = "http://"+ Request.Host.ToString() + "/" + a.Path,
                         Price = a.Valor,
                         Tipo = a.Tipo,
                         Quantidade = a.Quantidade,

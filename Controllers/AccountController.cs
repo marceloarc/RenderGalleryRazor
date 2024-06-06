@@ -283,14 +283,14 @@ namespace RenderGalleyRazor.Controllers
 
                 if (user == null)
                 {
-                    return BadRequest(new { Message = "Email não encontrado" });
+                    return Json(new { Message = "Email não encontrado" });
                 }
 
                 User userId = db.Users.FirstOrDefault(x => x.Email == user.Email);
 
                 if (userId.status == 0)
                 {
-                    return BadRequest(new { Message = "Acesso negado" });
+                    return Json(new { Message = "Acesso negado" });
                 }
 
                 var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
@@ -303,12 +303,17 @@ namespace RenderGalleyRazor.Controllers
                         {
                             Id = f.Art.Id,
                             Name = f.Art.Arte,
-                            Path = "http://192.168.0.13:5000/" + f.Art.Path,
+                            Path = "http://" + Request.Host.ToString() + "/" + f.Art.Path,
                             Price = f.Art.Valor,
                             Tipo = f.Art.Tipo,
                             Quantidade = f.Art.Quantidade,
                             Categoria = f.Art.categoria_id,
-                            Publicacao = f.Art.publi_id
+                            Publicacao = f.Art.publi_id,
+                            Artista = new
+                            {
+                                Id = f.Art.Publicacao.User.Id,
+                                Nome = f.Art.Publicacao.User.Name,
+                            }
                         })
                         .ToList();
 
@@ -324,7 +329,7 @@ namespace RenderGalleyRazor.Controllers
                             {
                                 IdProduto = pp.Arte.Id,
                                 NomeProduto = pp.Arte.Arte,
-                                Path = "http://192.168.0.13:5000/" + pp.Arte.Path,
+                                Path = "http://" + Request.Host.ToString() + "/" + pp.Arte.Path,
                                 Price = pp.Arte.Valor,
                                 Quantidade = pp.Quantidade,
                                 Categoria = pp.Arte.categoria_id,
@@ -339,10 +344,11 @@ namespace RenderGalleyRazor.Controllers
                         {
                             IdProduto = pc.Arte.Id,
                             NomeProduto = pc.Arte.Arte,
-                            Path = "http://192.168.0.13:5000/" + pc.Arte.Path,
+                            Path = "http://" + Request.Host.ToString() + "/" + pc.Arte.Path,
                             Price = pc.Arte.Valor,
                             Quantidade = pc.Quantidade,
                             Categoria = pc.Arte.categoria_id,
+                            Artista = pc.Arte.Publicacao.User.Name,
                             Publicacao = pc.Arte.publi_id
                         })
                         .ToList();
@@ -354,7 +360,7 @@ namespace RenderGalleyRazor.Controllers
                         {
                             Id = a.Id,
                             Name = a.Arte,
-                            Path = "http://192.168.0.13:5000/" + a.Path,
+                            Path = "http://" + Request.Host.ToString() + "/" + a.Path,
                             Price = a.Valor,
                             Tipo = a.Tipo,
                             Quantidade = a.Quantidade,
@@ -370,7 +376,7 @@ namespace RenderGalleyRazor.Controllers
                         Id = userId.Id,
                         Name = userId.Name,
                         Email = userId.Email,
-                        Pic = "http://192.168.0.13:5000/" + userId.Pic,
+                        Pic = "http://" + Request.Host.ToString() + "/" + userId.Pic,
                         Saldo = userId.Saldo,
                         Plano = userId.plano_id,
                         Favoritos = favoritosDoUsuario,
@@ -383,7 +389,7 @@ namespace RenderGalleyRazor.Controllers
                 }
                 else
                 {
-                    return BadRequest(new { Message = "Senha incorreta" });
+                    return Json(new { Message = "E-mail ou Senha incorretos" });
                 }
             }
 
@@ -393,7 +399,7 @@ namespace RenderGalleyRazor.Controllers
                 password = login.Password,
             };
 
-            return BadRequest(info);
+            return Json(new { Message = "E-mail ou Senha incorretos" });
         }
 
         [HttpPost("api/mobile/UserInfoAll")]
@@ -408,19 +414,24 @@ namespace RenderGalleyRazor.Controllers
                 }
 
                 var favoritosDoUsuario = db.Favoritos
-                .Where(f => f.user_id == user.Id)
-                .Select(f => new
-                {
-                    Id = f.Art.Id,
-                    Name = f.Art.Arte,
-                    Path = "http://192.168.0.13:5000/" + f.Art.Path,
-                    Price = f.Art.Valor,
-                    Tipo = f.Art.Tipo,
-                    Quantidade = f.Art.Quantidade,
-                    Categoria = f.Art.categoria_id,
-                    Publicacao = f.Art.publi_id
-                })
-                .ToList();
+                    .Where(f => f.user_id == loggedInUser.Id)
+                    .Select(f => new
+                    {
+                        Id = f.Art.Id,
+                        Name = f.Art.Arte,
+                        Path = "http://" + Request.Host.ToString() + "/" + f.Art.Path,
+                        Price = f.Art.Valor,
+                        Tipo = f.Art.Tipo,
+                        Quantidade = f.Art.Quantidade,
+                        Categoria = f.Art.categoria_id,
+                        Publicacao = f.Art.publi_id,
+                        Artista = new
+                        {
+                            Id = f.Art.Publicacao.User.Id,
+                            Nome = f.Art.Publicacao.User.Name,
+                        }
+                    })
+                    .ToList();
 
                 var pedidosDoUsuario = db.Pedidos
                     .Where(p => p.User_id == user.Id)
@@ -434,7 +445,7 @@ namespace RenderGalleyRazor.Controllers
                         {
                             IdProduto = pp.Arte.Id,
                             NomeProduto = pp.Arte.Arte,
-                            Path = "http://192.168.0.13:5000/" + pp.Arte.Path,
+                            Path = "http://" + Request.Host.ToString() + "/" + pp.Arte.Path,
                             Price = pp.Arte.Valor,
                             Quantidade = pp.Quantidade,
                             Categoria = pp.Arte.categoria_id,
@@ -449,11 +460,16 @@ namespace RenderGalleyRazor.Controllers
                     {
                         IdProduto = pc.Arte.Id,
                         NomeProduto = pc.Arte.Arte,
-                        Path = "http://192.168.0.13:5000/" + pc.Arte.Path,
+                        Path = "http://" + Request.Host.ToString() + "/" + pc.Arte.Path,
                         Price = pc.Arte.Valor,
                         Quantidade = pc.Quantidade,
                         Categoria = pc.Arte.categoria_id,
-                        Publicacao = pc.Arte.publi_id
+                        Publicacao = pc.Arte.publi_id,
+                        Artista = new
+                        {
+                            Id = pc.Arte.Publicacao.User.Id,
+                            Nome = pc.Arte.Publicacao.User.Name,
+                        }
                     })
                     .ToList();
 
@@ -464,7 +480,7 @@ namespace RenderGalleyRazor.Controllers
                     {
                         Id = a.Id,
                         Name = a.Arte,
-                        Path = "http://192.168.0.13:5000/" + a.Path,
+                        Path = "http://" + Request.Host.ToString()+"/" + a.Path,
                         Price = a.Valor,
                         Tipo = a.Tipo,
                         Quantidade = a.Quantidade,
@@ -480,7 +496,7 @@ namespace RenderGalleyRazor.Controllers
                     Id = loggedInUser.Id,
                     Name = loggedInUser.Name,
                     Email = loggedInUser.Email,
-                    Pic = "http://192.168.0.13:5000/" + loggedInUser.Pic,
+                    Pic = "http://" + Request.Host.ToString() + "/" + loggedInUser.Pic,
                     Saldo = loggedInUser.Saldo,
                     Plano = loggedInUser.plano_id,
                     Favoritos = favoritosDoUsuario,
@@ -544,6 +560,71 @@ namespace RenderGalleyRazor.Controllers
                 return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
             }
         }
+
+        [HttpPost("api/mobile/register")]
+        public async Task<IActionResult> MobileRegister([FromBody] VMRegistro registro)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingUser = await _userManager.FindByEmailAsync(registro.Email);
+
+                if (existingUser != null)
+                {
+                    return Json(new { Message = "Email já cadastrado" });
+                }
+
+                var newUser = new IdentityUser
+                {
+                    UserName = registro.Email,
+                    Email = registro.Email
+                };
+
+                var createUserResult = await _userManager.CreateAsync(newUser, registro.Password);
+
+                if (createUserResult.Succeeded)
+                {
+                    var path = "";
+                    var name = "";
+
+                    if (registro.File != null)
+                    {
+                        path = Functions.WriteFilePerfil(registro.File);
+                        var fileName = Path.GetFileName(path);
+                        name = "images/" + fileName;
+                    }
+
+                    if (name == "")
+                    {
+                        name = "images/user.jpg";
+                    }
+
+                    var user = new User
+                    {
+                        Name = registro.Nome,
+                        Email = registro.Email,
+                        Pic = name,
+                        plano_id = 1,
+                        Saldo = 0,
+                        status = (User.tipo)1
+                    };
+
+                    db.Users.Add(user);
+                    db.SaveChanges();
+
+                    await _userManager.AddToRoleAsync(newUser, "Artista");
+                    await _signInManager.SignInAsync(newUser, isPersistent: false);
+
+                    return Ok(new { Message = "Usuário registrado com sucesso" });
+                }
+                else
+                {
+                    return Json(new { Message = "Erro ao registrar usuário" });
+                }
+            }
+
+            return BadRequest(ModelState);
+        }
+
 
 
 

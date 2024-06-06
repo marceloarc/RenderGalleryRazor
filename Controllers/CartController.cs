@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
+using System.Data.Entity;
 using System.Globalization;
 
 namespace RenderGallery.Controllers
@@ -334,7 +335,9 @@ namespace RenderGallery.Controllers
                 var produto = db.Produtos.FirstOrDefault(p => p.art_id == model.ArtId && p.User_id == model.UserId);
                 if (produto != null)
                 {
-                    return BadRequest(new { Message = "Produto já se encontra em seu carrinho" });
+                    produto.Quantidade += (int)model.Quantidade;
+                    db.SaveChanges();
+                    return Ok(new { Message = "Produto atualizado com sucesso" });
                 }
 
                 produto = new ProdutoCarrinho
@@ -353,6 +356,21 @@ namespace RenderGallery.Controllers
             return BadRequest(ModelState);
         }
 
+        [HttpPost("api/mobile/removetoCart")]
+        public IActionResult RemoveItem([FromBody] AdicionarItemCarrinhoModel request)
+        {
+            var product = db.Produtos.FirstOrDefault(p => p.Arte.Id == request.ArtId && p.User_id == request.UserId);
+
+            if (product == null)
+            {
+                return NotFound("Produto não encontrado no carrinho");
+            }
+
+            db.Produtos.Remove(product);
+            db.SaveChanges();
+
+            return Ok("Produto removido do carrinho com sucesso");
+        }
 
 
     }
