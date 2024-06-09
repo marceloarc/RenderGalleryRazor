@@ -562,7 +562,7 @@ namespace RenderGalleyRazor.Controllers
         }
 
         [HttpPost("api/mobile/register")]
-        public async Task<IActionResult> MobileRegister([FromBody] VMRegistro registro)
+        public async Task<IActionResult> MobileRegister([FromForm] VMRegistro registro)
         {
             if (ModelState.IsValid)
             {
@@ -570,7 +570,7 @@ namespace RenderGalleyRazor.Controllers
 
                 if (existingUser != null)
                 {
-                    return Json(new { Message = "Email já cadastrado" });
+                    return Json(new { error = "Email já cadastrado" });
                 }
 
                 var newUser = new IdentityUser
@@ -614,11 +614,11 @@ namespace RenderGalleyRazor.Controllers
                     await _userManager.AddToRoleAsync(newUser, "Artista");
                     await _signInManager.SignInAsync(newUser, isPersistent: false);
 
-                    return Ok(new { Message = "Usuário registrado com sucesso" });
+                    return Ok(new { success = "Usuário registrado com sucesso" });
                 }
                 else
                 {
-                    return Json(new { Message = "Erro ao registrar usuário" });
+                    return Json(new { error = "Erro ao registrar usuário" });
                 }
             }
 
