@@ -1,9 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
+using NuGet.Protocol;
 using RenderGallery.Util;
 using RenderGalleyRazor.Models;
+using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Security.Claims;
+using System.Text;
 
 namespace RenderGalleyRazor.Controllers
 {
@@ -11,12 +17,14 @@ namespace RenderGalleyRazor.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IConfiguration _configuration; // Injeta a configuração do appsettings.json
         private readonly DatabaseContext db;
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, DatabaseContext db)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, DatabaseContext db, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             this.db = db;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -283,20 +291,22 @@ namespace RenderGalleyRazor.Controllers
 
                 if (user == null)
                 {
-                    return Json(new { Message = "Email não encontrado" });
+                    return BadRequest(new { Message = "Email não encontrado" });
                 }
 
                 User userId = db.Users.FirstOrDefault(x => x.Email == user.Email);
 
-                if (userId.status == 0)
+                if (userId.status == 0) // Ajustei aqui de userId.status para user.Status
                 {
-                    return Json(new { Message = "Acesso negado" });
+                    return BadRequest(new { Message = "Acesso negado" });
                 }
 
                 var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
 
                 if (result.Succeeded)
                 {
+                    var token = GenerateJwtToken(userId);
+
                     var favoritosDoUsuario = db.Favoritos
                         .Where(f => f.user_id == userId.Id)
                         .Select(f => new
@@ -355,7 +365,7 @@ namespace RenderGalleyRazor.Controllers
 
                     var publicacoesDoUsuario = db.Publicacoes
                         .Where(p => p.User_id == userId.Id)
-                        .SelectMany(p => p.Artes) 
+                        .SelectMany(p => p.Artes)
                         .Select(a => new
                         {
                             Id = a.Id,
@@ -366,11 +376,70 @@ namespace RenderGalleyRazor.Controllers
                             Quantidade = a.Quantidade,
                             CategoriaId = a.categoria_id,
                             PublicacaoId = a.publi_id,
-                            User = a.Publicacao.User_id,
+                            UserId = a.Publicacao.User_id,
                         })
                         .ToList();
 
+                    // Filtra os ChatsAsUser1 para o usuário
+                    var chatsAsUser1 = userId.ChatsAsUser1
+                        .Where(chat => chat.user_two != userId.Id) // Filtra chats onde o user_two não é o userId
+                        .Select(chat => new
+                        {
+                            chat_id = chat.chat_id,
+                            user_chat = new
+                            {
+                                id = chat.user_two,
+                                name = db.Users.Where(u => u.Id == chat.user_two).Select(u => u.Name).FirstOrDefault(),
+                                pic = "http://" + Request.Host.ToString() + "/" + db.Users.Where(u => u.Id == chat.user_two).Select(u => u.Pic).FirstOrDefault()
+                            },
+                            time = chat.time,
+                            status = chat.status,
+                            messages = chat.Messages.Select(msg => new
+                            {
+                                user_from = msg.user_id_from,
+                                user_to = msg.user_id_to,
+                                id = msg.id,
+                                msg_content = msg.msg_content,
+                                user_id_from = msg.user_id_from,
+                                user_id_to = msg.user_id_to,
+                                dataHora = msg.dataHora,
+                                visu_status = msg.visu_status,
+                                chat_id = msg.chat_id
+                            })
+                        });
 
+                    // Filtra os ChatsAsUser2 para o usuário
+                    var chatsAsUser2 = userId.ChatsAsUser2
+                        .Where(chat => chat.user_one != userId.Id) // Filtra chats onde o user_one não é o userId
+                        .Select(chat => new
+                        {
+                            chat_id = chat.chat_id,
+                            user_chat = new
+                            {
+                                id = chat.user_one,
+                                name = db.Users.Where(u => u.Id == chat.user_one).Select(u => u.Name).FirstOrDefault(),
+                                pic = "http://" + Request.Host.ToString() + "/" + db.Users.Where(u => u.Id == chat.user_one).Select(u => u.Pic).FirstOrDefault()
+                            },
+                            time = chat.time,
+                            status = chat.status,
+                            messages = chat.Messages.Select(msg => new
+                            {
+                                user_from = msg.user_id_from,
+                                user_to = msg.user_id_to,
+                                id = msg.id,
+                                msg_content = msg.msg_content,
+                                user_id_from = msg.user_id_from,
+                                user_id_to = msg.user_id_to,
+                                dataHora = msg.dataHora,
+                                visu_status = msg.visu_status,
+                                chat_id = msg.chat_id
+                            })
+                        });
+
+                    // Combina os resultados de chatsAsUser1 e chatsAsUser2 em uma única lista
+                    var allChats = chatsAsUser1.Concat(chatsAsUser2);
+
+                    // Constrói o objeto userInfo com as variáveis filtradas
                     var userInfo = new
                     {
                         Id = userId.Id,
@@ -382,25 +451,45 @@ namespace RenderGalleyRazor.Controllers
                         Favoritos = favoritosDoUsuario,
                         Pedidos = pedidosDoUsuario,
                         Carrinho = produtosCarrinhoDoUsuario,
-                        Publicacoes = publicacoesDoUsuario
+                        Publicacoes = publicacoesDoUsuario,
+                        Token = token,
+                        Chats = allChats
                     };
 
                     return Ok(userInfo);
                 }
                 else
                 {
-                    return Json(new { Message = "E-mail ou Senha incorretos" });
+                    return BadRequest(new { Message = "E-mail ou Senha incorretos" });
                 }
             }
 
-            var info = new
+            return BadRequest(new { Message = "E-mail ou Senha incorretos" });
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
             {
-                email = login.Email,
-                password = login.Password,
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                // Adicione quaisquer outros claims necessários aqui
             };
 
-            return Json(new { Message = "E-mail ou Senha incorretos" });
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(Convert.ToDouble(_configuration["Jwt:ExpireDays"])),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
 
         [HttpPost("api/mobile/UserInfoAll")]
         public IActionResult UserInfoAll([FromBody] User user)
@@ -486,10 +575,68 @@ namespace RenderGalleyRazor.Controllers
                         Quantidade = a.Quantidade,
                         CategoriaId = a.categoria_id,
                         PublicacaoId = a.publi_id,
-                        User = a.Publicacao.User_id,
+                        UserId = a.Publicacao.User_id,
                     })
                     .ToList();
 
+                // Filtra os ChatsAsUser1 para o usuário
+                var chatsAsUser1 = loggedInUser.ChatsAsUser1
+                    .Where(chat => chat.user_two != loggedInUser.Id) // Filtra chats onde o user_two não é o userId
+                    .Select(chat => new
+                    {
+                        chat_id = chat.chat_id,
+                        user_chat = new
+                        {
+                            id = chat.user_two,
+                            name = db.Users.Where(u => u.Id == chat.user_two).Select(u => u.Name).FirstOrDefault(),
+                            pic = "http://" + Request.Host.ToString() + "/" + db.Users.Where(u => u.Id == chat.user_two).Select(u => u.Pic).FirstOrDefault()
+                        },
+                        time = chat.time,
+                        status = chat.status,
+                        messages = chat.Messages.Select(msg => new
+                        {
+                            user_from = msg.user_id_from,
+                            user_to = msg.user_id_to,
+                            id = msg.id,
+                            msg_content = msg.msg_content,
+                            user_id_from = msg.user_id_from,
+                            user_id_to = msg.user_id_to,
+                            dataHora = msg.dataHora,
+                            visu_status = msg.visu_status,
+                            chat_id = msg.chat_id
+                        })
+                    });
+
+                // Filtra os ChatsAsUser2 para o usuário
+                var chatsAsUser2 = loggedInUser.ChatsAsUser2
+                    .Where(chat => chat.user_one != loggedInUser.Id) // Filtra chats onde o user_one não é o userId
+                    .Select(chat => new
+                    {
+                        chat_id = chat.chat_id,
+                        user_chat = new
+                        {
+                            id = chat.user_one,
+                            name = db.Users.Where(u => u.Id == chat.user_one).Select(u => u.Name).FirstOrDefault(),
+                            pic = "http://" + Request.Host.ToString() + "/" + db.Users.Where(u => u.Id == chat.user_one).Select(u => u.Pic).FirstOrDefault()
+                        },
+                        time = chat.time,
+                        status = chat.status,
+                        messages = chat.Messages.Select(msg => new
+                        {
+                            user_from = msg.user_id_from,
+                            user_to = msg.user_id_to,
+                            id = msg.id,
+                            msg_content = msg.msg_content,
+                            user_id_from = msg.user_id_from,
+                            user_id_to = msg.user_id_to,
+                            dataHora = msg.dataHora,
+                            visu_status = msg.visu_status,
+                            chat_id = msg.chat_id
+                        })
+                    });
+
+                // Combina os resultados de chatsAsUser1 e chatsAsUser2 em uma única lista
+                var allChats = chatsAsUser1.Concat(chatsAsUser2);
 
                 var userInfo = new
                 {
@@ -502,7 +649,8 @@ namespace RenderGalleyRazor.Controllers
                     Favoritos = favoritosDoUsuario,
                     Pedidos = pedidosDoUsuario,
                     Carrinho = produtosCarrinhoDoUsuario,
-                    Publicacoes = publicacoesDoUsuario
+                    Publicacoes = publicacoesDoUsuario,
+                    Chats = allChats
                 };
 
                 return Ok(userInfo);
@@ -525,7 +673,7 @@ namespace RenderGalleyRazor.Controllers
                 {
                     Id = a.Id,
                     Name = a.Arte,
-                    Path = a.Path,
+                    Path = "http://" + Request.Host.ToString() + "/" + a.Path,
                     Price = a.Valor,
                     Tipo = a.Tipo,
                     Quantidade = a.Quantidade,
@@ -541,7 +689,7 @@ namespace RenderGalleyRazor.Controllers
                     {
                         Id = a.Id,
                         Name = a.Name,
-                        Path = a.Pic,
+                        Path = "http://" + Request.Host.ToString() + "/" + a.Pic,
                         Publicacoes = publicacoesDoUsuario,
                     })
                     .FirstOrDefault();

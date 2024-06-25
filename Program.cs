@@ -3,22 +3,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
 using RenderGalleyRazor.Services;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-
-builder.Services.AddDbContext<DatabaseContext>(o => o.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.
-    GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<DatabaseContext>(o => o.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
 //Parte de Autenticação de Usuario
-builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<DatabaseContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DatabaseContext>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -37,12 +36,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "~/Account/AccessDenied"; // Página de acesso negado
     });
 
+// Adicionar serviço do SignalR
+builder.Services.AddSignalR();
 
-//criação de roles
+// Criação de roles
 builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
-
-
-
 
 var app = builder.Build();
 
@@ -64,10 +62,15 @@ await CriarPerfisUsuariosAsync(app);
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    // Mapear o Hub do SignalR
+    endpoints.MapHub<ChatHub>("/chatHub");
+});
 
 app.Run();
 
@@ -82,4 +85,3 @@ async Task CriarPerfisUsuariosAsync(WebApplication app)
         await service.SeedUsersAsync();
     }
 }
-

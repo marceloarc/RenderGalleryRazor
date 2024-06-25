@@ -109,7 +109,7 @@ namespace RenderGalleyRazor.Controllers
                             Quantidade = a.Quantidade,
                             CategoriaId = a.categoria_id,
                             PublicacaoId = a.publi_id,
-                            User = a.Publicacao.User_id,
+                            UserId = a.Publicacao.User_id,
                             Description = a.dataHora
                         })
                         .ToList();
@@ -127,7 +127,7 @@ namespace RenderGalleyRazor.Controllers
                             Quantidade = a.Quantidade,
                             CategoriaId = a.categoria_id,
                             PublicacaoId = a.publi_id,
-                            User = a.Publicacao.User_id,
+                            UserId = a.Publicacao.User_id,
                             Description = a.dataHora
                         })
                         .ToList();
@@ -149,7 +149,7 @@ namespace RenderGalleyRazor.Controllers
                             Quantidade = a.Quantidade,
                             CategoriaId = a.categoria_id,
                             PublicacaoId = a.publi_id,
-                            User = a.Publicacao.User_id,
+                            UserId = a.Publicacao.User_id,
                             Description = a.dataHora
                         })
                         .ToList();
@@ -168,7 +168,7 @@ namespace RenderGalleyRazor.Controllers
                             Quantidade = a.Quantidade,
                             CategoriaId = a.categoria_id,
                             PublicacaoId = a.publi_id,
-                            User = a.Publicacao.User_id,
+                            UserId = a.Publicacao.User_id,
                             Description = a.dataHora
                         })
                         .ToList();
