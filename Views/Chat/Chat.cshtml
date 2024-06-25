@@ -1,8 +1,13 @@
-﻿@{
+﻿
+@{
+
     Layout = "";
-   }
+
+}
 
     @if(ViewBag.Chat.Messages!= null){
+    var id = ViewBag.to;
+
         @foreach (var msg in ViewBag.Chat.Messages)
         {
         if (msg.user_id_from == ViewBag.from)
@@ -39,8 +44,10 @@
 
 <script>
     $(document).ready(function () {
+        var name = '@ViewBag.userTo.Name';
         $("#chat").attr("chat_id", @ViewBag.Chat.chat_id);
         $("#chat").attr("to_id", @ViewBag.to);
+        $("#user_name_chat").text(name);
     })
 
 </script>

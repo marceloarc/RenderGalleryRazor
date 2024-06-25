@@ -58,6 +58,22 @@
 
     }
 
+    .top-left {
+        display: none;
+        position: absolute;
+        top: 5%;
+        left: 10%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        padding: 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 80px;
+    }
+
     .out-stock {
    
         position: absolute;
@@ -104,6 +120,12 @@
         margin-left:10px;
     }
 
+    .item-image-price {
+        float: left;
+        height: 30px;
+        width: 70px;
+        margin-left: 10px;
+    }
     .item-image-like .icone{
         display: flex;
         justify-content: center;
@@ -149,6 +171,10 @@
     }
 
     #lightgallery .item:hover .middle2 {
+        display: block;
+    }
+
+    #lightgallery .item:hover .top-left {
         display: block;
     }
 
@@ -226,6 +252,13 @@
 
                     </div>
 
+                        <div class="top-left">
+
+                            <button class="item-btn item-image-price profile" style="" user_id="@art.Publicacao.User.Id">
+                                <a>@art.valor_formatado</a>
+                            </button>
+
+                        </div>
                     <div class="middle2">
 
 

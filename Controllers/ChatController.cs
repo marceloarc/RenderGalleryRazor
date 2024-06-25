@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
 using System;
+using System.Data.Entity;
 
 namespace RenderGallery.Controllers
 {
@@ -104,6 +105,7 @@ namespace RenderGallery.Controllers
                 ViewBag.Chat = conversa;
                 ViewBag.from = Id;
                 ViewBag.to = to;
+                ViewBag.userTo = db.Users.Where(x => x.Id == to).FirstOrDefault();
             }
           
             return View();

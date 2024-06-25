@@ -15,6 +15,8 @@ namespace RenderGalleyRazor.Models
 
         public float Valor { get; set; }
 
+        [NotMapped]
+        public string valor_formatado { get; set; }
 
         public int Tipo { get; set; }
         

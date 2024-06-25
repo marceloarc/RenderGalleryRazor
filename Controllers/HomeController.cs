@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
 using System.Numerics;
 
 namespace RenderGalleyRazor.Controllers
@@ -37,9 +39,14 @@ namespace RenderGalleyRazor.Controllers
             List<Art> arts = db.Arts.Where(x => x.categoria_id == id).ToList();
             Categoria cat = db.Categorias.Where(x => x.Id == id).FirstOrDefault();
             ViewBag.user_id = user_id;
+            foreach (Art art in arts)
+            {
+                var valor_formatado = string.Format(CultureInfo.GetCultureInfo("pt-BR"), "{0:C}", art.Valor);
+                art.valor_formatado = valor_formatado;
+            }
             ViewBag.Arts = arts;
             ViewBag.Title = cat.Nome;
-
+         
             return View();
         }
 

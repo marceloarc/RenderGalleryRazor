@@ -291,7 +291,7 @@ namespace RenderGalleyRazor.Controllers
 
                 if (user == null)
                 {
-                    return BadRequest(new { Message = "Email não encontrado" });
+                    return Json(new { Message = "Email não encontrado" });
                 }
 
                 User userId = db.Users.FirstOrDefault(x => x.Email == user.Email);
@@ -460,11 +460,11 @@ namespace RenderGalleyRazor.Controllers
                 }
                 else
                 {
-                    return BadRequest(new { Message = "E-mail ou Senha incorretos" });
+                    return Json(new { Message = "E-mail ou Senha incorretos" });
                 }
             }
 
-            return BadRequest(new { Message = "E-mail ou Senha incorretos" });
+            return Json(new { Message = "E-mail ou Senha incorretos" });
         }
 
         private string GenerateJwtToken(User user)
@@ -770,7 +770,7 @@ namespace RenderGalleyRazor.Controllers
                 }
             }
 
-            return BadRequest(ModelState);
+            return Json(new { error = "Por favor preencha todos os campos" });
         }
 
 

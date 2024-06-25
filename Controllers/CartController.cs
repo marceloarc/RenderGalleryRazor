@@ -355,6 +355,58 @@ namespace RenderGallery.Controllers
 
             return BadRequest(ModelState);
         }
+        [HttpPost("api/mobile/updateProductCart")]
+        public IActionResult UpdateItemCarrinho([FromBody] AdicionarItemCarrinhoModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.FirstOrDefault(u => u.Id == model.UserId);
+                if (user == null)
+                {
+                    return Json(new { Message = "Usuário não encontrado" });
+                }
+
+                var art = db.Arts.FirstOrDefault(a => a.Id == model.ArtId);
+                if (art == null)
+                {
+                    return Json(new { Message = "Arte não encontrada" });
+                }
+
+                if (art.Quantidade < 1)
+                {
+                    return Json(new { Message = "Produto fora de estoque" });
+                }
+
+
+                var produto = db.Produtos.FirstOrDefault(p => p.art_id == model.ArtId && p.User_id == model.UserId);
+                if ((int)model.Quantidade < 1){
+                    db.Produtos.Remove(produto);
+                    db.SaveChanges();
+                    return Ok(new { Message = "Produto Removido com sucesso" });
+                }
+
+                if (produto != null)
+                {
+                    produto.Quantidade = (int)model.Quantidade;
+                    db.SaveChanges();
+                    return Ok(new { Message = "Produto atualizado com sucesso" });
+                }
+
+                produto = new ProdutoCarrinho
+                {
+                    art_id = model.ArtId,
+                    publi_id = art.publi_id,
+                    User_id = model.UserId,
+                    Quantidade = (int)model.Quantidade,
+                };
+                db.Produtos.Add(produto);
+                db.SaveChanges();
+
+                return Ok(new { Message = "Produto adicionado ao carrinho com sucesso" });
+            }
+
+            return BadRequest(ModelState);
+        }
 
         [HttpPost("api/mobile/removetoCart")]
         public IActionResult RemoveItem([FromBody] AdicionarItemCarrinhoModel request)
