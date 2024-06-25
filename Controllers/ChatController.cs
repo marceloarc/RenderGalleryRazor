@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using RenderGalleyRazor.Models;
 using System;
 using System.Data.Entity;
+using System.Threading.Tasks.Dataflow;
 
 namespace RenderGallery.Controllers
 {
@@ -231,7 +232,32 @@ namespace RenderGallery.Controllers
             }
         }
 
-        [HttpPost("sendMessageChat")]
+        [HttpGet("api/mobile/visualizar/{cid}/{user_id}")]
+        public async Task<JsonResult> Visualizar(int cid, int user_id)
+        {
+          
+            Chat chat = db.Chats.Where(x => x.chat_id == cid).FirstOrDefault();
+
+            if(chat != null)
+            {
+                foreach(Message message in chat.Messages)
+                {
+                    if(message.user_id_from != user_id)
+                    {
+                        message.visu_status = 1;
+                        db.SaveChanges();
+                        TempData["success"] = "mensagens visualizadas";
+                    }
+                }
+            }
+      
+            return Json(TempData);
+        }
+
+
+
+
+            [HttpPost("sendMessageChat")]
         public async Task<JsonResult> EnviarApp([FromBody] VMMessage message)
         {
             if (ModelState.IsValid)

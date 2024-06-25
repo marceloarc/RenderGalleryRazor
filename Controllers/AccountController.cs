@@ -438,7 +438,21 @@ namespace RenderGalleyRazor.Controllers
 
                     // Combina os resultados de chatsAsUser1 e chatsAsUser2 em uma única lista
                     var allChats = chatsAsUser1.Concat(chatsAsUser2);
+                    var NewMessages = 0;
 
+                    foreach (var chat in allChats)
+                    {
+                        foreach (var message in chat.messages)
+                        {
+                            if (message.user_id_from != userId.Id)
+                            {
+                                if (message.visu_status == 0)
+                                {
+                                    NewMessages++;
+                                }
+                            }
+                        }
+                    }
                     // Constrói o objeto userInfo com as variáveis filtradas
                     var userInfo = new
                     {
@@ -453,7 +467,8 @@ namespace RenderGalleyRazor.Controllers
                         Carrinho = produtosCarrinhoDoUsuario,
                         Publicacoes = publicacoesDoUsuario,
                         Token = token,
-                        Chats = allChats
+                        Chats = allChats,
+                        NewMessages = NewMessages
                     };
 
                     return Ok(userInfo);
@@ -579,7 +594,7 @@ namespace RenderGalleyRazor.Controllers
                     })
                     .ToList();
 
-                // Filtra os ChatsAsUser1 para o usuário
+               
                 var chatsAsUser1 = loggedInUser.ChatsAsUser1
                     .Where(chat => chat.user_two != loggedInUser.Id) // Filtra chats onde o user_two não é o userId
                     .Select(chat => new
@@ -638,6 +653,21 @@ namespace RenderGalleyRazor.Controllers
                 // Combina os resultados de chatsAsUser1 e chatsAsUser2 em uma única lista
                 var allChats = chatsAsUser1.Concat(chatsAsUser2);
 
+                var NewMessages = 0;
+                
+                foreach (var chat in allChats)
+                {
+                    foreach(var message in chat.messages)
+                    {
+                        if(message.user_id_from != loggedInUser.Id)
+                        {
+                            if(message.visu_status == 0)
+                            {
+                                NewMessages++;
+                            }
+                        }
+                    }
+                }
                 var userInfo = new
                 {
                     Id = loggedInUser.Id,
@@ -650,7 +680,8 @@ namespace RenderGalleyRazor.Controllers
                     Pedidos = pedidosDoUsuario,
                     Carrinho = produtosCarrinhoDoUsuario,
                     Publicacoes = publicacoesDoUsuario,
-                    Chats = allChats
+                    Chats = allChats,
+                    NewMessages = NewMessages
                 };
 
                 return Ok(userInfo);

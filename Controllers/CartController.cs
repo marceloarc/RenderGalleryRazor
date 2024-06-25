@@ -377,6 +377,10 @@ namespace RenderGallery.Controllers
                     return Json(new { Message = "Produto fora de estoque" });
                 }
 
+                if ((int)model.Quantidade > art.Quantidade)
+                {
+                    return Json(new { Message = "Quantidade insuficiente" });
+                }
 
                 var produto = db.Produtos.FirstOrDefault(p => p.art_id == model.ArtId && p.User_id == model.UserId);
                 if ((int)model.Quantidade < 1){
