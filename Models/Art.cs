@@ -14,6 +14,11 @@ namespace RenderGalleyRazor.Models
         public string? Path { get; set; }
 
         public float Valor { get; set; }
+
+        [NotMapped]
+        public string valor_formatado { get; set; }
+
+        public int Tipo { get; set; }
         
         public int Quantidade { get; set; }
 
@@ -36,6 +41,8 @@ namespace RenderGalleyRazor.Models
 
         [ForeignKey("publi_id")]
         public virtual Publicacao? Publicacao { get; set; }
+
+
 
     }
 }

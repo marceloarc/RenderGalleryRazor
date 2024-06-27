@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RenderGalleyRazor.Models
 {
-    public class ProdutoCarrinho
+    public class ProdutoPedido
     {
         public int Id { get; set; }
 
@@ -24,23 +23,11 @@ namespace RenderGalleyRazor.Models
         [ForeignKey("art_id")]
         public virtual Art? Arte { get; set; }
 
-
-        [NotMapped]
-        public string? Valor { get; set; }
-
-
-    }
-
-    public class AdicionarItemCarrinhoModel
-    {
-        [Required(ErrorMessage = "O ID do usuário é obrigatório")]
-        public int UserId { get; set; }
-
-        [Required(ErrorMessage = "O ID da arte é obrigatório")]
-        public int ArtId { get; set; }
-
-        public int? Quantidade { get; set; }
-    }
+		[ForeignKey("PedidoId")]
+		public virtual Pedido? Pedido { get; set; }
 
 
+		[NotMapped]
+		public string? Valor { get; set; }
+	}
 }
