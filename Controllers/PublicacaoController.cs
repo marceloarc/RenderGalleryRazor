@@ -73,8 +73,7 @@ namespace RenderGallery.Controllers
             public IActionResult Create(Publicacao publi)
             {
                 ViewBag.success = false;
-                if (ModelState.IsValid)
-                {
+
                     User user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
                     if (user != null)
                     {
@@ -127,13 +126,6 @@ namespace RenderGallery.Controllers
                     {
                         ModelState.AddModelError("Error", "Usuário não encontrado.");
                     }
-                }
-                else
-                {
-                    ModelState.AddModelError("Error", "Todos os campos são obrigatórios.");
-                }
-
-            
 
                 return View();
             }

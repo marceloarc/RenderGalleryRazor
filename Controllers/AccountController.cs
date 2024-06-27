@@ -378,6 +378,7 @@ namespace RenderGalleyRazor.Controllers
                             CategoriaId = a.categoria_id,
                             PublicacaoId = a.publi_id,
                             UserId = a.Publicacao.User_id,
+                            FavoritosCount = db.Favoritos.Count(f => f.art_id == a.Id) 
                         })
                         .ToList();
 
@@ -454,6 +455,12 @@ namespace RenderGalleyRazor.Controllers
                             }
                         }
                     }
+
+                    var vendasDoUsuario = db.Pedidos
+                        .Where(p => p.User_id == userId.Id && p.Status == 1) 
+                        .Count();
+
+
                     // Constrói o objeto userInfo com as variáveis filtradas
                     var userInfo = new
                     {
@@ -469,7 +476,9 @@ namespace RenderGalleyRazor.Controllers
                         Publicacoes = publicacoesDoUsuario,
                         Token = token,
                         Chats = allChats,
-                        NewMessages = NewMessages
+                        NewMessages = NewMessages,
+                        DataCriacao = userId.data_cadastro,
+                        Vendas = vendasDoUsuario
                     };
 
                     return Ok(userInfo);
@@ -480,7 +489,7 @@ namespace RenderGalleyRazor.Controllers
                 }
             }
 
-            return Json(new { Message = "E-mail ou Senha incorretos" });
+            return Json(new { Message = "Preencha todos os campos" });
         }
 
         private string GenerateJwtToken(User user)
@@ -592,6 +601,7 @@ namespace RenderGalleyRazor.Controllers
                         CategoriaId = a.categoria_id,
                         PublicacaoId = a.publi_id,
                         UserId = a.Publicacao.User_id,
+                        FavoritosCount = db.Favoritos.Count(f => f.art_id == a.Id)
                     })
                     .ToList();
 
@@ -669,6 +679,11 @@ namespace RenderGalleyRazor.Controllers
                         }
                     }
                 }
+
+                var vendasDoUsuario = db.Pedidos
+                        .Where(p => p.User_id == loggedInUser.Id && p.Status == 1)
+                        .Count();
+
                 var userInfo = new
                 {
                     Id = loggedInUser.Id,
@@ -682,7 +697,9 @@ namespace RenderGalleyRazor.Controllers
                     Carrinho = produtosCarrinhoDoUsuario,
                     Publicacoes = publicacoesDoUsuario,
                     Chats = allChats,
-                    NewMessages = NewMessages
+                    NewMessages = NewMessages,
+                    DataCriacao = loggedInUser.data_cadastro,
+                    Vendas = vendasDoUsuario,
                 };
 
                 return Ok(userInfo);
@@ -723,6 +740,7 @@ namespace RenderGalleyRazor.Controllers
                         Name = a.Name,
                         Path = "http://" + Request.Host.ToString() + "/" + a.Pic,
                         Publicacoes = publicacoesDoUsuario,
+                        DataCriacao = a.data_cadastro
                     })
                     .FirstOrDefault();
 
