@@ -220,6 +220,13 @@ namespace RenderGallery.Controllers
                         ChatId = cid,
                         DateTime = mensagem.dataHora
                     });
+                    await _hubContext.Clients.User(toUserId).SendAsync("SendMessageNotification", new
+                    {
+                        From = id,
+                        Message = msg,
+                        ChatId = cid,
+                        DateTime = mensagem.dataHora
+                    });
 
                     TempData["success"] = "sim";
                     return Json(TempData);
@@ -315,6 +322,13 @@ namespace RenderGallery.Controllers
                     var toUserId = user.Id;
 
                     await _hubContext.Clients.User(toUserId).SendAsync("ReceiveMessage", new
+                    {
+                        From = id,
+                        Message = message.msg,
+                        ChatId = message.cid,
+                        DateTime = mensagem.dataHora
+                    });
+                    await _hubContext.Clients.User(toUserId).SendAsync("SendMessageNotification", new
                     {
                         From = id,
                         Message = message.msg,

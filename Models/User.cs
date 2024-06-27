@@ -21,6 +21,9 @@ namespace RenderGalleyRazor.Models
 
         public string? Telefone { get; set; }
 
+
+        public DateTime? data_cadastro { get; set; }
+
         public string? Pic { get; set; }
 
         public float Saldo { get; set; }

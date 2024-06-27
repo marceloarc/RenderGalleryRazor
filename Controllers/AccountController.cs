@@ -83,6 +83,7 @@ namespace RenderGalleyRazor.Controllers
                         user1.plano_id = 1;
                         user1.Saldo = 0;
                         user1.status = (User.tipo)1;
+                        user1.data_cadastro = DateTime.Now;
                         db.Users.Add(user1);
                         db.SaveChanges();
                         await _userManager.AddToRoleAsync(user, "Artista");
@@ -784,6 +785,7 @@ namespace RenderGalleyRazor.Controllers
                         Pic = name,
                         plano_id = 1,
                         Saldo = 0,
+                        data_cadastro = DateTime.Now,
                         status = (User.tipo)1
                     };
 

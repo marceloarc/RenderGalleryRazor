@@ -7,6 +7,7 @@ public class ChatHub : Hub
 {
     public async Task SendMessageToUser(string userId, string message)
     {
+        await Clients.User(userId).SendAsync("SendMessageNotification", message);
         await Clients.User(userId).SendAsync("ReceiveMessage", message);
     }
 }
