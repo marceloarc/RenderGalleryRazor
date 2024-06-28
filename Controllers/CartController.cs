@@ -228,7 +228,64 @@ namespace RenderGallery.Controllers
             return Json(TempData);
         }
 
-        public JsonResult FinalizarPlano(int plano_id)
+		[HttpGet("api/mobile/finalizarPedido/{id}")]
+		public JsonResult FinalizarPedido(int id)
+		{
+			int user_id = id;
+
+			User user = db.Users.Where(x => x.Id == user_id).FirstOrDefault();
+
+			if (user == null)
+			{
+				TempData["erro"] = "Usuário não encontrado!";
+			}
+
+
+
+
+			if (user_id != 0)
+			{
+				Pedido pedido = new Pedido();
+				float total = 0;
+				List<ProdutoCarrinho> produtos = db.Produtos.Where(x => x.User_id == user_id).ToList();
+				List<ProdutoPedido> produtoPedidos = new List<ProdutoPedido>();
+				if (produtos.Count() > 0)
+				{
+					foreach (ProdutoCarrinho produto in produtos)
+					{
+						total += (produto.Arte.Valor * produto.Quantidade);
+						ProdutoPedido produtoPedido = new ProdutoPedido();
+
+						produtoPedido.art_id = produto.Arte.Id;
+						produtoPedido.publi_id = produto.Arte.publi_id;
+						produtoPedido.Quantidade = produto.Quantidade;
+						produtoPedido.User_id = user_id;
+
+						produto.Arte.Publicacao.User.Saldo += (produto.Arte.Valor * produto.Quantidade);
+
+						produtoPedidos.Add(produtoPedido);
+
+						produto.Arte.Quantidade -= produto.Quantidade;
+					}
+
+				}
+
+				pedido.User_id = user_id;
+				pedido.Produtos = produtoPedidos;
+				pedido.total = total;
+				pedido.sub_total = total;
+				pedido.Status = 1;
+				db.Pedidos.Add(pedido);
+				db.Produtos.RemoveRange(produtos);
+				db.SaveChanges();
+				TempData["sucesso"] = "Pedido Relizado com sucesso!";
+
+			}
+
+			return Json(TempData);
+		}
+
+		public JsonResult FinalizarPlano(int plano_id)
         {
             User user = new User();
             int user_id = 0;
