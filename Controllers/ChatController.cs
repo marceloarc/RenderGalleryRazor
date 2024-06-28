@@ -264,7 +264,7 @@ namespace RenderGallery.Controllers
 
 
 
-            [HttpPost("sendMessageChat")]
+        [HttpPost("sendMessageChat")]
         public async Task<JsonResult> EnviarApp([FromBody] VMMessage message)
         {
             if (ModelState.IsValid)
@@ -295,6 +295,25 @@ namespace RenderGallery.Controllers
                     db.Chats.Add(new_conversa);
                     db.SaveChanges();
                     message.cid = new_conversa.chat_id;
+
+                    User userTo = db.Users.FirstOrDefault(u => u.Id == message.to);
+
+                    if (userTo == null)
+                    {
+                        return Json("Usuário não encontrado.");
+                    }
+                    var chatInfo = new
+                    {
+                        cid = new_conversa.chat_id,
+                        userTo = new
+                        {
+                            id = userTo.Id,
+                            pic = "http://" + Request.Host.ToString() + "/" + userTo.Pic,
+                            name = userTo.Name,
+                        }
+                    };
+
+                    return Json(chatInfo);
                 }
                 else
                 {
